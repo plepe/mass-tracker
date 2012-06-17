@@ -26,7 +26,7 @@ function init() {
 
   new gps();
   em=new event_map();
-  em.set_date("2012-06-17 16:30");
+  em.set_date("2012-06-17 16:40");
 }
 
 window.onload=init;
