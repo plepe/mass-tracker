@@ -11,5 +11,6 @@ session_start();
   </head>
   <body>
 <div id='map' style='width: 500px; height: 400px;'></div>
+<div id='status'></div>
   </body>
 </html>

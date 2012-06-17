@@ -60,6 +60,10 @@ event_map.prototype.update_callback=function(data) {
 
   var current=new Date();
   current.setSeconds(current.getSeconds()+this.time_shift);
+
+  var status=document.getElementById("status");
+  status.innerHTML=current.toString();
+
   for(var i in this.log) {
     var geo=[[], [], [], [], [], [], [], [], [], []];
     var pos;
