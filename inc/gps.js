@@ -11,18 +11,17 @@ gps.prototype.update_callback=function() {
 gps.prototype.update=function(lonlat) {
   gps.coords=lonlat.coords;
   ajax("gps_submit", gps.coords, null, this.update_callback.bind(this));
-return;
   gps.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
 
   if(this.vector) {
     vector_layer.removeFeatures([this.vector]);
   }
 
-  var pos = new clone(gps.pos);
-  pos.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+  var pos = gps.pos;
+  pos.transform(fromProjection, toProjection);
   var geo_point=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
   this.vector=new OpenLayers.Feature.Vector(geo_point, 0, {
-    externalGraphic: "plugins/gps/icon.png",
+    externalGraphic: "img/gps.png",
     graphicWidth: 25,
     graphicHeight: 25,
     graphicXOffset: -13,
@@ -30,7 +29,9 @@ return;
   });
   vector_layer.addFeatures([this.vector]);
 
-  call_hooks("gps_update", this);
+  map.setCenter(pos);
+
+  //call_hooks("gps_update", this);
 
   this.last_pos=gps.pos;
 }
