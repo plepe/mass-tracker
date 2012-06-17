@@ -25,7 +25,8 @@ function init() {
   map.setCenter(new OpenLayers.LonLat(47.99,15.3).transform(fromProjection, toProjection),10);
 
   new gps();
-  new event_map();
+  var em=new event_map();
+  em.set_date("2012-06-17 16:30");
 }
 
 window.onload=init;
