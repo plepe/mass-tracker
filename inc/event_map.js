@@ -59,13 +59,17 @@ event_map.prototype.update_callback=function(data) {
   this.features=[];
 
   var current=new Date();
+  current.setSeconds(current.getSeconds()+this.time_shift);
   for(var i in this.log) {
     var geo=[[], [], [], [], [], [], [], [], [], []];
     var pos;
     var last=null;
 
     for(var j=0; j<this.log[i].length; j++) {
-      var age=(current.getTime()-new Date(this.log[i][j].timestamp).getTime())/1000+current.getTimezoneOffset()*60+this.time_shift;
+      var timestamp=this.log[i][j].timestamp;
+      timestamp=timestamp.substr(0, 10)+"T"+timestamp.substr(11, 8)+"Z";
+
+      var age=(current.getTime()-new Date(timestamp).getTime())/1000;
       var age_category=floor(age/60);
 
       if(age>=600)
