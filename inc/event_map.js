@@ -1,14 +1,14 @@
 var age_styles=[
-  { strokeWidth: 3, strokeColor: '#ff0000', strokeOpacity: 1.0 },
-  { strokeWidth: 3, strokeColor: '#ee0000', strokeOpacity: 0.9 },
-  { strokeWidth: 3, strokeColor: '#dd0000', strokeOpacity: 0.9 },
-  { strokeWidth: 3, strokeColor: '#cc0000', strokeOpacity: 0.8 },
-  { strokeWidth: 3, strokeColor: '#aa0000', strokeOpacity: 0.8 },
-  { strokeWidth: 3, strokeColor: '#990000', strokeOpacity: 0.7 },
-  { strokeWidth: 3, strokeColor: '#770000', strokeOpacity: 0.7 },
-  { strokeWidth: 3, strokeColor: '#660000', strokeOpacity: 0.6 },
-  { strokeWidth: 3, strokeColor: '#440000', strokeOpacity: 0.6 },
-  { strokeWidth: 3, strokeColor: '#330000', strokeOpacity: 0.5 },
+  { strokeWidth: 3, strokeColor: '#ff0000', strokeOpacity: 1.0, strokeLinecap: 'round', graphicZIndex: 9 },
+  { strokeWidth: 3, strokeColor: '#ee0000', strokeOpacity: 0.9, strokeLinecap: 'round', graphicZIndex: 8 },
+  { strokeWidth: 3, strokeColor: '#dd0000', strokeOpacity: 0.9, strokeLinecap: 'round', graphicZIndex: 7 },
+  { strokeWidth: 3, strokeColor: '#cc0000', strokeOpacity: 0.8, strokeLinecap: 'round', graphicZIndex: 6 },
+  { strokeWidth: 3, strokeColor: '#aa0000', strokeOpacity: 0.8, strokeLinecap: 'round', graphicZIndex: 5 },
+  { strokeWidth: 3, strokeColor: '#990000', strokeOpacity: 0.7, strokeLinecap: 'round', graphicZIndex: 4 },
+  { strokeWidth: 3, strokeColor: '#770000', strokeOpacity: 0.7, strokeLinecap: 'round', graphicZIndex: 3 },
+  { strokeWidth: 3, strokeColor: '#660000', strokeOpacity: 0.6, strokeLinecap: 'round', graphicZIndex: 2 },
+  { strokeWidth: 3, strokeColor: '#440000', strokeOpacity: 0.6, strokeLinecap: 'round', graphicZIndex: 1 },
+  { strokeWidth: 3, strokeColor: '#330000', strokeOpacity: 0.5, strokeLinecap: 'round', graphicZIndex: 0 },
 ];
 
 function event_map() {

@@ -25,7 +25,8 @@ gps.prototype.update=function(lonlat) {
     graphicWidth: 25,
     graphicHeight: 25,
     graphicXOffset: -13,
-    graphicYOffset: -20
+    graphicYOffset: -20,
+    graphicZIndex: 20
   });
   vector_layer.addFeatures([this.vector]);
 

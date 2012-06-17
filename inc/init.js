@@ -18,7 +18,7 @@ function init() {
   map.addLayer(basemap);
   map.setBaseLayer(basemap);
 
-  vector_layer=new OpenLayers.Layer.Vector("Map", { weight: 10 });
+  vector_layer=new OpenLayers.Layer.Vector("Map", { weight: 10, rendererOptions: { zIndexing: true } });
   vector_layer.setOpacity(0.7);
   map.addLayer(vector_layer);
 
