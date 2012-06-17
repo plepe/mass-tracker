@@ -3,9 +3,10 @@ $name="Where is";
 
 $id="where_is";
 
-$depend=array();
+$depend=array("ajax");
 
 $include_php=array(
+  "inc/gps.php",
 );
 $include_js=array(
   "inc/gps.js",

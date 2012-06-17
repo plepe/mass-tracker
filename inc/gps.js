@@ -2,12 +2,15 @@ var gps_object=null;
 
 function gps() {
   if(navigator.geolocation)
-    this.watch=navigator.geolocation.watchPosition(this.update);
+    this.watch=navigator.geolocation.watchPosition(this.update.bind(this));
+}
+
+gps.prototype.update_callback=function() {
 }
 
 gps.prototype.update=function(lonlat) {
   gps.coords=lonlat.coords;
-console.log(gps.coords);
+  ajax("gps_submit", gps.coords, null, this.update_callback.bind(this));
 return;
   gps.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
 
