@@ -1,4 +1,6 @@
-<?php include "modulekit/loader.php"; /* loads all php-includes */ ?>
+<?php include "modulekit/loader.php"; /* loads all php-includes */
+session_start();
+?>
 <html>
   <head>
     <title>Where is ...</title>
