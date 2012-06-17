@@ -19,7 +19,7 @@ function ajax_event_map_update() {
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
 
-  $res=sqlite_query($db, "select * from gps_log $where order by session_id, timestamp desc");
+  $res=sqlite_query($db, "select * from gps_log $where order by session_id, timestamp asc");
   while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
     if($elem['timestamp']>$last_timestamp)
       $last_timestamp=$elem['timestamp'];
