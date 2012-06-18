@@ -10,7 +10,8 @@ function init() {
 	  {
 	    numZoomLevels: 19,
 	    controls: [ new OpenLayers.Control.PanZoomBar(),
-			new OpenLayers.Control.Navigation() ]
+			new OpenLayers.Control.Navigation(),
+			new OpenLayers.Control.TouchNavigation() ]
 	  });
 
   map.addControl(new OpenLayers.Control.ScaleLine({ geodesic: true }));
