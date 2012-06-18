@@ -1,0 +1,8 @@
+== INSTALL ==
+{{{
+git clone https://github.com/plepe/mass-tracker.git
+cd mass-tracker
+git submodules init
+git submodules update
+chmod 777 db
+}}}
