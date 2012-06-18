@@ -69,6 +69,7 @@ event_map.prototype.update_callback=function(data) {
   for(var i in this.log) {
     var geo=[[], [], [], [], [], [], [], [], [], []];
     var last=null;
+    var pos=null;
 
     for(var j=0; j<this.log[i].length; j++) {
       var timestamp=this.log[i][j].timestamp;
@@ -80,15 +81,16 @@ event_map.prototype.update_callback=function(data) {
       if(age>=600)
 	continue;
       if(last&&(geo[age_category].length==0))
-	geo[age_category].push(last);
+	geo[age_category].push(poi);
 
-      var pos = new OpenLayers.LonLat(this.log[i][j].longitude, this.log[i][j].latitude).transform(fromProjection, toProjection);
-      geo[age_category].push(new OpenLayers.Geometry.Point(pos.lon, pos.lat));
-      last=pos;
+      pos = new OpenLayers.LonLat(this.log[i][j].longitude, this.log[i][j].latitude).transform(fromProjection, toProjection);
+      var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
+      geo[age_category].push(poi);
+      last=poi;
     }
 
-    if(last)
-      center_pos.push(last);
+    if(pos)
+      center_pos.push(pos);
 
     this.features[i]=[];
     for(var j=0; j<geo.length; j++) {
