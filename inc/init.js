@@ -1,5 +1,6 @@
 var map;
 var vector_layer;
+var layout_css;
 
 function init() {
   fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
@@ -26,7 +27,23 @@ function init() {
 
   new gps();
   em=new event_map();
-  em.set_date("2012-06-17T14:40:00Z");
+  //em.set_date("2012-06-17T14:40:00Z");
+
+  layout_css=document.createElement("link");
+  layout_css.href="inc/layout_landscape.css";
+  layout_css.rel="stylesheet";
+  layout_css.type="text/css";
+  document.head.appendChild(layout_css);
+
+  resize();
+}
+
+function resize() {
+  if(window.innerWidth>window.innerHeight)
+    layout_css.href="inc/layout_landscape.css";
+  else
+    layout_css.href="inc/layout_portrait.css";
 }
 
 window.onload=init;
+window.onresize=resize;

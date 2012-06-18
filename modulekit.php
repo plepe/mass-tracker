@@ -17,4 +17,5 @@ $include_js=array(
   "inc/init.js",
 );
 $include_css=array(
+  "inc/style.css",
 );

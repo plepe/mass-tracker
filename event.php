@@ -5,6 +5,7 @@ session_start();
 <html>
   <head>
     <title>Where is ...</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <script type='text/javascript' src='lib/php.default.min.js'></script>
 <script type='text/javascript' src='lib/OpenLayers.js'></script>
     <?php print modulekit_include_js(); /* prints all js-includes */ ?>
@@ -22,13 +23,13 @@ if($_REQUEST['checkout']) {
   unset($_SESSION['event_id']);
 }
 
-print "<h1>{$event->data['name']}</h1>\n";
 ?>
-<div id='map' style='width: 500px; height: 400px;'></div>
+<div id='map'></div>
 <div id='time'></div>
 <div id='status'>
 <?
 
+print "<h1>{$event->data['name']}</h1>\n";
 if($event->data['status']=="current") {
   print "<form method='post'>\n";
   if($_SESSION['event_id']==$event->id) {
