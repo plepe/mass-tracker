@@ -8,4 +8,8 @@ class event {
     $res=sqlite_query($db, "select * from event where event_id='{$this->id}'");
     $this->data=sqlite_fetch_array($res, SQLITE_ASSOC);
   }
+
+  function index_info() {
+    return "<a href='event.php?id={$this->id}'>{$this->data['name']}</a>\n";
+  }
 }
