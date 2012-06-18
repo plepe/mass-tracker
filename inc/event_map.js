@@ -64,9 +64,10 @@ event_map.prototype.update_callback=function(data) {
   var status=document.getElementById("status");
   status.innerHTML=current.toString();
 
+  var center_pos=[];
+
   for(var i in this.log) {
     var geo=[[], [], [], [], [], [], [], [], [], []];
-    var pos;
     var last=null;
 
     for(var j=0; j<this.log[i].length; j++) {
@@ -86,8 +87,8 @@ event_map.prototype.update_callback=function(data) {
       last=pos;
     }
 
-    if(pos)
-      map.panTo(pos);
+    if(last)
+      center_pos.push(last);
 
     this.features[i]=[];
     for(var j=0; j<geo.length; j++) {
@@ -96,6 +97,23 @@ event_map.prototype.update_callback=function(data) {
     }
 
     vector_layer.addFeatures(this.features[i]);
+  }
+
+  // calculate arithmetic center of all front positions and pan viewport there
+  if(center_pos.length) {
+    var pos={ lon: 0.0, lat: 0.0 };
+
+    for(var i=0; i<center_pos.length; i++) {
+      pos.lon+=center_pos[i].lon;
+      pos.lat+=center_pos[i].lat;
+    }
+
+    pos.lon=pos.lon/center_pos.length;
+    pos.lat=pos.lat/center_pos.length;
+
+    pos = new OpenLayers.LonLat(pos.lon, pos.lat);
+
+    map.panTo(pos);
   }
 }
 
