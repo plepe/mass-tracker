@@ -6,6 +6,7 @@ $id="where_is";
 $depend=array("ajax");
 
 $include_php=array(
+  "inc/global.php",
   "inc/gps.php",
   "inc/event_map.php",
 );
