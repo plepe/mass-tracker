@@ -6,7 +6,7 @@ session_start();
     <title>Where is ...</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script type='text/javascript' src='lib/php.default.min.js'></script>
-<script type='text/javascript' src='lib/OpenLayers.js'></script>
+<script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
     <?php print modulekit_include_js(); /* prints all js-includes */ ?>
     <?php print modulekit_include_css(); /* prints all css-includes */ ?>
   </head>
