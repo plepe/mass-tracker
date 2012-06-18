@@ -11,3 +11,7 @@ Mass Tracker needs a couple of libraries:
 * OpenLayers
 Please visit http://trac.osgeo.org/openlayers/wiki/HowToDownload
 Download the .tar.gz file and extract to lib/OpenLayers (so that lib/OpenLayers/OpenLayers.js points to the JavaScript file).
+
+* PHPJS
+From http://phpjs.org/ download the default package and place in lib/
+(so that lib/php.default.min.js points to the JavaScript file).
