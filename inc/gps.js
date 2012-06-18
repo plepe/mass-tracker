@@ -1,6 +1,12 @@
+// configuration
+var gps_interval=10; // seconds
+
+// globals
 var gps_object=null;
 
 function gps() {
+  this.last_submit=null;
+
   if(navigator.geolocation)
     this.watch=navigator.geolocation.watchPosition(this.update.bind(this));
 }
@@ -10,8 +16,13 @@ gps.prototype.update_callback=function() {
 
 gps.prototype.update=function(lonlat) {
   gps.coords=lonlat.coords;
-  ajax("gps_submit", gps.coords, null, this.update_callback.bind(this));
   gps.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
+
+  var current=new Date();
+  if((this.last_submit===null)||(current.getTime()>=this.last_submit.getTime()+gps_interval*1000)) {
+    ajax("gps_submit", gps.coords, null, this.update_callback.bind(this));
+    this.last_submit=current;
+  }
 
   if(this.vector) {
     vector_layer.removeFeatures([this.vector]);
