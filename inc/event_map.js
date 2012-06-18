@@ -61,7 +61,7 @@ event_map.prototype.update_callback=function(data) {
   var current=new Date();
   current.setSeconds(current.getSeconds()+this.time_shift);
 
-  var status=document.getElementById("status");
+  var status=document.getElementById("time");
   status.innerHTML=current.toString();
 
   var center_pos=[];
