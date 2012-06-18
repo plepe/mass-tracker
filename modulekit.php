@@ -8,6 +8,7 @@ $depend=array("ajax");
 $include_php=array(
   "inc/global.php",
   "inc/gps.php",
+  "inc/event.php",
   "inc/event_map.php",
 );
 $include_js=array(
