@@ -16,10 +16,10 @@ session_start();
 <?
 $event=new event($_REQUEST['id']);
 
-if($_REQUEST['participate']) {
+if(isset($_REQUEST['participate'])) {
   $_SESSION['event_id']=$_REQUEST['id'];
 }
-if($_REQUEST['checkout']) {
+if(isset($_REQUEST['checkout'])) {
   unset($_SESSION['event_id']);
 }
 
@@ -37,14 +37,14 @@ if($_REQUEST['checkout']) {
 print "<h1>{$event->data['name']}</h1>\n";
 if($event->data['status']=="current") {
   print "<form method='post'>\n";
-  if($_SESSION['event_id']==$event->id) {
+  if(!isset($_SESSION['event_id'])) {
+    print "<input type='submit' name='participate' value='An Ereignis teilnehmen'>\n";
+  }
+  elseif($_SESSION['event_id']==$event->id) {
     print "<input type='submit' name='checkout' value='Von Ereignis abmelden'>\n";
   }
-  elseif(isset($_SESSION['event_id'])) {
-    print "Sie nehmen bereits an einem anderen Ereignis teil.\n";
-  }
   else {
-    print "<input type='submit' name='participate' value='An Ereignis teilnehmen'>\n";
+    print "Sie nehmen bereits an einem anderen Ereignis teil.\n";
   }
   print "</form>\n";
 }

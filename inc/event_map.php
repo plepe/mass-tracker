@@ -4,7 +4,7 @@ function ajax_event_map_update() {
   $ret=array();
   $last_timestamp='';
 
-  if($_REQUEST['time_shift']) {
+  if(isset($_REQUEST['time_shift'])) {
     $now="'now', '{$_REQUEST['time_shift']} second'";
     $where[]="timestamp<datetime($now)";
   }
