@@ -9,8 +9,7 @@ function init() {
   map = new OpenLayers.Map("map",
 	  {
 	    numZoomLevels: 19,
-	    controls: [ new OpenLayers.Control.PanZoomBar(),
-			new OpenLayers.Control.Navigation(),
+	    controls: [ new OpenLayers.Control.Navigation(),
 			new OpenLayers.Control.TouchNavigation() ]
 	  });
 
@@ -44,6 +43,14 @@ function resize() {
     layout_css.href="inc/layout_landscape.css";
   else
     layout_css.href="inc/layout_portrait.css";
+}
+
+function nav_zoomin() {
+  map.zoomIn();
+}
+
+function nav_zoomout() {
+  map.zoomOut();
 }
 
 window.onload=init;

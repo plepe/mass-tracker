@@ -5,3 +5,26 @@ body {
   top: 0px;
   bottom: 0px;
 }
+#nav {
+  position: absolute;
+  z-index: 10000;
+}
+#nav div {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-left: 20px;
+  margin-top: 20px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 30px;
+  font-family: sans-serif;
+  font-weight: bold;
+  background: white;
+  border: 1px solid black;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  opacity: 0.6;
+}

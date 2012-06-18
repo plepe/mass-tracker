@@ -24,7 +24,12 @@ if($_REQUEST['checkout']) {
 }
 
 ?>
-<div id='map'></div>
+<div id='map'>
+  <div id='nav'>
+    <div id='nav_zoomin' onClick='nav_zoomin()'>+</div>
+    <div id='nav_zoomout' onClick='nav_zoomout()'>-</div>
+  </div>
+</div>
 <div id='time'></div>
 <div id='status'>
 <?
