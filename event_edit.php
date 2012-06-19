@@ -20,6 +20,10 @@ $form_def=array(
     'type'	=>"text",
     'name'	=>"Endezeit",
   ),
+  'timezone'	=>array(
+    'type'	=>"text",
+    'name'	=>"Zeitzone (Minuten)",
+  ),
 );
 
 if(isset($_REQUEST['id'])) {
@@ -48,7 +52,19 @@ if($form->is_complete()) {
     $set[]="'".sqlite_escape_string($_REQUEST['id'])."'";
   }
 
-  foreach(array("name", "description", "begin_time", "end_time") as $k) {
+  foreach(array("begin_time", "end_time") as $k) {
+    $d=new DateTime($data[$k]);
+    if($data['timezone']<0) {
+      $t=-$data['timezone'];
+      $d->sub(new DateInterval("PT{$t}M"));
+    }
+    else
+      $d->add(new DateInterval("PT{$data['timezone']}M"));
+
+    $data[$k]=$d->format("Y-m-d H:i:00");
+  }
+
+  foreach(array("name", "description", "begin_time", "end_time", "timezone") as $k) {
     $var[]="\"$k\"";
     $set[]="'".sqlite_escape_string($data[$k])."'";
   }
@@ -62,16 +78,29 @@ if($form->is_complete()) {
 }
 
 if($form->is_empty()) {
-  if(isset($event))
-    $form->set_data($event->data);
+  if(isset($event)) {
+    $data=$event->data;
+
+    foreach(array("begin_time", "end_time") as $k) {
+      $d=new DateTime($data[$k]);
+      if($data['timezone']>0)
+	$d->sub(new DateInterval("PT{$data['timezone']}M"));
+      else {
+	$t=-$data['timezone'];
+	$d->add(new DateInterval("PT{$t}M"));
+      }
+
+      $data[$k]=$d->format("Y-m-d H:i:00");
+    }
+  }
   else {
-    $d=array(
+    $data=array(
       'begin_time'=>Date("Y-m-d H:i"),
       'end_time'=>Date("Y-m-d H:i", time()+7200),
     );
-
-    $form->set_data($d);
   }
+
+  $form->set_data($data);
 }
 
 $body.="<form enctype='multipart/form-data' method='post'>\n";

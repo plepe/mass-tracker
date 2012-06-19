@@ -38,6 +38,12 @@ function init() {
   document.head.appendChild(layout_css);
 
   resize();
+
+  // Event Edit
+  if(typeof form_data!="undefined") {
+    if(form_data.get_data().timezone=="")
+      form_data.set_data({ timezone: new Date().getTimezoneOffset() });
+  }
 }
 
 function resize() {

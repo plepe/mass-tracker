@@ -18,6 +18,7 @@ create table event (
   description	text		null,
   begin_time	datetime	null,
   end_time	datetime	null,
+  timezone	integer		null,
   begin_longitude float		null,
   begin_latitude  float		null
 );
