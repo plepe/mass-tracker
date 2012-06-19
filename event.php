@@ -16,6 +16,9 @@ session_start();
 
 <?
 $event=new mass_event($_REQUEST['id']);
+print "<script type='text/javascript'>\n";
+print "var current_event=new mass_event({$_REQUEST['id']}, ".json_encode($event->data).");\n";
+print "</script>\n";
 
 if(isset($_REQUEST['participate'])) {
   $_SESSION['event_id']=$_REQUEST['id'];

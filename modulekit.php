@@ -15,6 +15,7 @@ $include_js=array(
   "inc/gps.js",
   "inc/event_map.js",
   "inc/init.js",
+  "inc/event.js",
 );
 $include_css=array(
   "inc/style.css",
