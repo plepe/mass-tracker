@@ -1,4 +1,5 @@
 <?php include "modulekit/loader.php"; /* loads all php-includes */
+Header("Content-Type: text/html; charset=utf-8");
 session_start();
 ?>
 <html>
