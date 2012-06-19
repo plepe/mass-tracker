@@ -31,7 +31,7 @@ function init() {
       map.setCenter(new OpenLayers.LonLat(0, 0).transform(fromProjection, toProjection), 1);
     }
 
-    new gps();
+    gps_init();
     em=new event_map();
     //em.set_date("2012-06-17T14:40:00Z");
   }

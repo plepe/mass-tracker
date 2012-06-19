@@ -15,12 +15,12 @@ gps.prototype.update_callback=function() {
 }
 
 gps.prototype.update=function(lonlat) {
-  gps.coords=lonlat.coords;
-  gps.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
+  this.coords=lonlat.coords;
+  this.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
 
   var current=new Date();
   if((this.last_submit===null)||(current.getTime()>=this.last_submit.getTime()+gps_interval*1000)) {
-    ajax("gps_submit", gps.coords, null, this.update_callback.bind(this));
+    ajax("gps_submit", this.coords, null, this.update_callback.bind(this));
     this.last_submit=current;
   }
 
@@ -28,7 +28,7 @@ gps.prototype.update=function(lonlat) {
     vector_layer.removeFeatures([this.vector]);
   }
 
-  var pos = gps.pos;
+  var pos =new OpenLayers.LonLat(this.pos.lon, this.pos.lat);
   pos.transform(fromProjection, toProjection);
   var geo_point=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
   this.vector=new OpenLayers.Feature.Vector(geo_point, 0, {
@@ -41,19 +41,19 @@ gps.prototype.update=function(lonlat) {
   });
   vector_layer.addFeatures([this.vector]);
 
-  map.setCenter(pos);
+  //map.setCenter(pos);
 
   //call_hooks("gps_update", this);
 
-  this.last_pos=gps.pos;
+  this.last_pos=this.pos;
 }
 
 gps.prototype.get_pos=function() {
-  return gps.pos;
+  return this.pos;
 }
 
 gps.prototype.get_coords=function() {
-  return gps.coords;
+  return this.coords;
 }
 
 function gps_init() {
