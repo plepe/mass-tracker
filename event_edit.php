@@ -1,16 +1,7 @@
 <?php include "modulekit/loader.php"; /* loads all php-includes */
 session_start();
-?>
-<html>
-  <head>
-    <title>Where is ...</title>
-<script type='text/javascript' src='lib/php.default.min.js'></script>
-<script type='text/javascript' src='lib/OpenLayers.js'></script>
-    <?php print modulekit_include_js(); /* prints all js-includes */ ?>
-    <?php print modulekit_include_css(); /* prints all css-includes */ ?>
-  </head>
-  <body>
-<?
+$body="";
+
 $form_def=array(
   'name'	=>array(
     'type'	=>"text",
@@ -32,17 +23,17 @@ $form_def=array(
 
 if(isset($_REQUEST['id'])) {
   $event=new event($_REQUEST['id']);
-  print "<h1>Ereignis bearbeiten</h1>\n";
+  $body.="<h1>Ereignis bearbeiten</h1>\n";
 }
 else
-  print "<h1>Neues Ereignis anlegen</h1>\n";
+  $body.="<h1>Neues Ereignis anlegen</h1>\n";
 
 $form=new form("data", $form_def);
 
 if($form->errors()) {
-  // print errors
-  print "Errors in the form were found:";
-  print $form->show_errors();
+  // $body.=errors
+  $body.="Errors in the form were found:";
+  $body.=$form->show_errors();
 }
 
 if($form->is_complete()) {
@@ -64,6 +55,9 @@ if($form->is_complete()) {
   $var=implode(", ", $var);
 
   sqlite_query($db, "insert or replace into event ($var) values ($set)");
+  $event=new event(sqlite_last_insert_rowid($db));
+
+  Header("Location: event.php?id={$event->id}");
 }
 
 if($form->is_empty()) {
@@ -79,11 +73,28 @@ if($form->is_empty()) {
   }
 }
 
-print "<form enctype='multipart/form-data' method='post'>\n";
-print $form->show();
-print "<input type='submit' value='Ok'>\n";
-print "</form>\n";
+$body.="<form enctype='multipart/form-data' method='post'>\n";
+$body.=$form->show();
+$body.="<input type='submit' value='Ok'>\n";
+$body.="</form>\n";
 
+$body.="<p><a href='.'>Index</a>\n";
+if(isset($event)) {
+  $body.="<a href='event.php?id={$event->id}'>Zurück</a>\n";
+}
+
+?>
+<html>
+  <head>
+    <title>Where is ...</title>
+<script type='text/javascript' src='lib/php.default.min.js'></script>
+<script type='text/javascript' src='lib/OpenLayers.js'></script>
+    <?php print modulekit_include_js(); /* prints all js-includes */ ?>
+    <?php print modulekit_include_css(); /* prints all css-includes */ ?>
+  </head>
+  <body>
+<?
+print $body;
 ?>
   </body>
 </html>
