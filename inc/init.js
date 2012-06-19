@@ -9,6 +9,8 @@ function init() {
 
     map = new OpenLayers.Map("map",
 	    {
+	      maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+	      maxResolution: 156543.0399,
 	      numZoomLevels: 19,
 	      controls: [ new OpenLayers.Control.Navigation(),
 			  new OpenLayers.Control.TouchNavigation() ]
@@ -16,7 +18,14 @@ function init() {
 
     map.addControl(new OpenLayers.Control.ScaleLine({ geodesic: true }));
 
-    var basemap=new OpenLayers.Layer.OSM();
+    //var basemap=new OpenLayers.Layer.OSM();
+    var basemap=new OpenLayers.Layer.TMS("OpenStreetBrowser",
+      "http://tiles-base.openstreetbrowser.org/tiles/basemap_base/", {
+      type: 'png',
+      getURL: osm_getTileURL,
+      displayOutsideMaxExtent: true,
+      attribution: 'Tiles courtesy <a href="http://www.openstreetbrowser.org/">OpenStreetBrowser</a>, CC-BY-SA <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors</a>'
+    });
     map.addLayer(basemap);
     map.setBaseLayer(basemap);
 
@@ -64,6 +73,22 @@ function nav_zoomin() {
 
 function nav_zoomout() {
   map.zoomOut();
+}
+
+// from http://svn.geotools.org/sandbox/adube/openlayers/examples/spherical-mercator.html
+function osm_getTileURL(bounds) {
+  var res = this.map.getResolution();
+  var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+  var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+  var z = this.map.getZoom();
+  var limit = Math.pow(2, z);
+
+  if (y < 0 || y >= limit) {
+    return OpenLayers.Util.getImagesLocation() + "404.png";
+  } else {
+    x = ((x % limit) + limit) % limit;
+    return this.url + z + "/" + x + "/" + y + "." + this.type;
+  }
 }
 
 window.onload=init;
