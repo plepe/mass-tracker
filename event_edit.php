@@ -27,7 +27,7 @@ $form_def=array(
 );
 
 if(isset($_REQUEST['id'])) {
-  $event=new event($_REQUEST['id']);
+  $event=new mass_event($_REQUEST['id']);
   $body.="<h1>Ereignis bearbeiten</h1>\n";
 }
 else
@@ -71,8 +71,8 @@ if($form->is_complete()) {
   $set=implode(", ", $set);
   $var=implode(", ", $var);
 
-  sqlite_query($db, "insert or replace into event ($var) values ($set)");
-  $event=new event(sqlite_last_insert_rowid($db));
+  sqlite_query($db, "insert or replace into mass_event ($var) values ($set)");
+  $event=new mass_event(sqlite_last_insert_rowid($db));
 
   Header("Location: event.php?id={$event->id}");
 }

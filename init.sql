@@ -12,7 +12,7 @@ create table gps_log (
   foreign key(event_id) references event(event_id)
 );
 
-create table event (
+create table mass_event (
   event_id	integer		primary key,
   name		text		null,
   description	text		null,

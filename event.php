@@ -15,7 +15,7 @@ session_start();
   <body>
 
 <?
-$event=new event($_REQUEST['id']);
+$event=new mass_event($_REQUEST['id']);
 
 if(isset($_REQUEST['participate'])) {
   $_SESSION['event_id']=$_REQUEST['id'];

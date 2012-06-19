@@ -21,7 +21,7 @@ function show_block($res, $title) {
 
   $ret.="<ul>\n";
   while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
-    $ev=new event($elem['event_id']);
+    $ev=new mass_event($elem['event_id']);
     $ret.="<li>{$ev->index_info()}</li>\n";
   }
   $ret.="</ul>\n";
@@ -29,13 +29,13 @@ function show_block($res, $title) {
   return $ret;
 }
 
-$res=sqlite_query($db, "select * from event where begin_time<=datetime('now') and end_time>datetime('now') order by begin_time asc");
+$res=sqlite_query($db, "select * from mass_event where begin_time<=datetime('now') and end_time>datetime('now') order by begin_time asc");
 print show_block($res, "Aktuelle Ereignisse");
 
-$res=sqlite_query($db, "select * from event where begin_time>datetime('now') order by begin_time asc limit 10");
+$res=sqlite_query($db, "select * from mass_event where begin_time>datetime('now') order by begin_time asc limit 10");
 print show_block($res, "Kommende Ereignisse");
 
-$res=sqlite_query($db, "select * from event where end_time<=datetime('now') order by end_time desc limit 10");
+$res=sqlite_query($db, "select * from mass_event where end_time<=datetime('now') order by end_time desc limit 10");
 print show_block($res, "Letzte Ereignisse");
 
 print "<a href='event_edit.php'>Neues Ereignis anlegen</a>\n";
