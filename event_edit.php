@@ -69,6 +69,14 @@ if($form->is_complete()) {
 if($form->is_empty()) {
   if(isset($event))
     $form->set_data($event->data);
+  else {
+    $d=array(
+      'begin_time'=>Date("Y-m-d H:i"),
+      'end_time'=>Date("Y-m-d H:i", time()+7200),
+    );
+
+    $form->set_data($d);
+  }
 }
 
 print "<form enctype='multipart/form-data' method='post'>\n";
