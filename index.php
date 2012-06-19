@@ -38,6 +38,8 @@ print show_block($res, "Kommende Ereignisse");
 $res=sqlite_query($db, "select * from event where end_time<=datetime('now') order by end_time desc limit 10");
 print show_block($res, "Letzte Ereignisse");
 
+print "<a href='event_edit.php'>Neues Ereignis anlegen</a>\n";
+
 ?>
   </body>
 </html>

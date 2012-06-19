@@ -32,7 +32,10 @@ $form_def=array(
 
 if(isset($_REQUEST['id'])) {
   $event=new event($_REQUEST['id']);
+  print "<h1>Ereignis bearbeiten</h1>\n";
 }
+else
+  print "<h1>Neues Ereignis anlegen</h1>\n";
 
 $form=new form("data", $form_def);
 

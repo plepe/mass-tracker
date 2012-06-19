@@ -35,6 +35,7 @@ if(isset($_REQUEST['checkout'])) {
 <?
 
 print "<h1>{$event->data['name']}</h1>\n";
+$may_edit=false;
 if($event->data['status']=="current") {
   print "<form method='post'>\n";
   if(!isset($_SESSION['event_id'])) {
@@ -47,12 +48,19 @@ if($event->data['status']=="current") {
     print "Sie nehmen bereits an einem anderen Ereignis teil.\n";
   }
   print "</form>\n";
+  $may_edit=true;
 }
 elseif($event->data['status']=="coming_up") {
   print "Das Ereignis startet erst.";
+  $may_edit=true;
 }
 elseif($event->data['status']=="past") {
   print "Das Ereignis ist bereits Geschichte.";
+}
+
+print "<p><a href='.'>Index</a>\n";
+if($may_edit) {
+  print "<a href='event_edit.php?id={$event->id}'>Bearbeiten</a>\n";
 }
 
 ?>
