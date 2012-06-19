@@ -24,7 +24,12 @@ function init() {
     vector_layer.setOpacity(0.7);
     map.addLayer(vector_layer);
 
-    map.setCenter(new OpenLayers.LonLat(47.99,15.3).transform(fromProjection, toProjection),10);
+    if(current_event) {
+      current_event.center_map();
+    }
+    else {
+      map.setCenter(new OpenLayers.LonLat(0, 0).transform(fromProjection, toProjection), 1);
+    }
 
     new gps();
     em=new event_map();

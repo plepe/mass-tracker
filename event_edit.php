@@ -24,6 +24,18 @@ $form_def=array(
     'type'	=>"text",
     'name'	=>"Zeitzone (Minuten)",
   ),
+  'begin_longitude'	=>array(
+    'type'	=>"text",
+    'name'	=>"Longitude Beginnort",
+  ),
+  'begin_latitude'	=>array(
+    'type'	=>"text",
+    'name'	=>"Latitude Beginnort",
+  ),
+  'begin_zoom'	=>array(
+    'type'	=>"text",
+    'name'	=>"Default Zoom",
+  ),
 );
 
 if(isset($_REQUEST['id'])) {
@@ -64,7 +76,7 @@ if($form->is_complete()) {
     $data[$k]=$d->format("Y-m-d H:i:00");
   }
 
-  foreach(array("name", "description", "begin_time", "end_time", "timezone") as $k) {
+  foreach(array("name", "description", "begin_time", "end_time", "timezone", "begin_longitude", "begin_latitude", "begin_zoom") as $k) {
     $var[]="\"$k\"";
     $set[]="'".sqlite_escape_string($data[$k])."'";
   }

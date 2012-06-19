@@ -20,5 +20,6 @@ create table mass_event (
   end_time	datetime	null,
   timezone	integer		null,
   begin_longitude float		null,
-  begin_latitude  float		null
+  begin_latitude  float		null,
+  begin_zoom	integer		null
 );
