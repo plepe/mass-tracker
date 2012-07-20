@@ -16,6 +16,8 @@ function ajax_event_map_update() {
   else
     $where[]="timestamp>datetime($now, '-10 minute')";
 
+  $where[]="event_id='".sqlite_escape_string($_REQUEST['id'])."'";
+
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
 

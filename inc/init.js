@@ -43,7 +43,7 @@ function init() {
     }
 
     gps_init();
-    em=new event_map();
+    //em=new event_map();
     //em.set_date("2012-06-17T14:40:00Z");
   }
 
