@@ -33,6 +33,8 @@ function init() {
     vector_layer.setOpacity(0.7);
     map.addLayer(vector_layer);
 
+    resize();
+
     if(current_event) {
       current_event.center_map();
     }
@@ -45,14 +47,6 @@ function init() {
     //em.set_date("2012-06-17T14:40:00Z");
   }
 
-  layout_css=document.createElement("link");
-  layout_css.href="inc/layout_landscape.css";
-  layout_css.rel="stylesheet";
-  layout_css.type="text/css";
-  document.head.appendChild(layout_css);
-
-  resize();
-
   // Event Edit
   if(typeof form_data!="undefined") {
     if(form_data.get_data().timezone=="")
@@ -61,10 +55,20 @@ function init() {
 }
 
 function resize() {
+  if(map)
+    var center=map.center;
+
+  if(!layout_css)
+    layout_css=document.getElementById("layout_css");
+
   if(window.innerWidth>window.innerHeight)
     layout_css.href="inc/layout_landscape.css";
   else
     layout_css.href="inc/layout_portrait.css";
+
+
+  if(map)
+    map.setCenter(center);
 }
 
 function nav_zoomin() {
