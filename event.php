@@ -35,6 +35,7 @@ if(isset($_REQUEST['checkout'])) {
     <div id='nav_zoomout' onClick='nav_zoomout()'>-</div>
   </div>
 </div>
+<div id='content'>
 <div id='time'></div>
 <div id='status'>
 <?
@@ -69,5 +70,6 @@ if($may_edit) {
 }
 
 ?>
+</div>
   </body>
 </html>
