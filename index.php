@@ -1,10 +1,12 @@
 <?php include "modulekit/loader.php"; /* loads all php-includes */
 Header("Content-Type: text/html; charset=utf-8");
 session_start();
+include "conf.php";
+
 ?>
 <html>
   <head>
-    <title>Where is ...</title>
+    <title><?=$title?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script type='text/javascript' src='lib/php.default.min.js'></script>
     <?php print modulekit_include_js(); /* prints all js-includes */ ?>

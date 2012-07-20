@@ -1,11 +1,12 @@
 <?php include "modulekit/loader.php"; /* loads all php-includes */
 Header("Content-Type: text/html; charset=utf-8");
 session_start();
+include "conf.php";
 
 ?>
 <html>
   <head>
-    <title>Where is ...</title>
+    <title><?=$title?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link id='layout_css' rel='stylesheet' href='inc/layout_landscape.css' type='text/css' />
 <script type='text/javascript' src='lib/php.default.min.js'></script>
@@ -46,6 +47,7 @@ if($event->data['status']=="current") {
   print "<form method='post'>\n";
   if(!isset($_SESSION['event_id'])) {
     print "<input type='submit' name='participate' value='An Ereignis teilnehmen'>\n";
+    print "<br>Damit stellst Du Deine Geo-Information zur Verfügung, damit die Ausdehnung der Critical Mass beobachtet werden kann.";
   }
   elseif($_SESSION['event_id']==$event->id) {
     print "<input type='submit' name='checkout' value='Von Ereignis abmelden'>\n";
