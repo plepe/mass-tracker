@@ -61,10 +61,14 @@ function resize() {
   if(!layout_css)
     layout_css=document.getElementById("layout_css");
 
-  if(window.innerWidth>window.innerHeight)
-    layout_css.href="inc/layout_landscape.css";
-  else
-    layout_css.href="inc/layout_portrait.css";
+  if(window.innerWidth>window.innerHeight) {
+    if(layout_css.href!="inc/layout_landscape.css")
+      layout_css.href="inc/layout_landscape.css";
+  }
+  else {
+    if(layout_css.href!="inc/layout_portrait.css")
+      layout_css.href="inc/layout_portrait.css";
+  }
 
 
   if(map)
