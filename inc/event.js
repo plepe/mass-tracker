@@ -10,6 +10,13 @@ var age_styles=[
   { strokeWidth: 3, strokeColor: '#440000', strokeOpacity: 0.6, strokeLinecap: 'round', graphicZIndex: 1 },
   { strokeWidth: 3, strokeColor: '#330000', strokeOpacity: 0.5, strokeLinecap: 'round', graphicZIndex: 0 },
 ];
+var pos_style={
+  externalGraphic: 'img/pos_cycle_red.png',
+  graphicWidth: 25,
+  graphicHeight: 25,
+  graphicXOffset: -13,
+  graphicYOffset: -13
+};
 
 function mass_event(id, data) {
   this.id=id;
@@ -74,7 +81,11 @@ mass_event.prototype.update_callback=function(data) {
     for(var i in this.features) {
       vector_layer.removeFeatures(this.features[i]);
     }
+  if(this.pos_features)
+    vector_layer.removeFeatures(this.pos_features);
+
   this.features=[];
+  this.pos_features=[];
 
   var current=new Date();
   current.setSeconds(current.getSeconds()+this.time_shift);
@@ -88,6 +99,7 @@ mass_event.prototype.update_callback=function(data) {
     var geo=[[], [], [], [], [], [], [], [], [], []];
     var last=null;
     var pos=null;
+    var last_age=null;
 
     for(var j=0; j<this.log[i].length; j++) {
       var timestamp=this.log[i][j].timestamp;
@@ -105,10 +117,15 @@ mass_event.prototype.update_callback=function(data) {
       var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
       geo[age_category].push(poi);
       last=poi;
+      last_age=age;
     }
 
-    if(pos)
+    if(pos&&(last_age<=30)) {
       center_pos.push(pos);
+
+      var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
+      this.pos_features.push(new OpenLayers.Feature.Vector(poi, 0, pos_style));
+    }
 
     this.features[i]=[];
     for(var j=0; j<geo.length; j++) {
@@ -118,6 +135,8 @@ mass_event.prototype.update_callback=function(data) {
 
     vector_layer.addFeatures(this.features[i]);
   }
+
+  vector_layer.addFeatures(this.pos_features);
 
   // calculate arithmetic center of all front positions and pan viewport there
   if(center_pos.length) {
