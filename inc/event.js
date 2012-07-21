@@ -154,4 +154,9 @@ mass_event.prototype.update_callback=function(data) {
 
     map.panTo(pos);
   }
+
+  var tracker_count=document.getElementById("tracker_count");
+  if(tracker_count) {
+    tracker_count.innerHTML=center_pos.length;
+  }
 }

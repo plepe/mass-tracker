@@ -66,6 +66,8 @@ elseif($event->data['status']=="past") {
   print "Das Ereignis ist bereits Geschichte.";
 }
 
+print "<br>Aktuelle Tracker: <span id='tracker_count'>0</span>\n";
+
 print "<p><a href='.'>Index</a>\n";
 if($may_edit) {
   print "<a href='event_edit.php?id={$event->id}'>Bearbeiten</a>\n";
