@@ -20,6 +20,16 @@ function gpx_date($date) {
   return $d->format("Y-m-d\TH:i:s\Z");
 }
 
+function gpx_timediff($date1, $date2) {
+  if($date1===null)
+    return 0;
+
+  $d1=new DateTime($date1);
+  $d2=new DateTime($date2);
+  $i=$d2->getTimestamp()-$d1->getTimestamp();
+  return $i;
+}
+
 print "<metadata>\n";
 if(isset($event->data['name'])&&($event->data['name']))
   print "  <name>{$event->data['name']}</name>\n";
@@ -54,6 +64,12 @@ while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
     print "  <name>{$elem['session_id']}</name>\n";
     print "  <trkseg>\n";
     $current_trk=$elem['session_id'];
+    $last_pt=null;
+  }
+
+  if(gpx_timediff($last_pt, $elem['timestamp'])>10) {
+    print "  </trkseg>\n";
+    print "  <trkseg>\n";
   }
 
   print "    <trkpt lat='{$elem['latitude']}' lon='{$elem['longitude']}'>\n";
@@ -61,6 +77,7 @@ while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
   $date=gpx_date($elem['timestamp']);
   print "      <time>{$date}</time>\n";
   print "    </trkpt>\n";
+  $last_pt=$elem['timestamp'];
 }
 
 if($current_trk!=null) {
