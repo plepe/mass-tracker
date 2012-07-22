@@ -72,6 +72,7 @@ print "<p><a href='.'>Index</a>\n";
 if($may_edit) {
   print "<a href='event_edit.php?id={$event->id}'>Bearbeiten</a>\n";
 }
+print "<a href='gpx.php?id={$event->id}'>Download as GPX</a>\n";
 
 ?>
 </div>
