@@ -1,5 +1,5 @@
 // configuration
-var gps_interval=10; // seconds
+var gps_interval=2; // seconds
 
 // globals
 var gps_object=null;
