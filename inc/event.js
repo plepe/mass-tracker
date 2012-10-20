@@ -1,29 +1,9 @@
-var age_styles=[
-  { strokeWidth: 3, strokeColor: '#ff0000', strokeOpacity: 1.0, strokeLinecap: 'round', graphicZIndex: 9 },
-  { strokeWidth: 3, strokeColor: '#ee0000', strokeOpacity: 0.9, strokeLinecap: 'round', graphicZIndex: 8 },
-  { strokeWidth: 3, strokeColor: '#dd0000', strokeOpacity: 0.9, strokeLinecap: 'round', graphicZIndex: 7 },
-  { strokeWidth: 3, strokeColor: '#cc0000', strokeOpacity: 0.8, strokeLinecap: 'round', graphicZIndex: 6 },
-  { strokeWidth: 3, strokeColor: '#aa0000', strokeOpacity: 0.8, strokeLinecap: 'round', graphicZIndex: 5 },
-  { strokeWidth: 3, strokeColor: '#990000', strokeOpacity: 0.7, strokeLinecap: 'round', graphicZIndex: 4 },
-  { strokeWidth: 3, strokeColor: '#770000', strokeOpacity: 0.7, strokeLinecap: 'round', graphicZIndex: 3 },
-  { strokeWidth: 3, strokeColor: '#660000', strokeOpacity: 0.6, strokeLinecap: 'round', graphicZIndex: 2 },
-  { strokeWidth: 3, strokeColor: '#440000', strokeOpacity: 0.6, strokeLinecap: 'round', graphicZIndex: 1 },
-  { strokeWidth: 3, strokeColor: '#330000', strokeOpacity: 0.5, strokeLinecap: 'round', graphicZIndex: 0 },
-];
-var pos_style={
-  externalGraphic: 'img/pos_cycle_red.png',
-  graphicWidth: 25,
-  graphicHeight: 25,
-  graphicXOffset: -13,
-  graphicYOffset: -13
-};
-
 function mass_event(id, data) {
   this.id=id;
   this.data=data;
 
   this.time_shift=0;
-  this.log={};
+  this.tracker={};
 
   this.update();
   window.setInterval(this.update.bind(this), 1000);
@@ -69,23 +49,13 @@ mass_event.prototype.update_callback=function(data) {
     if(i=="last_timestamp")
       continue;
 
-    if(!this.log[i])
-      this.log[i]=[];
+    if(!this.tracker[i])
+      this.tracker[i]=new tracker(i);
 
     for(var j=0; j<data[i].length; j++) {
-      this.log[i].push(data[i][j]);
+      this.tracker[i].push_point(data[i][j]);
     }
   }
-
-  if(this.features)
-    for(var i in this.features) {
-      vector_layer.removeFeatures(this.features[i]);
-    }
-  if(this.pos_features)
-    vector_layer.removeFeatures(this.pos_features);
-
-  this.features=[];
-  this.pos_features=[];
 
   var current=new Date();
   current.setSeconds(current.getSeconds()+this.time_shift);
@@ -93,62 +63,32 @@ mass_event.prototype.update_callback=function(data) {
   var status=document.getElementById("time");
   status.innerHTML=current.toString();
 
+  this.refresh(current);
+}
+
+mass_event.prototype.refresh=function(current) {
   var center_pos=[];
 
-  for(var i in this.log) {
-    var geo=[[], [], [], [], [], [], [], [], [], []];
-    var last=null;
-    var pos=null;
-    var last_age=null;
-
-    for(var j=0; j<this.log[i].length; j++) {
-      var timestamp=this.log[i][j].timestamp;
-      timestamp=timestamp.substr(0, 10)+"T"+timestamp.substr(11, 8)+"Z";
-
-      var age=(current.getTime()-new Date(timestamp).getTime())/1000;
-      var age_category=floor(age/60);
-
-      if(age>=600)
-	continue;
-      if(last&&(geo[age_category].length==0))
-	geo[age_category].push(poi);
-
-      pos = new OpenLayers.LonLat(this.log[i][j].longitude, this.log[i][j].latitude).transform(fromProjection, toProjection);
-      var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
-      geo[age_category].push(poi);
-      last=poi;
-      last_age=age;
-    }
-
-    if(pos&&(last_age<=30)) {
-      center_pos.push(pos);
-
-      var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
-      this.pos_features.push(new OpenLayers.Feature.Vector(poi, 0, pos_style));
-    }
-
-    this.features[i]=[];
-    for(var j=0; j<geo.length; j++) {
-      geo[j]=new OpenLayers.Geometry.LineString(geo[j]);
-      this.features[i][j]=new OpenLayers.Feature.Vector(geo[j], 0, age_styles[j]);
-    }
-
-    vector_layer.addFeatures(this.features[i]);
+  for(var i in this.tracker) {
+    this.tracker[i].refresh(current);
   }
 
-  vector_layer.addFeatures(this.pos_features);
-
   // calculate arithmetic center of all front positions and pan viewport there
-  if(center_pos.length) {
-    var pos={ lon: 0.0, lat: 0.0 };
+  var pos={ lon: 0.0, lat: 0.0 };
+  var center_count=0;
 
-    for(var i=0; i<center_pos.length; i++) {
-      pos.lon+=center_pos[i].lon;
-      pos.lat+=center_pos[i].lat;
+  for(var i in this.tracker) {
+    if(this.tracker[i].center_pos) {
+      pos.lon+=this.tracker[i].center_pos.lon;
+      pos.lat+=this.tracker[i].center_pos.lat;
+
+      center_count++;
     }
+  }
 
-    pos.lon=pos.lon/center_pos.length;
-    pos.lat=pos.lat/center_pos.length;
+  if(center_count>0) {
+    pos.lon=pos.lon/center_count;
+    pos.lat=pos.lat/center_count;
 
     pos = new OpenLayers.LonLat(pos.lon, pos.lat);
 
@@ -157,6 +97,6 @@ mass_event.prototype.update_callback=function(data) {
 
   var tracker_count=document.getElementById("tracker_count");
   if(tracker_count) {
-    tracker_count.innerHTML=center_pos.length;
+    tracker_count.innerHTML=center_count;
   }
 }
