@@ -36,7 +36,7 @@ function init() {
     resize();
 
     if(current_event) {
-      current_event.center_map();
+      current_event.init();
     }
     else {
       map.setCenter(new OpenLayers.LonLat(0, 0).transform(fromProjection, toProjection), 1);

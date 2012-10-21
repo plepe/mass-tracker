@@ -1,3 +1,13 @@
+var event_ui_form;
+var event_ui_form_def={
+  'view': {
+    'name':	"Ansicht",
+    'type':	'radio',
+    'values':	{ 'live': "Verlauf", 'full': "Gesamt" }
+  }
+};
+var event_ui_default={ 'view': 'live' };
+
 function mass_event(id, data) {
   this.id=id;
   this.data=data;
@@ -7,6 +17,21 @@ function mass_event(id, data) {
 
   this.update();
   window.setInterval(this.update.bind(this), 1000);
+}
+
+mass_event.prototype.init=function() {
+  current_event.center_map();
+
+  var event_ui_form_div=document.getElementById("event_ui_form");
+  if(event_ui_form_div) {
+    event_ui_form=new form("event_ui", event_ui_form_def);
+    event_ui_form.show(event_ui_form_div);
+    event_ui_form.set_data(event_ui_default);
+    event_ui_form.onchange=this.change_ui;
+  }
+}
+
+mass_event.prototype.change_ui=function() {
 }
 
 mass_event.prototype.set_date=function(new_date) {
