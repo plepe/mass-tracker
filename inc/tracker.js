@@ -11,7 +11,7 @@ var age_styles=[
   { strokeWidth: 3, strokeColor: 0.200, strokeOpacity: 0.5, strokeLinecap: 'round', graphicZIndex: 0 },
 ];
 var pos_style={
-  externalGraphic: 'img/pos_cycle_red.png',
+  externalGraphic: 'img_cycle.php?color=%',
   graphicWidth: 25,
   graphicHeight: 25,
   graphicXOffset: -13,
@@ -37,6 +37,13 @@ function tracker(id) {
 
     this.age_styles[i].strokeColor=color_mul(this.color, this.age_styles[i].strokeColor);
   }
+
+  this.pos_style={};
+  for(var j in pos_style)
+    this.pos_style[j]=pos_style[j];
+
+  this.pos_style.externalGraphic=
+    this.pos_style.externalGraphic.replace(/%/, this.color.substr(1));
 }
 
 tracker.prototype.push_point=function(point) {
@@ -81,7 +88,7 @@ tracker.prototype.refresh=function(current) {
     this.center_pos=pos;
 
     var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
-    this.pos_feature=new OpenLayers.Feature.Vector(poi, 0, pos_style);
+    this.pos_feature=new OpenLayers.Feature.Vector(poi, 0, this.pos_style);
   }
 
   for(var j=0; j<geo.length; j++) {
