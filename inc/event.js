@@ -17,6 +17,17 @@ function mass_event(id, data) {
 
   this.update();
   window.setInterval(this.update.bind(this), 1000);
+
+  this.begin_time=new Date(new Date(this.data.begin_time).getTime()-
+    this.data.timezone*60000);
+  this.end_time=new Date(new Date(this.data.end_time).getTime()-
+    this.data.timezone*60000);
+
+  this.current_time=new Date();
+  if(this.current_time>this.end_time)
+    this.set_date(this.end_time);
+  else if(this.current_time<this.begin_time)
+    this.set_date(this.begin_time);
 }
 
 mass_event.prototype.init=function() {
@@ -39,6 +50,9 @@ mass_event.prototype.set_date=function(new_date) {
   new_date=new Date(new_date);
   this.time_shift=floor((new_date.getTime()-new Date().getTime())/1000);
 
+  this.current_time=new Date();
+  this.current_time.setSeconds(this.current_time.getSeconds()+this.time_shift);
+
   // remove current last_timestamp and abort current xmlhttprequest
   if(this.request)
     this.request.request.abort();
@@ -59,6 +73,9 @@ mass_event.prototype.update=function() {
   if(this.time_shift)
     param.time_shift=this.time_shift;
   param.id=this.id;
+
+  this.current_time=new Date();
+  this.current_time.setSeconds(this.current_time.getSeconds()+this.time_shift);
 
   this.request=new ajax("event_map_update", param, null, this.update_callback.bind(this));
 }
@@ -82,13 +99,13 @@ mass_event.prototype.update_callback=function(data) {
     }
   }
 
-  var current=new Date();
-  current.setSeconds(current.getSeconds()+this.time_shift);
+  this.current_time=new Date();
+  this.current_time.setSeconds(this.current_time.getSeconds()+this.time_shift);
 
   var status=document.getElementById("time");
-  status.innerHTML=current.toString();
+  status.innerHTML=this.current_time.toString();
 
-  this.refresh(current);
+  this.refresh(this.current_time);
 }
 
 mass_event.prototype.refresh=function(current) {
