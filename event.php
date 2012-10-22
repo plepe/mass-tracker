@@ -36,6 +36,7 @@ if(isset($_REQUEST['checkout'])) {
     <div id='nav_zoomout' onClick='nav_zoomout()'>-</div>
   </div>
 </div>
+<div id='content_container'>
 <div id='content'>
 <div id='time'></div>
 <div id='status'>
@@ -76,6 +77,7 @@ if($may_edit) {
 print "<a href='gpx.php?id={$event->id}'>Download as GPX</a>\n";
 
 ?>
-</div>
+</div>  <!-- #container -->
+</div>  <!-- #content_container -->
   </body>
 </html>
