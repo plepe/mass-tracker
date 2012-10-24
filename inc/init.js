@@ -53,11 +53,17 @@ function init() {
 
   var displays=document.getElementById("displays");
 
-  var d=new Display("speed", { title: "Geschwindigkeit", unit: "km/h" });
+  var d=new Display("speed", { title: "Geschwindigkeit", unit: "km/h", format: "%.1f" });
   d.show(displays);
-  d.set_value(45.3);
+  d.set_value(45.32343542);
 
   var d=new Display("distance", { title: "Entfernung", unit: "km" });
+  d.show(displays);
+
+  var d=new Display("datetime", { title: "Zeit", unit: "", type: "datetime" });
+  d.show(displays);
+
+  var d=new Display("tracker_count", { title: "TrackerInnen", unit: "", type: "integer" });
   d.show(displays);
 
 }

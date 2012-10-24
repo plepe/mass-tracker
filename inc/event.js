@@ -125,8 +125,8 @@ mass_event.prototype.update_callback=function(data) {
   this.current_time=new Date();
   this.current_time.setSeconds(this.current_time.getSeconds()+this.time_shift);
 
-  var status=document.getElementById("time");
-  status.innerHTML=this.current_time.toString();
+  if(displays.datetime)
+    displays.datetime.set_value(this.current_time);
 
   this.refresh(this.current_time);
 }
@@ -160,8 +160,6 @@ mass_event.prototype.refresh=function(current) {
     map.panTo(pos);
   }
 
-  var tracker_count=document.getElementById("tracker_count");
-  if(tracker_count) {
-    tracker_count.innerHTML=center_count;
-  }
+  if(displays.tracker_count)
+    displays.tracker_count.set_value(center_count);
 }
