@@ -37,12 +37,14 @@ if(isset($_REQUEST['checkout'])) {
   </div>
 </div>
 <div id='content_container'>
+
 <div id='content'>
+<div id='title'><?=$event->data['name']?></div>
+
 <div id='time'></div>
 <div id='status'>
 <?
 
-print "<h1>{$event->data['name']}</h1>\n";
 $may_edit=false;
 if($event->data['status']=="current") {
   print "<form method='post'>\n";

@@ -28,3 +28,9 @@ body {
   -o-user-select: none;
   opacity: 0.6;
 }
+
+#title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.0em;
+  font-weight: bold;
+}
