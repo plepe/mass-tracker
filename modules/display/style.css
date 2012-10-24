@@ -1,0 +1,46 @@
+.displays:after {
+  content: '.';
+  display: block;
+  height: 0;
+  clear: left;
+  visibility: hidden;
+}
+
+.display {
+  border: 1px solid black;
+  float: left;
+  position: relative;
+  width: 5em;
+  height: 3.75em;
+  overflow: hidden;
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+}
+.display .title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.75em;
+  vertical-align: top;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.display .value {
+  font-family: Arial, Helvetica, sans-serif;
+  position: absolute;
+  vertical-align: top;
+  font-size: 2em;
+  top: 0.375em;
+}
+.display .value.numeric {
+  right: 0.125em;
+}
+.display .unit {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.75em;
+  position: absolute;
+  right: 0px;
+  text-align: right;
+  left: 0px;
+  bottom: 0px;
+  vertical-align: top;
+}
