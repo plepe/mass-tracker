@@ -50,6 +50,16 @@ function init() {
     if(form_data.get_data().timezone=="")
       form_data.set_data({ timezone: new Date().getTimezoneOffset() });
   }
+
+  var displays=document.getElementById("displays");
+
+  var d=new Display("speed", { title: "Geschwindigkeit", unit: "km/h" });
+  d.show(displays);
+  d.set_value(45.3);
+
+  var d=new Display("distance", { title: "Entfernung", unit: "km" });
+  d.show(displays);
+
 }
 
 function resize() {

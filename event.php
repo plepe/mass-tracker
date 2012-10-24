@@ -41,7 +41,7 @@ if(isset($_REQUEST['checkout'])) {
 <div id='content'>
 <div id='title'><?=$event->data['name']?></div>
 
-<div id='time'></div>
+<div id='displays' class='displays'></div>
 <div id='status'>
 <?
 
