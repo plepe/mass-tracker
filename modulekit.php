@@ -18,7 +18,12 @@ $include_js=array(
   "inc/init.js",
   "inc/event.js",
   "inc/tracker.js",
+
+  "lib/jquery.js",
+  "lib/jquery-ui.js",
 );
 $include_css=array(
   "inc/style.css",
+
+  "lib/jquery-ui.css",
 );

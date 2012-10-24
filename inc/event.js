@@ -40,6 +40,26 @@ mass_event.prototype.init=function() {
     event_ui_form.set_data(event_ui_default);
     event_ui_form.onchange=this.change_ui;
   }
+
+   $("#timeslider").slider({
+            sliderOptions: {
+                orientation: 'horizontal',
+	    },
+
+	    min: this.begin_time.getTime() / 1000,
+	    max: this.end_time.getTime() / 1000,
+	    value: this.current_time.getTime() / 1000,
+	    step: 1,
+
+	    create: function(event, ui) {
+	      this.slider=ui;
+	    }.bind(this),
+
+	    change: function(event, ui) {
+	      if(event.originalEvent)
+	        this.set_date(new Date(ui.value*1000));
+	    }.bind(this)
+	  });
 }
 
 mass_event.prototype.change_ui=function() {
@@ -52,6 +72,7 @@ mass_event.prototype.set_date=function(new_date) {
 
   this.current_time=new Date();
   this.current_time.setSeconds(this.current_time.getSeconds()+this.time_shift);
+  $("#timeslider").slider('value', this.current_time.getTime()/1000);
 
   // remove current last_timestamp and abort current xmlhttprequest
   if(this.request)
@@ -78,6 +99,8 @@ mass_event.prototype.update=function() {
   this.current_time.setSeconds(this.current_time.getSeconds()+this.time_shift);
 
   this.request=new ajax("event_map_update", param, null, this.update_callback.bind(this));
+
+  $("#timeslider").slider('value', this.current_time.getTime()/1000);
 }
 
 mass_event.prototype.update_callback=function(data) {
