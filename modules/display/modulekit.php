@@ -12,5 +12,8 @@ $include=array(
   ),
   'js'=>array(
     'display.js',
+    'sprintf.js',
+    'strftime.js',
+    'setlocale.js',
   ),
 );

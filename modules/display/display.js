@@ -1,11 +1,24 @@
+var displays={};
+
 function Display(id, options) {
   this.id=id;
   this.options=options;
   if(!this.options)
     options={};
+
+  displays[id]=this;
 }
 
 Display.prototype.set_value=function(value) {
+  switch(this.options.type) {
+    case "datetime":
+      value=strftime("%H:%M", value.getTime()/1000);
+      break;
+    default:
+      if(this.options.format)
+	value=sprintf(this.options.format, value);
+  }
+
   if(this.value_node)
     this.value_node.innerHTML=value;
 }
@@ -23,7 +36,6 @@ Display.prototype.show=function(parentNode) {
   this.value_node=document.createElement("span");
   this.value_node.className="value numeric";
   this.div.appendChild(this.value_node);
-  this.value_node.innerHTML="25.3";
 
   var span=document.createElement("span");
   span.className="unit";
