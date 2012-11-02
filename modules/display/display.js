@@ -26,7 +26,7 @@ Display.prototype.set_value=function(value) {
 Display.prototype.show=function(parentNode) {
   this.div=document.createElement("div");
   this.div.id=this.id;
-  this.div.className="display";
+  this.div.className="display "+this.options.type;
 
   var span=document.createElement("span");
   span.className="title";
@@ -34,7 +34,7 @@ Display.prototype.show=function(parentNode) {
   span.innerHTML=this.options.title;
 
   this.value_node=document.createElement("span");
-  this.value_node.className="value numeric";
+  this.value_node.className="value ";
   this.div.appendChild(this.value_node);
 
   var span=document.createElement("span");

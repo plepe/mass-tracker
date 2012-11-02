@@ -7,40 +7,54 @@
 }
 
 .display {
-  border: 1px solid black;
-  float: left;
+  border-top: 0px;
+  border-bottom: 1px solid black;
+  min-height: 3em;
+  margin-right: 0em;
+  width: 100%;
   position: relative;
-  width: 5.5em;
-  height: 3.75em;
-  overflow: hidden;
-  margin-right: 0.5em;
-  margin-bottom: 0.5em;
 }
 .display .title {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.75em;
-  vertical-align: top;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5em;
+  vertical-align: middle;
+  left: 0.25em;
+  top: 0.45em;
+}
+.display .title:after {
+  content: ": ";
 }
 .display .value {
   font-family: Arial, Helvetica, sans-serif;
-  position: absolute;
-  vertical-align: top;
+  right: 0.125em;
   font-size: 2em;
-  top: 0.375em;
+  top: 0.175em;
+  right: 1.5em;
+  display: block;
+  position: absolute;
 }
 .display .value.numeric {
-  right: 0.125em;
 }
 .display .unit {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.75em;
   position: absolute;
-  right: 0px;
+  right: 0.5em;
   text-align: right;
   left: 0px;
-  bottom: 0px;
+  bottom: 1em;
   vertical-align: top;
+}
+
+.display.large {
+}
+.display.large .title {
+  position: static;
+  padding-left: 0.25em;
+}
+.display.large .value {
+  display: block;
+  padding-left: 1em;
+  position: static;
 }

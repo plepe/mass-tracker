@@ -66,6 +66,10 @@ function init() {
   var d=new Display("tracker_count", { title: "TrackerInnen", unit: "", type: "integer" });
   d.show(displays);
 
+  var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "large" });
+  d.show(displays);
+  d.set_value("<ul><li>Foo</li><li>Bar</li></ul>");
+
 }
 
 function resize() {
