@@ -1,6 +1,6 @@
 <?
 class Tracker {
-  function __construct($id=null) {
+  function __construct($event_id, $id=null) {
     if($id===null) {
       if(!isset($_SESSION['tracker_id'])) {
 	// Calculate an id for this tracker, based on the session_id
@@ -12,6 +12,7 @@ class Tracker {
 	$id=$_SESSION['tracker_id'];
     }
 
+    $this->event_id=$event_id;
     $this->id=$id;
   }
 }

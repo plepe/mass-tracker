@@ -5,7 +5,7 @@ function ajax_gps_submit() {
   if(!isset($_SESSION['event_id']))
     return;
 
-  $tracker=new Tracker();
+  $tracker=new Tracker($_SESSION['event_id']);
 
   $str=array(
     "'{$tracker->id}'",
