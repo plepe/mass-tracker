@@ -1,5 +1,5 @@
 create table gps_log (
-  session_id	varchar(32)	not null,
+  tracker_id	varchar(32)	not null,
   event_id	integer		null,
   timestamp	datetime	not null,
   longitude	float		not null,

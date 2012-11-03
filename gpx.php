@@ -51,19 +51,19 @@ $where[]="event_id='".sqlite_escape_string($_REQUEST['id'])."'";
 if(sizeof($where))
   $where="where ".implode(" and ", $where);
 
-$res=sqlite_query($db, "select * from gps_log $where order by session_id, timestamp asc");
+$res=sqlite_query($db, "select * from gps_log $where order by tracker_id, timestamp asc");
 $current_trk=null;
 while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
-  if($current_trk!=$elem['session_id']) {
+  if($current_trk!=$elem['tracker_id']) {
     if($current_trk!=null) {
       print "  </trkseg>\n";
       print "</trk>\n";
     }
 
     print "<trk>\n";
-    print "  <name>{$elem['session_id']}</name>\n";
+    print "  <name>{$elem['tracker_id']}</name>\n";
     print "  <trkseg>\n";
-    $current_trk=$elem['session_id'];
+    $current_trk=$elem['tracker_id'];
     $last_pt=null;
   }
 
