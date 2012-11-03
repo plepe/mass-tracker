@@ -5,15 +5,10 @@ function ajax_gps_submit() {
   if(!isset($_SESSION['event_id']))
     return;
 
-  if(!isset($_SESSION['tracker_id'])) {
-    // Calculate an id for this tracker, based on the session_id
-    $_SESSION['tracker_id']=base64_encode(md5(session_id(), true));
-    while(substr($_SESSION['tracker_id'], -1)=="=")
-      $_SESSION['tracker_id']=substr($_SESSION['tracker_id'], 0, -1);
-  }
+  $tracker=new Tracker();
 
   $str=array(
-    "'{$_SESSION['tracker_id']}'",
+    "'{$tracker->id}'",
     "'".sqlite_escape_string($_SESSION['event_id'])."'",
     "datetime('now')"
   );

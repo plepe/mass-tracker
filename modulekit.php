@@ -10,6 +10,7 @@ $include_php=array(
   "inc/gps.php",
   "inc/event.php",
   "inc/event_map.php",
+  "inc/tracker.php",
 );
 $include_js=array(
   "inc/functions.js",
