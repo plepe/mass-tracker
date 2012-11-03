@@ -23,3 +23,10 @@ create table mass_event (
   begin_latitude  float		null,
   begin_zoom	integer		null
 );
+
+create table tracker_data (
+  tracker_id	varchar(32)	not null,
+  event_id	integer		null,
+  timestamp	datetime	not null,
+  name		text		null
+);

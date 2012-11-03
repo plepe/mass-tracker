@@ -14,12 +14,33 @@ class Tracker {
 
     $this->event_id=$event_id;
     $this->id=$id;
+    $this->data=array();
   }
 
   function set_data($data) {
-    $this->data=$data;
+    global $db;
 
-    // TODO: save to database
+    foreach($data as $k=>$v)
+      $this->data[$k]=$v;
+
+    $str=array(
+      "'{$this->id}'",
+      "'".sqlite_escape_string($_SESSION['event_id'])."'",
+      "datetime('now')"
+    );
+
+    foreach(array("name") as $k) {
+      if(!$this->data[$k])
+	$str[]="null";
+      else
+	$str[]="'".sqlite_escape_string($this->data[$k])."'";
+    }
+
+    $str=implode(", ", $str);
+
+    sqlite_query($db, "insert into tracker_data values ($str)");
+
+    return $this->data;
   }
 }
 
@@ -48,7 +69,7 @@ function ajax_tracker_log() {
 
 function ajax_tracker_start($param) {
   $tracker=new Tracker($param['id']);
-  $tracker->set_data($param['tracker_data']);
+  $tracker->set_data(json_decode($param['tracker_data'], true));
   $_SESSION['event_id']=$param['id'];
 
   return array("tracker_id"=>$tracker->id);
