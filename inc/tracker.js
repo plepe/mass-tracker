@@ -21,9 +21,19 @@ var pos_style={
 var tracker_colors=[ "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#7FFF00" ];
 var tracker_colors_index=0;
 var this_tracker;
+var tracker_data_form={
+  'name': {
+    'name':	"Name",
+    'type':	'text'
+  },
+};
+var tracker_data_form_default={
+  'name': "Anonymous"
+};
 
 function tracker(id) {
   this.id=id;
+  this.data=null;
 
   this.log=[];
   this.color=tracker_colors[tracker_colors_index++];
@@ -47,11 +57,92 @@ function tracker(id) {
     this.pos_style.externalGraphic.replace(/%/, this.color.substr(1));
 }
 
+tracker.prototype.set_data=function(data) {
+  this.data=data;
+}
+
+tracker.prototype.show_form=function(dom) {
+  var data=this.data;
+  if(!data)
+    data=tracker_data_form_default;
+
+  this.form=new form("this_tracker_data", tracker_data_form);
+  this.form.show(dom);
+  this.form.set_data(data);
+}
+
 tracker.prototype.start_participate=function() {
+  var dom=document.createElement("form");
+
+  this.show_form(dom);
+
+  var input=document.createElement("input");
+  input.type="button";
+  input.value="Start Tracking!";
+  input.onclick=this.submit_participate.bind(this);
+  dom.appendChild(input);
+
+  this.display.set_value(dom);
+}
+
+tracker.prototype.submit_participate=function() {
+  var param={
+    'tracker_data': this.form.get_data(),
+    'id': current_event.id
+  };
+
+  ajax("tracker_start", param, this.submit_participate_callback.bind(this));
+  this.set_data(this.form.get_data());
+}
+
+tracker.prototype.submit_participate_callback=function(data) {
+  var input=document.createElement("input");
+  input.type="button";
+  input.value="X "+this.data.name;
+  input.onclick=this.edit_participate.bind(this);
+
+  this.display.set_value(input);
+}
+
+tracker.prototype.edit_participate=function() {
+  var dom=document.createElement("form");
+
+  this.show_form(dom);
+
+  var input=document.createElement("input");
+  input.type="button";
+  input.value="Speichere Einstellungen";
+  input.onclick=this.submit_participate.bind(this);
+  dom.appendChild(input);
+
+  var input=document.createElement("input");
+  input.type="button";
+  input.value="Stop Tracking!";
+  input.onclick=this.stop_participate.bind(this);
+  dom.appendChild(input);
+
+  this.display.set_value(dom);
+}
+
+tracker.prototype.stop_participate=function() {
+  var param={
+    'id': current_event.id
+  };
+
+  ajax("tracker_stop", param, this.stop_participate_callback.bind(this));
+}
+
+tracker.prototype.stop_participate_callback=function() {
+  var input=document.createElement("input");
+  input.type="button";
+  input.value="An Ereignis teilnehmen";
+  input.onclick=this.start_participate.bind(this);
+
+  this.display.set_value(input);
 }
 
 tracker.prototype.create_display=function(displays) {
-  this.display=new Display("this_tracker", { title: "Teilnahme", unit: "" });
+  this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
   this.display.show(displays);
 
   var input=document.createElement("input");

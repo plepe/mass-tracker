@@ -15,6 +15,12 @@ class Tracker {
     $this->event_id=$event_id;
     $this->id=$id;
   }
+
+  function set_data($data) {
+    $this->data=$data;
+
+    // TODO: save to database
+  }
 }
 
 function ajax_tracker_log() {
@@ -38,4 +44,19 @@ function ajax_tracker_log() {
   }
 
   return $ret;
+}
+
+function ajax_tracker_start($param) {
+  $tracker=new Tracker($param['id']);
+  $tracker->set_data($param['tracker_data']);
+  $_SESSION['event_id']=$param['id'];
+
+  return array("tracker_id"=>$tracker->id);
+}
+
+function ajax_tracker_stop($param) {
+  $tracker=new Tracker($param['id']);
+  unset($_SESSION['event_id']);
+
+  return array("tracker_id"=>$tracker->id);
 }
