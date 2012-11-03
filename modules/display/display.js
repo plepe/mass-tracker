@@ -10,6 +10,21 @@ function Display(id, options) {
 }
 
 Display.prototype.set_value=function(value) {
+  // got a dom node/element?
+  if(value.nodeType) {
+    // remove current content
+    var current=this.value_node.firstChild;
+    while(current) {
+      var next=current.nextSibling;
+      this.value_node.removeChild(current);
+      current=next;
+    }
+
+    // append dom as only child
+    this.value_node.appendChild(value);
+    return;
+  }
+
   switch(this.options.type) {
     case "datetime":
       value=strftime("%H:%M", value.getTime()/1000);
