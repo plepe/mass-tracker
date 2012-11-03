@@ -47,11 +47,19 @@ function tracker(id) {
     this.pos_style.externalGraphic.replace(/%/, this.color.substr(1));
 }
 
+tracker.prototype.start_participate=function() {
+}
+
 tracker.prototype.create_display=function(displays) {
-  this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
+  this.display=new Display("this_tracker", { title: "Teilnahme", unit: "" });
   this.display.show(displays);
 
-  this.display.set_value("foobar");
+  var input=document.createElement("input");
+  input.type="button";
+  input.value="An Ereignis teilnehmen";
+  input.onclick=this.start_participate.bind(this);
+
+  this.display.set_value(input);
 }
 
 tracker.prototype.push_point=function(point) {
