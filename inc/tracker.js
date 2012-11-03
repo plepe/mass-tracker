@@ -20,6 +20,7 @@ var pos_style={
 };
 var tracker_colors=[ "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#7FFF00" ];
 var tracker_colors_index=0;
+var this_tracker;
 
 function tracker(id) {
   this.id=id;
@@ -44,6 +45,13 @@ function tracker(id) {
 
   this.pos_style.externalGraphic=
     this.pos_style.externalGraphic.replace(/%/, this.color.substr(1));
+}
+
+tracker.prototype.create_display=function(displays) {
+  this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
+  this.display.show(displays);
+
+  this.display.set_value("foobar");
 }
 
 tracker.prototype.push_point=function(point) {

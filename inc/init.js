@@ -70,6 +70,8 @@ function init() {
   d.show(displays);
   d.set_value("<ul><li>Foo</li><li>Bar</li></ul>");
 
+  this_tracker=new tracker(null);
+  this_tracker.create_display(displays);
 }
 
 function resize() {
