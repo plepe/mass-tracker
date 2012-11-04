@@ -17,8 +17,6 @@ var pos_style={
   graphicYOffset: -13,
   graphicZIndex: 10
 };
-var tracker_colors=[ "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#7FFF00" ];
-var tracker_colors_index=0;
 var this_tracker;
 var tracker_data_form={
   'name': {
@@ -42,20 +40,21 @@ var tracker_data_form_default={
 
 function tracker(id) {
   this.id=id;
-  this.data=null;
+  this.data=tracker_data_form_default;
 
   this.log=[];
-  this.color=tracker_colors[tracker_colors_index++];
-  if(tracker_colors_index>=tracker_colors_index.length)
-    tracker_colors_index=0;
 
+  this.update_style();
+}
+
+tracker.prototype.update_style=function() {
   this.age_styles=[];
   for(var i=0; i<age_styles.length; i++) {
     this.age_styles[i]={};
     for(var j in age_styles[i])
       this.age_styles[i][j]=age_styles[i][j];
 
-    this.age_styles[i].strokeColor=color_mul(this.color, this.age_styles[i].strokeColor);
+    this.age_styles[i].strokeColor=color_mul(this.data.color1, this.age_styles[i].strokeColor);
   }
 
   this.pos_style={};
@@ -63,6 +62,8 @@ function tracker(id) {
     this.pos_style[j]=pos_style[j];
 
   this.pos_style.externalGraphic=this.icon();
+
+  this.refresh();
 }
 
 tracker.prototype.format_name=function() {
@@ -81,13 +82,15 @@ tracker.prototype.format_name=function() {
 tracker.prototype.icon=function() {
   var ret='img_cycle.php?color=%';
 
-  ret=ret.replace(/%/, this.color.substr(1));
+  ret=ret.replace(/%/, urlencode(this.data.color1));
 
   return ret;
 }
 
 tracker.prototype.set_data=function(data) {
   this.data=data;
+
+  this.update_style();
 }
 
 tracker.prototype.show_form=function(dom) {

@@ -1,6 +1,6 @@
 <?
 $color="#000000";
-if(isset($_REQUEST['color'])&&preg_match("/^[0-9A-F]{6}$/", $_REQUEST['color']))
+if(isset($_REQUEST['color'])&&preg_match("/^#[0-9A-Fa-f]{6}$/", $_REQUEST['color']))
   $color=$_REQUEST['color'];
 
 $tmpfile=tempnam("/tmp/", "pos_cycle");
