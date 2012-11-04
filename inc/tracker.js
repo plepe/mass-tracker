@@ -166,6 +166,10 @@ tracker.prototype.push_point=function(point) {
   this.log.push(point);
 }
 
+tracker.prototype.reset=function() {
+  this.log=[];
+}
+
 tracker.prototype.refresh=function(current) {
   if(this.features)
     vector_layer.removeFeatures(this.features);

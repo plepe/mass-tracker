@@ -83,6 +83,16 @@ mass_event.prototype.set_date=function(new_date) {
     this.request.request.abort();
   delete(this.last_timestamp);
 
+  // reset trackers
+  for(var i=0; this.tracker.length; i++)
+    this.tracker[i].reset();
+
+  // get list of (new) current trackers
+  var param={ "all": true };
+  if(this.time_shift)
+    param.time_shift=this.time_shift;
+  new ajax("get_trackers", param, null, this.update_callback.bind(this));
+
   // force update
   this.update();
 }
