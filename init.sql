@@ -28,5 +28,7 @@ create table tracker_data (
   tracker_id	varchar(32)	not null,
   event_id	integer		null,
   timestamp	datetime	not null,
-  name		text		null
+  name		text		null,
+  color1	text		null,
+  color2	text		null
 );

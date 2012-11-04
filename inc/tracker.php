@@ -1,4 +1,7 @@
 <?
+global $tracker_fields;
+$tracker_fields=array("name", "color1", "color2");
+
 class Tracker {
   function __construct($event_id, $id=null) {
     if($id===null) {
@@ -29,7 +32,8 @@ class Tracker {
       "datetime('now')"
     );
 
-    foreach(array("name") as $k) {
+    global $tracker_fields;
+    foreach($tracker_fields as $k) {
       if(!$this->data[$k])
 	$str[]="null";
       else
@@ -104,8 +108,10 @@ function tracker_update_send($ret, $param) {
 
   $res=sqlite_query($db, "select * from tracker_data $where order by tracker_id, timestamp asc");
   while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+    global $tracker_fields;
+
     $d=array();
-    foreach(array('name') as $k)
+    foreach($tracker_fields as $k)
       $d[$k]=$elem[$k];
 
     $ret[$elem['tracker_id']][]=array(

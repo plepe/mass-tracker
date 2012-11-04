@@ -25,9 +25,19 @@ var tracker_data_form={
     'name':	"Name",
     'type':	'text'
   },
+  'color1': {
+    'name':	"Farbe #1",
+    'type':	'text'
+  },
+  'color2': {
+    'name':	"Farbe #2",
+    'type':	'text'
+  }
 };
 var tracker_data_form_default={
-  'name': "Anonymous"
+  'name': "Anonymous",
+  'color1': "#ff0000",
+  'color2': "#000000"
 };
 
 function tracker(id) {
