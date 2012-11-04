@@ -62,8 +62,6 @@ tracker.prototype.update_style=function() {
     this.pos_style[j]=pos_style[j];
 
   this.pos_style.externalGraphic=this.icon();
-
-  this.refresh();
 }
 
 tracker.prototype.format_name=function() {
@@ -210,6 +208,9 @@ tracker.prototype.reset=function() {
 }
 
 tracker.prototype.refresh=function(current) {
+  if(!current)
+    current=current_event.current_time;
+
   if(this.features)
     vector_layer.removeFeatures(this.features);
   if(this.pos_feature)
@@ -231,6 +232,13 @@ tracker.prototype.refresh=function(current) {
     var age=(current.getTime()-new Date(timestamp).getTime())/1000;
     var age_category=floor(age/60);
 
+    if(this.log[j].tracker_data) {
+      this.set_data(this.log[j].tracker_data);
+
+      this.update_style();
+      // TODO: color trail in varying colors
+    }
+
     if((age>=600)||(age<0))
       continue;
     if(last&&(geo[age_category].length==0))
@@ -241,12 +249,6 @@ tracker.prototype.refresh=function(current) {
       var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
       geo[age_category].push(poi);
       last=poi;
-    }
-    if(this.log[j].tracker_data) {
-      this.data=this.log[j].tracker_data;
-
-      // TODO: update style
-      // TODO: color trail in varying colors
     }
 
     last_age=age;
