@@ -11,7 +11,6 @@ var age_styles=[
   { strokeWidth: 3, strokeColor: 0.200, strokeOpacity: 0.5, strokeLinecap: 'round', graphicZIndex: 0 },
 ];
 var pos_style={
-  externalGraphic: 'img_cycle.php?color=%',
   graphicWidth: 25,
   graphicHeight: 25,
   graphicXOffset: -13,
@@ -53,8 +52,7 @@ function tracker(id) {
   for(var j in pos_style)
     this.pos_style[j]=pos_style[j];
 
-  this.pos_style.externalGraphic=
-    this.pos_style.externalGraphic.replace(/%/, this.color.substr(1));
+  this.pos_style.externalGraphic=this.icon();
 }
 
 tracker.prototype.format_name=function() {
@@ -64,6 +62,14 @@ tracker.prototype.format_name=function() {
     ret=this.data.name;
   else
     ret="Anonymous";
+
+  return ret;
+}
+
+tracker.prototype.icon=function() {
+  var ret='img_cycle.php?color=%';
+
+  ret=ret.replace(/%/, this.color.substr(1));
 
   return ret;
 }
