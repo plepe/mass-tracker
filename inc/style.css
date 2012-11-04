@@ -5,6 +5,10 @@ body {
   top: 0px;
   bottom: 0px;
 }
+ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
 #nav {
   position: absolute;
   z-index: 10000;
@@ -35,4 +39,11 @@ body {
   font-weight: bold;
   border-bottom: 1px solid black;
   padding: 0.25em;
+}
+
+#tracker_list .value ul {
+  padding-left: 0px;
+}
+#tracker_list .value ul li {
+  list-style-type: none;
 }

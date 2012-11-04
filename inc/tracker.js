@@ -58,10 +58,12 @@ function tracker(id) {
 tracker.prototype.format_name=function() {
   var ret="";
 
+  ret+="<img src='"+this.icon()+"'> ";
+
   if(this.data&&this.data.name)
-    ret=this.data.name;
+    ret+=this.data.name;
   else
-    ret="Anonymous";
+    ret+="Anonymous";
 
   return ret;
 }
