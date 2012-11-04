@@ -62,6 +62,7 @@ tracker.prototype.update_style=function() {
     this.pos_style[j]=pos_style[j];
 
   this.pos_style.externalGraphic=this.icon();
+  this.pos_style.graphicTitle=this.data.name;
 }
 
 tracker.prototype.format_name=function() {
