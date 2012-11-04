@@ -80,9 +80,10 @@ tracker.prototype.format_name=function() {
 }
 
 tracker.prototype.icon=function() {
-  var ret='img_cycle.php?color=%';
+  var ret='img_cycle.php?color1=%color1%&color2=%color2%';
 
-  ret=ret.replace(/%/, urlencode(this.data.color1));
+  ret=ret.replace(/%color1%/, urlencode(this.data.color1));
+  ret=ret.replace(/%color2%/, urlencode(this.data.color2));
 
   return ret;
 }
