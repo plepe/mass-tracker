@@ -35,5 +35,7 @@ function ajax_event_map_update() {
 
   $ret['last_timestamp']=$last_timestamp;
 
+  call_hooks("update_send", &$ret, $param);
+
   return $ret;
 }

@@ -81,3 +81,38 @@ function ajax_tracker_stop($param) {
 
   return array("tracker_id"=>$tracker->id);
 }
+
+function tracker_update_send($ret, $param) {
+  global $db;
+
+  if(isset($param['time_shift'])) {
+    $now="'now', '{$param['time_shift']} second'";
+    $where[]="timestamp<datetime($now)";
+  }
+  else
+    $now="'now'";
+
+  if(isset($param['last_timestamp']))
+    $where[]="timestamp>'".sqlite_escape_string($param['last_timestamp'])."' and timestamp>datetime($now, '-10 minute')";
+  else
+    $where[]="timestamp>datetime($now, '-10 minute')";
+
+  if(sizeof($where))
+    $where="where ".implode(" and ", $where);
+
+  $res=sqlite_query($db, "select * from tracker_data $where order by tracker_id, timestamp asc");
+  while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+    $d=array();
+    foreach(array('name') as $k)
+      $d[$k]=$elem[$k];
+
+    $ret[$elem['tracker_id']][]=array(
+      'timestamp'=>$elem['timestamp'],
+      'tracker_data'=>$d,
+    );
+  }
+
+  return $ret;
+}
+
+register_hook("update_send", "tracker_update_send");
