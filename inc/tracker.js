@@ -129,12 +129,27 @@ tracker.prototype.submit_participate=function() {
 }
 
 tracker.prototype.submit_participate_callback=function(data) {
+  if(!this.id) {
+    // replace tracker with my id by my object
+    if(current_event.tracker[data.tracker_id]) {
+      this.log=current_event.tracker[data.tracker_id].log;
+      current_event.tracker[data.tracker_id].remove();
+      delete(current_event.tracker[data.tracker_id]);
+    }
+
+    // add my tracker to event
+    this.id=data.tracker_id;
+    current_event.tracker[this.id]=this;
+  }
+
   var input=document.createElement("input");
   input.type="button";
   input.value="X "+this.data.name;
   input.onclick=this.edit_participate.bind(this);
 
   this.display.set_value(input);
+
+  this.refresh();
 }
 
 tracker.prototype.edit_participate=function() {
@@ -252,4 +267,11 @@ tracker.prototype.refresh=function(current) {
   vector_layer.addFeatures(this.features);
   if(this.pos_feature)
     vector_layer.addFeatures([this.pos_feature]);
+}
+
+tracker.prototype.remove=function() {
+  if(this.features)
+    vector_layer.removeFeatures(this.features);
+  if(this.pos_feature)
+    vector_layer.removeFeatures([this.pos_feature]);
 }
