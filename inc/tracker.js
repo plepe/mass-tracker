@@ -188,7 +188,7 @@ tracker.prototype.refresh=function(current) {
     var age=(current.getTime()-new Date(timestamp).getTime())/1000;
     var age_category=floor(age/60);
 
-    if(age>=600)
+    if((age>=600)||(age<0))
       continue;
     if(last&&(geo[age_category].length==0))
       geo[age_category].push(poi);
