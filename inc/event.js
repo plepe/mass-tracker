@@ -142,10 +142,14 @@ mass_event.prototype.refresh=function(current) {
   var pos={ lon: 0.0, lat: 0.0 };
   var center_count=0;
 
+  var tracker_list=[];
+
   for(var i in this.tracker) {
     if(this.tracker[i].center_pos) {
       pos.lon+=this.tracker[i].center_pos.lon;
       pos.lat+=this.tracker[i].center_pos.lat;
+      if(this.tracker[i].data&&this.tracker[i].data.name)
+	tracker_list.push("<li>"+this.tracker[i].format_name()+"</li>");
 
       center_count++;
     }
@@ -162,4 +166,6 @@ mass_event.prototype.refresh=function(current) {
 
   if(displays.tracker_count)
     displays.tracker_count.set_value(center_count);
+  if(displays.tracker_list)
+    displays.tracker_list.set_value("<ul>\n"+tracker_list.join("\n")+"</ul>\n");
 }

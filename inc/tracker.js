@@ -57,6 +57,15 @@ function tracker(id) {
     this.pos_style.externalGraphic.replace(/%/, this.color.substr(1));
 }
 
+tracker.prototype.format_name=function() {
+  var ret="";
+
+  if(this.data&&this.data.name)
+    ret=this.data.name;
+
+  return ret;
+}
+
 tracker.prototype.set_data=function(data) {
   this.data=data;
 }
