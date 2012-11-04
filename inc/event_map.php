@@ -1,22 +1,22 @@
 <?
-function ajax_event_map_update() {
+function ajax_event_map_update($param) {
   global $db;
   $ret=array();
   $last_timestamp='';
 
-  if(isset($_REQUEST['time_shift'])) {
-    $now="'now', '{$_REQUEST['time_shift']} second'";
+  if(isset($param['time_shift'])) {
+    $now="'now', '{$param['time_shift']} second'";
     $where[]="timestamp<datetime($now)";
   }
   else
     $now="'now'";
 
-  if(isset($_REQUEST['last_timestamp']))
-    $where[]="timestamp>'".sqlite_escape_string($_REQUEST['last_timestamp'])."' and timestamp>datetime($now, '-10 minute')";
+  if(isset($param['last_timestamp']))
+    $where[]="timestamp>'".sqlite_escape_string($param['last_timestamp'])."' and timestamp>datetime($now, '-10 minute')";
   else
     $where[]="timestamp>datetime($now, '-10 minute')";
 
-  $where[]="event_id='".sqlite_escape_string($_REQUEST['id'])."'";
+  $where[]="event_id='".sqlite_escape_string($param['id'])."'";
 
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
