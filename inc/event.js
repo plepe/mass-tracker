@@ -28,6 +28,11 @@ function mass_event(id, data) {
     this.set_date(this.end_time);
   else if(this.current_time<this.begin_time)
     this.set_date(this.begin_time);
+
+  var param={ "all": true };
+  if(this.time_shift)
+    param.time_shift=this.time_shift;
+  new ajax("get_trackers", param, null, this.update_callback.bind(this));
 }
 
 mass_event.prototype.init=function() {

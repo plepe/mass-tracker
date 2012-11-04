@@ -94,6 +94,8 @@ function tracker_update_send($ret, $param) {
 
   if(isset($param['last_timestamp']))
     $where[]="timestamp>'".sqlite_escape_string($param['last_timestamp'])."' and timestamp>datetime($now, '-10 minute')";
+  elseif(isset($param['all'])&&$param['all'])
+     ;
   else
     $where[]="timestamp>datetime($now, '-10 minute')";
 
@@ -111,6 +113,14 @@ function tracker_update_send($ret, $param) {
       'tracker_data'=>$d,
     );
   }
+
+  return $ret;
+}
+
+function ajax_get_trackers($param) {
+  $ret=array();
+
+  tracker_update_send(&$ret, $param);
 
   return $ret;
 }
