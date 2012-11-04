@@ -184,10 +184,19 @@ tracker.prototype.refresh=function(current) {
     if(last&&(geo[age_category].length==0))
       geo[age_category].push(poi);
 
-    pos = new OpenLayers.LonLat(this.log[j].longitude, this.log[j].latitude).transform(fromProjection, toProjection);
-    var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
-    geo[age_category].push(poi);
-    last=poi;
+    if(this.log[j].latitude&&this.log[j].longitude) {
+      pos = new OpenLayers.LonLat(this.log[j].longitude, this.log[j].latitude).transform(fromProjection, toProjection);
+      var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
+      geo[age_category].push(poi);
+      last=poi;
+    }
+    if(this.log[j].tracker_data) {
+      this.data=this.log[j].tracker_data;
+
+      // TODO: update style
+      // TODO: color trail in varying colors
+    }
+
     last_age=age;
   }
 
