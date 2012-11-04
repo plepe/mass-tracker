@@ -62,6 +62,8 @@ tracker.prototype.format_name=function() {
 
   if(this.data&&this.data.name)
     ret=this.data.name;
+  else
+    ret="Anonymous";
 
   return ret;
 }

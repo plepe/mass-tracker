@@ -160,8 +160,7 @@ mass_event.prototype.refresh=function(current) {
     if(this.tracker[i].center_pos) {
       pos.lon+=this.tracker[i].center_pos.lon;
       pos.lat+=this.tracker[i].center_pos.lat;
-      if(this.tracker[i].data&&this.tracker[i].data.name)
-	tracker_list.push("<li>"+this.tracker[i].format_name()+"</li>");
+      tracker_list.push("<li>"+this.tracker[i].format_name()+"</li>");
 
       center_count++;
     }
