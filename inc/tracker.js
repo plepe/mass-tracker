@@ -40,7 +40,9 @@ var tracker_data_form_default={
 
 function tracker(id) {
   this.id=id;
-  this.data=tracker_data_form_default;
+  this.data={};
+  for(var i in tracker_data_form_default)
+    this.data[i]=tracker_data_form_default[i];
 
   this.log=[];
 
@@ -97,8 +99,11 @@ tracker.prototype.set_data=function(data) {
 
 tracker.prototype.show_form=function(dom) {
   var data=this.data;
-  if(!data)
-    data=tracker_data_form_default;
+  if(!data) {
+    data={};
+    for(var i in tracker_data_form_default)
+      data[i]=tracker_data_form_default[i];
+  }
 
   this.form=new form("this_tracker_data", tracker_data_form);
   this.form.show(dom);
