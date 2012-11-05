@@ -1,2 +1,4 @@
 <?
 $title="Mass Tracker";
+
+$modulekit_load=array("report");
