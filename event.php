@@ -1,7 +1,8 @@
-<?php include "modulekit/loader.php"; /* loads all php-includes */
+<?php
+include "conf.php";
+include "modulekit/loader.php"; /* loads all php-includes */
 Header("Content-Type: text/html; charset=utf-8");
 session_start();
-include "conf.php";
 
 ?>
 <html>

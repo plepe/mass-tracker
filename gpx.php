@@ -1,8 +1,9 @@
-<?php include "modulekit/loader.php"; /* loads all php-includes */
+<?php
+include "conf.php";
+include "modulekit/loader.php"; /* loads all php-includes */
 Header("Content-Type: application/octet-stream; charset=utf-8");
 Header("Content-Disposition: attachment; filename=\"event.gpx\"");
 session_start();
-include "conf.php";
 
 print "<"."?xml version='1.0' encoding='UTF-8' ?".">\n";
 ?>

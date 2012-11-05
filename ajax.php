@@ -1,4 +1,6 @@
-<?php include "modulekit/loader.php"; /* loads all php-includes */
+<?php
+include "conf.php";
+include "modulekit/loader.php"; /* loads all php-includes */
 session_start();
 
 ?>
