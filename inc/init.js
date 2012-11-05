@@ -72,6 +72,8 @@ function init() {
 
   this_tracker=new tracker(null);
   this_tracker.create_display(displays);
+
+  call_hooks("init", displays);
 }
 
 function resize() {
