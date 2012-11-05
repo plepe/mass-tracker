@@ -88,7 +88,9 @@ tracker.prototype.icon=function() {
 }
 
 tracker.prototype.set_data=function(data) {
-  this.data=data;
+  for(var i in data)
+    if(data[i])
+      this.data[i]=data[i];
 
   this.update_style();
 }
