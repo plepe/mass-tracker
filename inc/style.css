@@ -47,3 +47,6 @@ ul {
 #tracker_list .value ul li {
   list-style-type: none;
 }
+iframe.page {
+  border: none;
+}
