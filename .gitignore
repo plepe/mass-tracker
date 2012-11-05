@@ -1,3 +1,4 @@
 .*.swp
 /conf.php
 /db/
+/lib/
