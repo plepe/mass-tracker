@@ -33,7 +33,7 @@ function ajax_event_map_update($param) {
     );
   }
 
-  $ret['last_timestamp']=$last_timestamp;
+  $ret['last_timestamp']=gmdate("Y-m-d H:i:s");
 
   call_hooks("update_send", &$ret, $param);
 
