@@ -7,13 +7,15 @@ class Report {
 
   function save($post_data) {
     global $db;
+    global $ajax_timestamp;
+    $ajax_timestamp->setTimezone(new DateTimeZone('UTC'));
 
     $post_data=json_decode($post_data, true);
 
     $str=array(
       "'{$this->tracker->id}'",
       "'".sqlite_escape_string($this->event_id)."'",
-      "datetime('now')"
+      "'".$ajax_timestamp->format("Y-m-d H:i:s")."'",
     );
 
     foreach(array("longitude", "latitude", "comment", "file_data") as $k) {
