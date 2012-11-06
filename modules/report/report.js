@@ -16,7 +16,14 @@ function report_reset() {
   report_display.set_value("<input type='button' value='Berichte!' onClick='report_start()'>");
 }
 
-function Report() {
+function Report(elem) {
+  if(elem)
+    this.data=elem;
+  else
+    this.data={};
+}
+
+Report.prototype.show_form=function() {
   this.form_dom=document.createElement("form");
   this.form_dom.id="report_form";
   this.form_dom.onsubmit=this.save.bind(this);
@@ -43,6 +50,7 @@ Report.prototype.save=function() {
 
   report_display.set_value("Senden ...");
   ajax("report_save", param, JSON.stringify(data), this.save_callback.bind(this));
+  this.data=data;
 
   return false;
 }
@@ -51,8 +59,26 @@ Report.prototype.save_callback=function(data) {
   report_reset();
 }
 
+Report.prototype.show=function() {
+  alert(JSON.stringify(this.data, null, "  "));
+}
+
 function report_start() {
-  new Report();
+  new Report().show_form();
+}
+
+function report_receive(data) {
+  for(var tracker_id in data) {
+    for(var i=0; i<data[tracker_id].length; i++) {
+      var elem=data[tracker_id][i];
+
+      if(elem.type&&(elem.type=="report")) {
+	var report=new Report(elem);
+	report.show();
+      }
+    }
+  }
 }
 
 register_hook("init", report_init);
+register_hook("receive", report_receive);
