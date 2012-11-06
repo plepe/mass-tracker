@@ -16,7 +16,7 @@ class Report {
       "datetime('now')"
     );
 
-    foreach(array("comment", "file_data") as $k) {
+    foreach(array("longitude", "latitude", "comment", "file_data") as $k) {
       if(isset($post_data[$k])&&$post_data[$k])
 	$str[]="'".sqlite_escape_string($post_data[$k])."'";
       else

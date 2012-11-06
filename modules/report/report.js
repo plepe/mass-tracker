@@ -37,8 +37,12 @@ Report.prototype.save=function() {
   param.tracker_id=this_tracker.id;
   param.event_id=current_event.id;
 
+  var data=this.form.get_data();
+  data.latitude=gps_object.coords.latitude;
+  data.longitude=gps_object.coords.longitude;
+
   report_display.set_value("Senden ...");
-  ajax("report_save", param, JSON.stringify(this.form.get_data()), this.save_callback.bind(this));
+  ajax("report_save", param, JSON.stringify(data), this.save_callback.bind(this));
 
   return false;
 }

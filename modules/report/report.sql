@@ -2,6 +2,8 @@ create table report (
   tracker_id	varchar(32)	not null,
   event_id	integer		not null,
   timestamp	datetime	not null,
+  longitude	float		not null,
+  latitude	float		not null,
   comment	text		null,
   file_data	text		null
 );
