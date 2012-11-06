@@ -33,10 +33,18 @@ function Report() {
 }
 
 Report.prototype.save=function() {
+  var param={};
+  param.tracker_id=this_tracker.id;
+  param.event_id=current_event.id;
+
   report_display.set_value("Senden ...");
-  alert(JSON.stringify(this.form.get_data()));
+  ajax("report_save", param, JSON.stringify(this.form.get_data()), this.save_callback.bind(this));
 
   return false;
+}
+
+Report.prototype.save_callback=function(data) {
+  report_reset();
 }
 
 function report_start() {
