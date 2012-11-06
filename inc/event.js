@@ -122,6 +122,8 @@ mass_event.prototype.update_callback=function(data) {
 
   this.request=null;
 
+  call_hooks("receive", data);
+
   // push new points to list
   for(var i in data) {
     if(i=="last_timestamp")
