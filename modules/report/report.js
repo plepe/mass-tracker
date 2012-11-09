@@ -60,7 +60,16 @@ Report.prototype.save_callback=function(data) {
 }
 
 Report.prototype.show=function() {
-  alert(JSON.stringify(this.data, null, "  "));
+  this.popup=new OpenLayers.Popup.FramedCloud(
+    "popup",
+    new OpenLayers.LonLat(this.data.longitude, this.data.latitude)
+      .transform(fromProjection, toProjection),
+    null,
+    this.data.comment,
+    null,
+    true
+  );
+  map.addPopup(this.popup);
 }
 
 function report_start() {
