@@ -52,6 +52,9 @@
   font-size: 0.75em;
 }
 
+.display .expanded_hidden {
+  display: none;
+}
 .display .expanded {
   display: block;
   padding-top: 2.25em;

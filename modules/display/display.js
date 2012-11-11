@@ -50,6 +50,20 @@ Display.prototype.set_value=function(value, expanded_value) {
   }
 }
 
+Display.prototype.toggle_expanded=function() {
+  this.expanded_container.className=
+    (this.expanded_container.className=="expanded_hidden"?
+      "expanded":"expanded_hidden");
+}
+
+Display.prototype.show_expanded=function() {
+  this.expanded_container.className="expanded";
+}
+
+Display.prototype.hide_expanded=function() {
+  this.expanded_container.className="show_expanded";
+}
+
 Display.prototype.show=function(parentNode) {
   this.div=document.createElement("div");
   this.div.id=this.id;
@@ -58,6 +72,7 @@ Display.prototype.show=function(parentNode) {
   var container=document.createElement("span");
   container.className="title";
   this.div.appendChild(container);
+  container.onclick=this.toggle_expanded.bind(this);
 
   var span=document.createElement("span");
   container.appendChild(span);
@@ -81,8 +96,9 @@ Display.prototype.show=function(parentNode) {
   span.innerHTML=this.options.unit;
 
   var container=document.createElement("span");
-  container.className="expanded";
+  container.className="expanded_hidden";
   this.div.appendChild(container);
+  this.expanded_container=container;
 
   this.expanded_node=document.createElement("span");
   this.expanded_node.className="";
