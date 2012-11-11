@@ -7,6 +7,10 @@ session_start();
 ?>
 <html>
   <head>
+    <script type='text/javascript'>
+    // calculate client time offset
+    var client_time_offset=(new Date().getTime())-<?=time()?>*1000;
+    </script>
     <title><?=$title?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link id='layout_css' rel='stylesheet' href='inc/layout_landscape.css' type='text/css' />

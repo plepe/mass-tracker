@@ -22,5 +22,8 @@ function get_date(timestamp) {
 }
 
 function now() {
-  return new Date();
+  if(typeof client_time_offset == "undefined")
+    client_time_offset=0;
+
+  return new Date(new Date().getTime()-client_time_offset);
 }
