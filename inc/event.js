@@ -18,10 +18,8 @@ function mass_event(id, data) {
   this.update();
   window.setInterval(this.update.bind(this), 1000);
 
-  this.begin_time=new Date(new Date(this.data.begin_time).getTime()-
-    this.data.timezone*60000);
-  this.end_time=new Date(new Date(this.data.end_time).getTime()-
-    this.data.timezone*60000);
+  this.begin_time=get_date(this.data.begin_time);
+  this.end_time=get_date(this.data.end_time);
 
   this.current_time=new Date();
   if(this.current_time>this.end_time)
