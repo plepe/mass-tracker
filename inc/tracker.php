@@ -89,19 +89,7 @@ function ajax_tracker_stop($param) {
 function tracker_update_send($ret, $param) {
   global $db;
 
-  if(isset($param['time_shift'])) {
-    $now="'now', '{$param['time_shift']} second'";
-    $where[]="timestamp<datetime($now)";
-  }
-  else
-    $now="'now'";
-
-  if(isset($param['last_timestamp']))
-    $where[]="timestamp>'".sqlite_escape_string($param['last_timestamp'])."' and timestamp>datetime($now, '-10 minute')";
-  elseif(isset($param['all'])&&$param['all'])
-     ;
-  else
-    $where[]="timestamp>datetime($now, '-10 minute')";
+  $where=sql_where_timestamp($param);
 
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
