@@ -49,6 +49,23 @@ function tracker(id) {
   this.update_style();
 }
 
+tracker.prototype.cleanup=function() {
+  var newlog=[];
+  var current=current_event.current_time;
+
+  for(var j=0; j<this.log.length; j++) {
+    var timestamp=this.log[j].timestamp;
+    timestamp=timestamp.substr(0, 10)+"T"+timestamp.substr(11, 8)+"Z";
+
+    var age=(current.getTime()-new Date(timestamp).getTime())/1000;
+
+    if(age<=600)
+      newlog.push(this.log[j]);
+  }
+
+  this.log=newlog;
+}
+
 tracker.prototype.update_style=function() {
   this.age_styles=[];
   for(var i=0; i<age_styles.length; i++) {

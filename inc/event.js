@@ -17,6 +17,7 @@ function mass_event(id, data) {
 
   this.update();
   window.setInterval(this.update.bind(this), 1000);
+  window.setInterval(this.cleanup.bind(this), 10000);
 
   this.begin_time=get_date(this.data.begin_time);
   this.end_time=get_date(this.data.end_time);
@@ -68,6 +69,13 @@ mass_event.prototype.init=function() {
 }
 
 mass_event.prototype.change_ui=function() {
+}
+
+mass_event.prototype.cleanup=function() {
+  this.current_time=new Date(now().getTime()+this.time_shift*1000);
+
+  for(var i in this.tracker)
+    this.tracker[i].cleanup();
 }
 
 mass_event.prototype.set_date=function(new_date) {
