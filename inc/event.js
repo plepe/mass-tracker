@@ -81,8 +81,10 @@ mass_event.prototype.set_date=function(new_date) {
   $("#timeslider").slider('value', this.current_time.getTime()/1000);
 
   // remove current last_timestamp and abort current xmlhttprequest
-  if(this.request)
+  if(this.request) {
     this.request.request.abort();
+    this.request=null;
+  }
   delete(this.last_timestamp);
 
   // reset trackers
@@ -106,6 +108,13 @@ mass_event.prototype.center_map=function() {
 }
 
 mass_event.prototype.update=function() {
+  this.current_time=new Date(new Date().getTime()+this.time_shift*1000);
+  $("#timeslider").slider('value', this.current_time.getTime()/1000);
+
+  // last request still running -> ignore
+  if(this.request)
+    return;
+
   var param={};
   if(this.last_timestamp)
     param.last_timestamp=this.last_timestamp;
@@ -113,11 +122,7 @@ mass_event.prototype.update=function() {
     param.time_shift=this.time_shift;
   param.id=this.id;
 
-  this.current_time=new Date(new Date().getTime()+this.time_shift*1000);
-
   this.request=new ajax("update", param, null, this.update_callback.bind(this));
-
-  $("#timeslider").slider('value', this.current_time.getTime()/1000);
 }
 
 mass_event.prototype.update_callback=function(data) {
