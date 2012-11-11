@@ -192,8 +192,6 @@ mass_event.prototype.refresh=function(current) {
     map.panTo(pos);
   }
 
-  if(displays.tracker_count)
-    displays.tracker_count.set_value(center_count);
   if(displays.tracker_list)
-    displays.tracker_list.set_value("<ul>\n"+tracker_list.join("\n")+"</ul>\n");
+    displays.tracker_list.set_value(center_count, "<ul>\n"+tracker_list.join("\n")+"</ul>\n");
 }

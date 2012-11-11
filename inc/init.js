@@ -63,12 +63,8 @@ function init() {
   var d=new Display("datetime", { title: "Zeit", unit: "", type: "datetime" });
   d.show(displays);
 
-  var d=new Display("tracker_count", { title: "TrackerInnen", unit: "", type: "integer" });
+  var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "integer", expanded_type: "html" });
   d.show(displays);
-
-  var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "large" });
-  d.show(displays);
-  d.set_value("<ul><li>Foo</li><li>Bar</li></ul>");
 
   this_tracker=new tracker(null);
   this_tracker.create_display(displays);

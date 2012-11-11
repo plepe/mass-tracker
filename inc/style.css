@@ -41,10 +41,10 @@ ul {
   padding: 0.25em;
 }
 
-#tracker_list .value ul {
+#tracker_list .expanded ul {
   padding-left: 0px;
 }
-#tracker_list .value ul li {
+#tracker_list .expanded ul li {
   list-style-type: none;
 }
 iframe.page {
