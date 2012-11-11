@@ -81,10 +81,10 @@ mass_event.prototype.cleanup=function() {
 mass_event.prototype.set_date=function(new_date) {
   // calc time_shift
   new_date=new Date(new_date);
-  this.time_shift=floor((new_date.getTime()-now().getTime())/1000);
+  this.time_shift=round((new_date.getTime()-now().getTime())/1000);
 
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
-  $("#timeslider").slider('value', this.current_time.getTime()/1000);
+  $("#timeslider").slider('value', round(this.current_time.getTime()/1000));
 
   // remove current last_timestamp and abort current xmlhttprequest
   if(this.request) {
@@ -114,8 +114,28 @@ mass_event.prototype.center_map=function() {
 }
 
 mass_event.prototype.update=function() {
+  var active=true;
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
+
+  // current time after end of event
+  if(this.end_time&&
+     (this.current_time.getTime()>this.end_time.getTime())) {
+    this.current_time=this.end_time;
+    active=false;
+  }
+
+  // not started yet
+  if(this.begin_time&&
+     (now().getTime()<this.begin_time.getTime())) {
+    active=false;
+  }
+
   $("#timeslider").slider('value', this.current_time.getTime()/1000);
+  if(displays.datetime)
+    displays.datetime.set_value(this.current_time);
+
+  if(!active)
+    return;
 
   // last request still running -> ignore
   if(this.request)
@@ -153,9 +173,6 @@ mass_event.prototype.update_callback=function(data) {
   }
 
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
-
-  if(displays.datetime)
-    displays.datetime.set_value(this.current_time);
 
   this.refresh(this.current_time);
 }
