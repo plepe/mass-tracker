@@ -1,7 +1,6 @@
 <?
-function ajax_event_map_update($param) {
+function event_map_update_send($ret, $param) {
   global $db;
-  $ret=array();
   $last_timestamp='';
 
   $where=sql_where_timestamp($param);
@@ -21,9 +20,7 @@ function ajax_event_map_update($param) {
     );
   }
 
-  $ret['last_timestamp']=gmdate("Y-m-d H:i:s");
-
-  call_hooks("update_send", &$ret, $param);
-
   return $ret;
 }
+
+register_hook("update_send", "event_map_update_send");

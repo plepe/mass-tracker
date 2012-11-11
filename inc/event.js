@@ -32,6 +32,8 @@ function mass_event(id, data) {
   var param={ "all": true };
   if(this.time_shift)
     param.time_shift=this.time_shift;
+  param.id=this.id;
+
   new ajax("get_trackers", param, null, this.update_callback.bind(this));
 }
 
@@ -91,6 +93,8 @@ mass_event.prototype.set_date=function(new_date) {
   var param={ "all": true };
   if(this.time_shift)
     param.time_shift=this.time_shift;
+  param.id=this.id;
+
   new ajax("get_trackers", param, null, this.update_callback.bind(this));
 
   // force update
@@ -111,7 +115,7 @@ mass_event.prototype.update=function() {
 
   this.current_time=new Date(new Date().getTime()+this.time_shift*1000);
 
-  this.request=new ajax("event_map_update", param, null, this.update_callback.bind(this));
+  this.request=new ajax("update", param, null, this.update_callback.bind(this));
 
   $("#timeslider").slider('value', this.current_time.getTime()/1000);
 }
