@@ -86,7 +86,7 @@ mass_event.prototype.set_date=function(new_date) {
   delete(this.last_timestamp);
 
   // reset trackers
-  for(var i=0; this.tracker.length; i++)
+  for(var i in this.tracker)
     this.tracker[i].reset();
 
   // get list of (new) current trackers
