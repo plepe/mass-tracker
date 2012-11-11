@@ -21,7 +21,7 @@ function mass_event(id, data) {
   this.begin_time=get_date(this.data.begin_time);
   this.end_time=get_date(this.data.end_time);
 
-  this.current_time=new Date();
+  this.current_time=now();
   if(this.current_time>this.end_time)
     this.set_date(this.end_time);
   else if(this.current_time<this.begin_time)
@@ -73,9 +73,9 @@ mass_event.prototype.change_ui=function() {
 mass_event.prototype.set_date=function(new_date) {
   // calc time_shift
   new_date=new Date(new_date);
-  this.time_shift=floor((new_date.getTime()-new Date().getTime())/1000);
+  this.time_shift=floor((new_date.getTime()-now().getTime())/1000);
 
-  this.current_time=new Date(new Date().getTime()+this.time_shift*1000);
+  this.current_time=new Date(now().getTime()+this.time_shift*1000);
   $("#timeslider").slider('value', this.current_time.getTime()/1000);
 
   // remove current last_timestamp and abort current xmlhttprequest
@@ -106,7 +106,7 @@ mass_event.prototype.center_map=function() {
 }
 
 mass_event.prototype.update=function() {
-  this.current_time=new Date(new Date().getTime()+this.time_shift*1000);
+  this.current_time=new Date(now().getTime()+this.time_shift*1000);
   $("#timeslider").slider('value', this.current_time.getTime()/1000);
 
   // last request still running -> ignore
@@ -144,7 +144,7 @@ mass_event.prototype.update_callback=function(data) {
     }
   }
 
-  this.current_time=new Date(new Date().getTime()+this.time_shift*1000);
+  this.current_time=new Date(now().getTime()+this.time_shift*1000);
 
   if(displays.datetime)
     displays.datetime.set_value(this.current_time);

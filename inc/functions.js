@@ -20,3 +20,7 @@ function get_date(timestamp) {
   timestamp=timestamp.substr(0, 10)+"T"+timestamp.substr(11)+"Z";
   return new Date(timestamp);
 }
+
+function now() {
+  return new Date();
+}
