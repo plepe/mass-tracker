@@ -232,6 +232,7 @@ tracker.prototype.refresh=function(current) {
   var last=null;
   var pos=null;
   var last_age=null;
+  var age_index=0;
 
   for(var j=0; j<this.log.length; j++) {
     var timestamp=this.log[j].timestamp;
@@ -249,17 +250,24 @@ tracker.prototype.refresh=function(current) {
 
     if((age>=600)||(age<0))
       continue;
-    if(last&&(geo[age_category].length==0))
-      geo[age_category].push(poi);
+    if(geo[age_category].length==0) {
+      geo[age_category].push([]);
+
+      if(last&&(last_age-age<=10))
+	geo[age_category][age_index].push(last);
+    }
 
     if(this.log[j].latitude&&this.log[j].longitude) {
       pos = new OpenLayers.LonLat(this.log[j].longitude, this.log[j].latitude).transform(fromProjection, toProjection);
       var poi=new OpenLayers.Geometry.Point(pos.lon, pos.lat);
-      geo[age_category].push(poi);
-      last=poi;
-    }
+      if((last_age)&&(last_age-age>10)) {
+	geo[age_category].push([]);
+      }
 
-    last_age=age;
+      geo[age_category][geo[age_category].length-1].push(poi);
+      last=poi;
+      last_age=age;
+    }
   }
 
   if(pos&&(last_age<=30)) {
@@ -270,8 +278,10 @@ tracker.prototype.refresh=function(current) {
   }
 
   for(var j=0; j<geo.length; j++) {
-    geo[j]=new OpenLayers.Geometry.LineString(geo[j]);
-    this.features[j]=new OpenLayers.Feature.Vector(geo[j], 0, this.age_styles[j]);
+    for(var k=0; k<geo[j].length; k++) {
+      geo[j][k]=new OpenLayers.Geometry.LineString(geo[j][k]);
+      this.features.push(new OpenLayers.Feature.Vector(geo[j][k], 0, this.age_styles[j]));
+    }
   }
 
   vector_layer.addFeatures(this.features);
