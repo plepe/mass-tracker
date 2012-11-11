@@ -47,14 +47,10 @@
   vertical-align: top;
 }
 
-.display.large {
-}
-.display.large .title {
-  position: static;
-  padding-left: 0.25em;
-}
-.display.large .value {
+.display .expanded {
   display: block;
+  padding-top: 1.75em;
   padding-left: 1em;
-  position: static;
+  font-size: 1.5em;
+  font-family: Arial, Helvetica, sans-serif;
 }

@@ -9,20 +9,21 @@ function Display(id, options) {
   displays[id]=this;
 }
 
-Display.prototype.set_value=function(value) {
-  // got a dom node/element?
-  if(value.nodeType) {
-    // remove current content
-    var current=this.value_node.firstChild;
-    while(current) {
-      var next=current.nextSibling;
-      this.value_node.removeChild(current);
-      current=next;
-    }
+Display.prototype.set_value=function(value, expanded_value) {
+  // remove current content
+  var current=(this.value_node?this.value_node.firstChild:null);
+  while(current) {
+    var next=current.nextSibling;
+    this.value_node.removeChild(current);
+    current=next;
+  }
 
-    // append dom as only child
-    this.value_node.appendChild(value);
-    return;
+  // remove current content
+  var current=(this.expanded_node?this.expanded_node.firstChild:null);
+  while(current) {
+    var next=current.nextSibling;
+    this.expanded_node.removeChild(current);
+    current=next;
   }
 
   switch(this.options.type) {
@@ -34,8 +35,19 @@ Display.prototype.set_value=function(value) {
 	value=sprintf(this.options.format, value);
   }
 
-  if(this.value_node)
-    this.value_node.innerHTML=value;
+  if(this.value_node&&value) {
+    if(value.nodeType)
+      this.value_node.appendChild(value);
+    else
+      this.value_node.innerHTML=value;
+  }
+
+  if(this.expanded_node&&expanded_value) {
+    if(value.nodeType)
+      this.expanded_node.appendChild(expanded_value);
+    else
+      this.expanded_node.innerHTML=expanded_value;
+  }
 }
 
 Display.prototype.show=function(parentNode) {
@@ -56,6 +68,10 @@ Display.prototype.show=function(parentNode) {
   span.className="unit";
   this.div.appendChild(span);
   span.innerHTML=this.options.unit;
+
+  this.expanded_node=document.createElement("span");
+  this.expanded_node.className="expanded ";
+  this.div.appendChild(this.expanded_node);
 
   if(parentNode)
     parentNode.appendChild(this.div);
