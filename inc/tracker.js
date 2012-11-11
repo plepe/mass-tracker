@@ -127,7 +127,7 @@ tracker.prototype.show_form=function(dom) {
   this.form.set_data(data);
 }
 
-tracker.prototype.start_participate=function() {
+tracker.prototype.show_start_participate=function() {
   var dom=document.createElement("form");
 
   this.show_form(dom);
@@ -138,7 +138,7 @@ tracker.prototype.start_participate=function() {
   input.onclick=this.submit_participate.bind(this);
   dom.appendChild(input);
 
-  this.display.set_value(dom);
+  this.display.set_value("Klicke hier!", dom);
 }
 
 tracker.prototype.submit_participate=function() {
@@ -165,17 +165,14 @@ tracker.prototype.submit_participate_callback=function(data) {
     current_event.tracker[this.id]=this;
   }
 
-  var input=document.createElement("input");
-  input.type="button";
-  input.value="X "+this.data.name;
-  input.onclick=this.edit_participate.bind(this);
-
-  this.display.set_value(input);
+  this.display.hide_expanded();
+  this.display.set_value(this.format_name());
+  this.show_edit_participate();
 
   this.refresh();
 }
 
-tracker.prototype.edit_participate=function() {
+tracker.prototype.show_edit_participate=function() {
   var dom=document.createElement("form");
 
   this.show_form(dom);
@@ -192,7 +189,7 @@ tracker.prototype.edit_participate=function() {
   input.onclick=this.stop_participate.bind(this);
   dom.appendChild(input);
 
-  this.display.set_value(dom);
+  this.display.set_value(null, dom);
 }
 
 tracker.prototype.stop_participate=function() {
@@ -204,24 +201,16 @@ tracker.prototype.stop_participate=function() {
 }
 
 tracker.prototype.stop_participate_callback=function() {
-  var input=document.createElement("input");
-  input.type="button";
-  input.value="An Ereignis teilnehmen";
-  input.onclick=this.start_participate.bind(this);
+  this.display.hide_expanded();
 
-  this.display.set_value(input);
+  this.show_start_participate();
 }
 
 tracker.prototype.create_display=function(displays) {
   this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
   this.display.show(displays);
 
-  var input=document.createElement("input");
-  input.type="button";
-  input.value="An Ereignis teilnehmen";
-  input.onclick=this.start_participate.bind(this);
-
-  this.display.set_value(input);
+  this.show_start_participate();
 }
 
 tracker.prototype.push_point=function(point) {
