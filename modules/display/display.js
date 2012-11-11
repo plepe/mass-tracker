@@ -55,23 +55,38 @@ Display.prototype.show=function(parentNode) {
   this.div.id=this.id;
   this.div.className="display "+this.options.type;
 
+  var container=document.createElement("span");
+  container.className="title";
+  this.div.appendChild(container);
+
   var span=document.createElement("span");
-  span.className="title";
-  this.div.appendChild(span);
+  container.appendChild(span);
   span.innerHTML=this.options.title;
 
+  var container=document.createElement("span");
+  container.className="value";
+  this.div.appendChild(container);
+
   this.value_node=document.createElement("span");
-  this.value_node.className="value ";
-  this.div.appendChild(this.value_node);
+  this.value_node.className="";
+  container.appendChild(this.value_node);
+
+  var container=document.createElement("span");
+  container.className="unit";
+  this.div.appendChild(container);
 
   var span=document.createElement("span");
-  span.className="unit";
-  this.div.appendChild(span);
+  span.className="";
+  container.appendChild(span);
   span.innerHTML=this.options.unit;
 
+  var container=document.createElement("span");
+  container.className="expanded";
+  this.div.appendChild(container);
+
   this.expanded_node=document.createElement("span");
-  this.expanded_node.className="expanded ";
-  this.div.appendChild(this.expanded_node);
+  this.expanded_node.className="";
+  container.appendChild(this.expanded_node);
 
   if(parentNode)
     parentNode.appendChild(this.div);
