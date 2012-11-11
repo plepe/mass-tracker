@@ -75,7 +75,6 @@ elseif($event->data['status']=="past") {
 }
 
 print "<div id='event_ui_form'></div>\n";
-print "<div id='timeslider_container'><div id='timeslider'></div></div>\n";
 print "<p><a href='.'>Index</a>\n";
 if($may_edit) {
   print "<a href='event_edit.php?id={$event->id}'>Bearbeiten</a>\n";

@@ -35,6 +35,27 @@ function init() {
 
     resize();
 
+    // Initialize Displays
+    var displays=document.getElementById("displays");
+
+    var d=new Display("speed", { title: "Geschwindigkeit", unit: "km/h", format: "%.1f" });
+    d.show(displays);
+    d.set_value(45.32343542);
+
+    var d=new Display("distance", { title: "Entfernung", unit: "km" });
+    d.show(displays);
+
+    var d=new Display("datetime", { title: "Zeit", unit: "", type: "datetime", expanded_type: "html" });
+    d.show(displays);
+    d.set_value(null, "<div id='timeslider_container'><div id='timeslider'></div></div>\n");
+
+    var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "integer", expanded_type: "html" });
+    d.show(displays);
+
+    this_tracker=new tracker(null);
+    this_tracker.create_display(displays);
+
+    // Initialize event
     if(current_event) {
       current_event.init();
     }
@@ -50,24 +71,6 @@ function init() {
     if(form_data.get_data().timezone=="")
       form_data.set_data({ timezone: new Date().getTimezoneOffset() });
   }
-
-  var displays=document.getElementById("displays");
-
-  var d=new Display("speed", { title: "Geschwindigkeit", unit: "km/h", format: "%.1f" });
-  d.show(displays);
-  d.set_value(45.32343542);
-
-  var d=new Display("distance", { title: "Entfernung", unit: "km" });
-  d.show(displays);
-
-  var d=new Display("datetime", { title: "Zeit", unit: "", type: "datetime" });
-  d.show(displays);
-
-  var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "integer", expanded_type: "html" });
-  d.show(displays);
-
-  this_tracker=new tracker(null);
-  this_tracker.create_display(displays);
 
   call_hooks("init", displays);
 }
