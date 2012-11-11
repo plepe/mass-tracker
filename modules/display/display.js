@@ -66,7 +66,7 @@ Display.prototype.show_expanded=function() {
 }
 
 Display.prototype.hide_expanded=function() {
-  this.expanded_container.className="show_expanded";
+  this.expanded_container.className="expanded_hidden";
 }
 
 Display.prototype.show=function(parentNode) {
