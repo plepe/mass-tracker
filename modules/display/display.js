@@ -86,6 +86,7 @@ Display.prototype.show=function(parentNode) {
   var container=document.createElement("span");
   container.className="value";
   this.div.appendChild(container);
+  container.onclick=this.toggle_expanded.bind(this);
 
   this.value_node=document.createElement("span");
   this.value_node.className="";
