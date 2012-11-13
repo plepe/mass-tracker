@@ -50,3 +50,11 @@ ul {
 iframe.page {
   border: none;
 }
+
+table.form td.field_value input[type="text"] {
+  display: block;
+  width: 100%;
+}
+table.form {
+  width: 100%;
+}
