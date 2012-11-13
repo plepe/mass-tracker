@@ -75,6 +75,9 @@ function resize() {
   if(!layout_css)
     layout_css=document.getElementById("layout_css");
 
+  if(!layout_css.href)
+    layout_css.href=null;
+
   if(window.innerWidth>window.innerHeight) {
     if(layout_css.href!="inc/layout_landscape.css")
       layout_css.href="inc/layout_landscape.css";
