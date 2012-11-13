@@ -163,12 +163,16 @@ tracker.prototype.show_start_participate=function() {
 
   var img=document.createElement("img");
   img.src=this.icon();
+  img.onload=function(img) {
+    img.className="loaded";
+  }.bind(this, img);
   div.appendChild(img);
 
   $("#this_tracker_data_color1 input").spectrum({
     clickoutFiresChange: true,
     move: function(img, c) {
       var data=this.form.get_data();
+      img.className="loading";
       img.src=this.icon(c.toHexString(true), data.color2);
     }.bind(this, img)
   });
@@ -177,6 +181,7 @@ tracker.prototype.show_start_participate=function() {
     clickoutFiresChange: true,
     move: function(img, c) {
       var data=this.form.get_data();
+      img.className="loading";
       img.src=this.icon(data.color1, c.toHexString(true));
     }.bind(this, img)
   });

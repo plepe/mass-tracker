@@ -61,3 +61,9 @@ table.form {
 #icon_preview {
   float: right;
 }
+#icon_preview img.loading {
+  opacity: 0.5;
+}
+#icon_preview img.loaded {
+  opacity: 1;
+}
