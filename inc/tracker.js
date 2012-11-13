@@ -128,6 +128,15 @@ tracker.prototype.show_form=function(dom) {
 }
 
 tracker.prototype.show_start_participate=function() {
+  if(current_event.begin_time.getTime()>now().getTime()) {
+    this.display.set_value("ab "+strftime("%H:%M", current_event.begin_time.getTime()/1000), "");
+    window.setTimeout(this.show_start_participate.bind(this),
+      current_event.begin_time.getTime()-now().getTime());
+    current_event.time_shift=0;
+
+    return;
+  }
+
   var dom=document.createElement("form");
 
   this.show_form(dom);
@@ -206,11 +215,24 @@ tracker.prototype.stop_participate_callback=function() {
   this.show_start_participate();
 }
 
+tracker.prototype.show_end_event=function() {
+  this.display.set_value("vorbei");
+}
+
 tracker.prototype.create_display=function(displays) {
   this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
   this.display.show(displays);
 
-  this.show_start_participate();
+  if(current_event.end_time.getTime()>now().getTime()) {
+    var x=current_event.end_time.getTime()-now().getTime();
+    window.setTimeout(this.show_end_event.bind(this),
+      x);
+
+    this.show_start_participate();
+  }
+  else {
+    this.show_end_event();
+  }
 }
 
 tracker.prototype.push_point=function(point) {
