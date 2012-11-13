@@ -28,6 +28,8 @@ Display.prototype.set_value=function(value, expanded_value) {
       this.expanded_node.removeChild(current);
       current=next;
     }
+
+    $(this.div).removeClass("has_expansion");
   }
 
   if(value)
@@ -52,6 +54,8 @@ Display.prototype.set_value=function(value, expanded_value) {
       this.expanded_node.appendChild(expanded_value);
     else
       this.expanded_node.innerHTML=expanded_value;
+
+    $(this.div).addClass("has_expansion");
   }
 }
 

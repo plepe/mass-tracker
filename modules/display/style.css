@@ -17,7 +17,7 @@
 .display .title {
   position: absolute;
   vertical-align: middle;
-  left: 0.25em;
+  left: 1.5em;
   top: 0.6em;
 }
 .display .title span {
@@ -68,9 +68,13 @@
 }
 
 .display .title span:before {
-  content: "\25b6";
-  margin-right: 0.25em;
+  content: " ";
+  position: absolute;
+  left: -0.75em;
 }
-.display.expanded .title span:before {
+.display.has_expansion .title span:before {
+  content: "\25b6";
+}
+.display.has_expansion.expanded .title span:before {
   content: "\25bc";
 }
