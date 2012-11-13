@@ -10,6 +10,11 @@ function Display(id, options) {
 }
 
 Display.prototype.set_value=function(value, expanded_value) {
+  if(typeof value == "undefined")
+    value=null;
+  if(typeof expanded_value == "undefined")
+    expanded_value=null;
+
   // remove current content
   if(value!==null) {
     var current=(this.value_node?this.value_node.firstChild:null);
@@ -21,7 +26,7 @@ Display.prototype.set_value=function(value, expanded_value) {
   }
 
   // remove current content
-  if(expanded_value!=null) {
+  if(expanded_value!==null) {
     var current=(this.expanded_node?this.expanded_node.firstChild:null);
     while(current) {
       var next=current.nextSibling;
@@ -42,14 +47,14 @@ Display.prototype.set_value=function(value, expanded_value) {
 	  value=sprintf(this.options.format, value);
     }
 
-  if(this.value_node&&value) {
+  if(this.value_node&&(value!==null)&&(value!=="")) {
     if(value.nodeType)
       this.value_node.appendChild(value);
     else
       this.value_node.innerHTML=value;
   }
 
-  if(this.expanded_node&&expanded_value) {
+  if(this.expanded_node&&(expanded_value!==null)&&(expanded_value!=="")) {
     if(expanded_value.nodeType)
       this.expanded_node.appendChild(expanded_value);
     else
