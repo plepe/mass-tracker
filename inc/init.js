@@ -38,12 +38,8 @@ function init() {
     // Initialize Displays
     var displays=document.getElementById("displays");
 
-    var d=new Display("speed", { title: "Geschwindigkeit", unit: "km/h", format: "%.1f" });
-    d.show(displays);
-    d.set_value(45.32343542);
-
-    var d=new Display("distance", { title: "Entfernung", unit: "km" });
-    d.show(displays);
+    this_tracker=new tracker(null);
+    this_tracker.create_display(displays);
 
     var d=new Display("datetime", { title: "Zeit", unit: "", type: "datetime", expanded_type: "html" });
     d.show(displays);
@@ -51,9 +47,6 @@ function init() {
 
     var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "integer", expanded_type: "html" });
     d.show(displays);
-
-    this_tracker=new tracker(null);
-    this_tracker.create_display(displays);
 
     // Initialize event
     if(current_event) {
