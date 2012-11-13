@@ -66,3 +66,11 @@
   font-size: 1.5em;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.display .title span:before {
+  content: "\25b6";
+  margin-right: 0.25em;
+}
+.display.expanded .title span:before {
+  content: "\25bc";
+}
