@@ -25,11 +25,11 @@ var tracker_data_form={
   },
   'color1': {
     'name':	"Farbe #1",
-    'type':	'text'
+    'type':	'color'
   },
   'color2': {
     'name':	"Farbe #2",
-    'type':	'text'
+    'type':	'color'
   }
 };
 var tracker_data_form_default={
@@ -148,6 +148,9 @@ tracker.prototype.show_start_participate=function() {
   dom.appendChild(input);
 
   this.display.set_value("Klicke hier!", dom);
+  $("input[type=color]").spectrum({
+    clickoutFiresChange: true
+  });
 }
 
 tracker.prototype.submit_participate=function() {

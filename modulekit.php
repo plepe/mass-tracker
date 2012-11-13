@@ -22,9 +22,11 @@ $include_js=array(
 
   "lib/jquery.js",
   "lib/jquery-ui.js",
+  "lib/spectrum/spectrum.js",
 );
 $include_css=array(
   "inc/style.css",
 
   "lib/jquery-ui.css",
+  "lib/spectrum/spectrum.css",
 );
