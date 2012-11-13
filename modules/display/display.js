@@ -56,17 +56,15 @@ Display.prototype.set_value=function(value, expanded_value) {
 }
 
 Display.prototype.toggle_expanded=function() {
-  this.expanded_container.className=
-    (this.expanded_container.className=="expanded_hidden"?
-      "expanded":"expanded_hidden");
+  $(this.div).toggleClass("expanded");
 }
 
 Display.prototype.show_expanded=function() {
-  this.expanded_container.className="expanded";
+  $(this.div).addClass("expanded");
 }
 
 Display.prototype.hide_expanded=function() {
-  this.expanded_container.className="expanded_hidden";
+  $(this.div).removeClass("expanded");
 }
 
 Display.prototype.show=function(parentNode) {
@@ -102,7 +100,7 @@ Display.prototype.show=function(parentNode) {
   span.innerHTML=this.options.unit;
 
   var container=document.createElement("span");
-  container.className="expanded_hidden";
+  container.className="expansion";
   this.div.appendChild(container);
   this.expanded_container=container;
 

@@ -53,16 +53,16 @@
   font-size: 0.75em;
 }
 
-.display .expanded_hidden {
+.display .expansion {
   display: none;
 }
-.display .expanded {
+.display.expanded .expansion {
   display: block;
   padding-top: 2.25em;
   padding-left: 2em;
   padding-bottom: 0.5em;
 }
-.display .expanded span {
+.display .expansion span {
   font-size: 1.5em;
   font-family: Arial, Helvetica, sans-serif;
 }
