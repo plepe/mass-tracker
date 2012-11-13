@@ -19,7 +19,7 @@ gps.prototype.update=function(lonlat) {
   this.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
 
   var current=now();
-  if((this.last_submit===null)||(current.getTime()>=this.last_submit.getTime()+gps_interval*1000)) {
+  if(this_tracker.participate&&((this.last_submit===null)||(current.getTime()>=this.last_submit.getTime()+gps_interval*1000))) {
     ajax("gps_submit", this.coords, null, this.update_callback.bind(this));
     this.last_submit=current;
   }

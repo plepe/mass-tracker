@@ -45,6 +45,7 @@ function tracker(id) {
     this.data[i]=tracker_data_form_default[i];
 
   this.log=[];
+  this.participate=false;
 
   this.update_style();
 }
@@ -194,6 +195,7 @@ tracker.prototype.submit_participate=function() {
     'id': current_event.id
   };
 
+  this.participate=true;
   ajax("tracker_start", param, this.submit_participate_callback.bind(this));
   this.set_data(this.form.get_data());
 }
@@ -244,6 +246,7 @@ tracker.prototype.stop_participate=function() {
     'id': current_event.id
   };
 
+  this.participate=true;
   ajax("tracker_stop", param, this.stop_participate_callback.bind(this));
 }
 
@@ -255,6 +258,7 @@ tracker.prototype.stop_participate_callback=function() {
 
 tracker.prototype.show_end_event=function() {
   this.display.set_value("vorbei");
+  this.participate=false;
 }
 
 tracker.prototype.create_display=function(displays) {
