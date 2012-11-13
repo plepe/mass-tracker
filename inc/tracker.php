@@ -5,14 +5,14 @@ $tracker_fields=array("name", "color1", "color2");
 class Tracker {
   function __construct($event_id, $id=null) {
     if($id===null) {
-      if(!isset($_SESSION['tracker_id'])) {
+      if((!isset($_SESSION['tracker_id']))||(!$_SESSION['tracker_id'])) {
 	// Calculate an id for this tracker, based on the session_id
 	$_SESSION['tracker_id']=base64_encode(md5(session_id(), true));
 	while(substr($_SESSION['tracker_id'], -1)=="=")
 	  $_SESSION['tracker_id']=substr($_SESSION['tracker_id'], 0, -1);
       }
-      else
-	$id=$_SESSION['tracker_id'];
+
+      $id=$_SESSION['tracker_id'];
     }
 
     $this->event_id=$event_id;
@@ -28,7 +28,7 @@ class Tracker {
 
     $str=array(
       "'{$this->id}'",
-      "'".sqlite_escape_string($_SESSION['event_id'])."'",
+      "'".sqlite_escape_string($this->event_id)."'",
       "datetime('now')"
     );
 
