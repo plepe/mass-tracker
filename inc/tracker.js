@@ -97,11 +97,16 @@ tracker.prototype.format_name=function() {
   return ret;
 }
 
-tracker.prototype.icon=function() {
+tracker.prototype.icon=function(color1, color2) {
   var ret='img_cycle.php?color1=%color1%&color2=%color2%';
 
-  ret=ret.replace(/%color1%/, urlencode(this.data.color1));
-  ret=ret.replace(/%color2%/, urlencode(this.data.color2));
+  if(!color1)
+    color1=this.data.color1;
+  if(!color2)
+    color2=this.data.color2;
+
+  ret=ret.replace(/%color1%/, urlencode(color1));
+  ret=ret.replace(/%color2%/, urlencode(color2));
 
   return ret;
 }
@@ -148,9 +153,34 @@ tracker.prototype.show_start_participate=function() {
   dom.appendChild(input);
 
   this.display.set_value("Klicke hier!", dom);
-  $("input[type=color]").spectrum({
-    clickoutFiresChange: true
+  var div=document.createElement("div");
+  div.id="icon_preview";
+  var inp=document.getElementById("this_tracker_data_color1");
+  inp.parentNode.insertBefore(div, inp.parentNode.firstChild);
+
+  var txt=document.createTextNode("Vorschau: ");
+  div.appendChild(txt);
+
+  var img=document.createElement("img");
+  img.src=this.icon();
+  div.appendChild(img);
+
+  $("#this_tracker_data_color1 input").spectrum({
+    clickoutFiresChange: true,
+    move: function(img, c) {
+      var data=this.form.get_data();
+      img.src=this.icon(c.toHexString(true), data.color2);
+    }.bind(this, img)
   });
+
+  $("#this_tracker_data_color2 input").spectrum({
+    clickoutFiresChange: true,
+    move: function(img, c) {
+      var data=this.form.get_data();
+      img.src=this.icon(data.color1, c.toHexString(true));
+    }.bind(this, img)
+  });
+
 }
 
 tracker.prototype.submit_participate=function() {

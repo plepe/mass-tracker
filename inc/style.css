@@ -58,3 +58,6 @@ table.form td.field_value input[type="text"] {
 table.form {
   width: 100%;
 }
+#icon_preview {
+  float: right;
+}
