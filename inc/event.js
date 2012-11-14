@@ -175,7 +175,7 @@ mass_event.prototype.update_callback=function(data) {
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
 
   this.refresh(this.current_time);
-  this.goto_position();
+  this.follow_visible();
 }
 
 mass_event.prototype.refresh=function(current) {
@@ -198,6 +198,77 @@ mass_event.prototype.refresh=function(current) {
     else
       displays.tracker_list.set_value(0, "");
   }
+}
+
+mass_event.prototype.follow_visible=function() {
+  var new_pos_list={};
+  var pos={ lon: 0.0, lat: 0.0 };
+  var move_list=[];
+  var center_count=0;
+  var bbox=map.calculateBounds();
+
+  // last_pos_list contains visible trackers from last time
+  if(!this.last_pos_list)
+    this.last_pos_list={};
+  // when we follow, what distance is there still to do
+  if(!this.follow_to_move)
+    this.follow_to_move={ lat: 0.0, lon: 0.0 };
+
+  for(var i in this.tracker) {
+    // if this tracker was visible last time, add to list of trackers we follow
+    if(this.last_pos_list[i]&&bbox.containsLonLat(this.last_pos_list[i])) {
+      if(this.tracker[i].center_pos)
+	move_list.push({
+	  lat: this.tracker[i].center_pos.lat-this.last_pos_list[i].lat,
+	  lon: this.tracker[i].center_pos.lon-this.last_pos_list[i].lon
+	});
+    }
+
+    if(this.tracker[i].center_pos) {
+      new_pos_list[i]=this.tracker[i].center_pos;
+    }
+  }
+
+  // if there are trackers we are following
+  if(move_list.length>0) {
+    var to_move={ lat: 0, lon: 0 };
+
+    // calculate average of their moves
+    for(var i=0; i<move_list.length; i++) {
+      to_move.lat+=move_list[i].lat;
+      to_move.lon+=move_list[i].lon;
+    }
+    to_move={
+      lat: to_move.lat/move_list.length,
+      lon: to_move.lon/move_list.length
+    };
+
+    // add to 'to do'-distance
+    this.follow_to_move.lat+=to_move.lat;
+    this.follow_to_move.lon+=to_move.lon;
+
+    // get center of map (center_*) and calculate new center
+    var center_ll=map.getCenter();
+    var center_poi=new OpenLayers.Geometry.Point(center_ll.lon, center_ll.lat);
+    var follow_poi=new OpenLayers.Geometry.Point(center_ll.lon, center_ll.lat);
+    follow_poi.move(this.follow_to_move.lon, this.follow_to_move.lat);
+    follow_ll=new OpenLayers.LonLat(follow_poi.x, follow_poi.y);
+    var center_px=map.getPixelFromLonLat(center_ll);
+    var follow_px=map.getPixelFromLonLat(follow_ll);
+
+    // calculate viewport distance from move (actually it's square)
+    var dist2=Math.pow(center_px.x-follow_px.x, 2)+
+              Math.pow(center_px.y-follow_px.y, 2);
+
+    // if move is more than 16px (square=256), move
+    if(dist2>256) {
+      map.panTo(follow_ll);
+      delete this.follow_to_move;
+    }
+  }
+
+  // remember current tracker positions
+  this.last_pos_list=new_pos_list;
 }
 
 mass_event.prototype.goto_position=function() {
