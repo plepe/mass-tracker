@@ -40,7 +40,7 @@ Display.prototype.set_value=function(value, expanded_value) {
   if(value)
     switch(this.options.type) {
       case "datetime":
-	value=strftime("%H:%M", value.getTime()/1000);
+	value=strftime("%H:%M:%S", value.getTime()/1000);
 	break;
       default:
 	if(this.options.format)
