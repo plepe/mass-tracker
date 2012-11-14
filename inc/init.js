@@ -33,6 +33,8 @@ function init() {
     vector_layer.setOpacity(0.7);
     map.addLayer(vector_layer);
 
+    map.events.register("moveend", map, call_hooks.bind(window, "map_moveend"));
+
     resize();
 
     // Initialize Displays

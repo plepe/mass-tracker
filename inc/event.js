@@ -34,6 +34,11 @@ function mass_event(id, data) {
   param.id=this.id;
 
   new ajax("get_trackers", param, null, this.update_callback.bind(this, true));
+
+  register_hook("map_moveend", function() {
+    delete this.follow_to_move;
+  }.bind(this), this);
+
 }
 
 mass_event.prototype.init=function() {
@@ -210,6 +215,13 @@ mass_event.prototype.follow_visible=function() {
   var move_list=[];
   var center_count=0;
   var bbox=map.calculateBounds();
+
+  // don't move map when it is being dragged and forget how much will still
+  // have to do
+  if(map.dragging) {
+    delete this.follow_to_move;
+    return;
+  }
 
   // last_pos_list contains visible trackers from last time
   if(!this.last_pos_list)
