@@ -59,11 +59,13 @@ elseif($event->data['status']=="coming_up") {
 }
 
 print "<div id='event_ui_form'></div>\n";
-print "<p><a href='.'>Index</a>\n";
+print "<div id='navigation'>\n";
+print "<a href='.'>Index</a>\n";
 if($may_edit) {
   print "<a href='event_edit.php?id={$event->id}'>Bearbeiten</a>\n";
 }
 print "<a href='gpx.php?id={$event->id}'>Download as GPX</a>\n";
+print "</div>\n";
 
 ?>
 </div>  <!-- #container -->
