@@ -52,25 +52,10 @@ if(isset($_REQUEST['checkout'])) {
 
 $may_edit=false;
 if($event->data['status']=="current") {
-  print "<form method='post'>\n";
-  if(!isset($_SESSION['event_id'])) {
-    print "<input type='submit' name='participate' value='An Ereignis teilnehmen'>\n";
-  }
-  elseif($_SESSION['event_id']==$event->id) {
-    print "<input type='submit' name='checkout' value='Von Ereignis abmelden'>\n";
-  }
-  else {
-    print "Sie nehmen bereits an einem anderen Ereignis teil.\n";
-  }
-  print "</form>\n";
   $may_edit=true;
 }
 elseif($event->data['status']=="coming_up") {
-  print "Das Ereignis startet erst.";
   $may_edit=true;
-}
-elseif($event->data['status']=="past") {
-  print "Das Ereignis ist bereits Geschichte.";
 }
 
 print "<div id='event_ui_form'></div>\n";
