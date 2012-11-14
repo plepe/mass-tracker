@@ -86,6 +86,10 @@ mass_event.prototype.cleanup=function() {
 mass_event.prototype.set_date=function(new_date) {
   // calc time_shift
   new_date=new Date(new_date);
+
+  if(new_date.getTime()>now().getTime())
+    new_date=now();
+
   this.time_shift=round((new_date.getTime()-now().getTime())/1000);
 
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
