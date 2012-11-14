@@ -1,10 +1,10 @@
 var event_ui_form;
 var event_ui_form_def={
-  'view': {
-    'name':	"Ansicht",
-    'type':	'radio',
-    'values':	{ 'live': "Verlauf", 'full': "Gesamt" }
-  }
+//  'view': {
+//    'name':	"Ansicht",
+//    'type':	'radio',
+//    'values':	{ 'live': "Verlauf", 'full': "Gesamt" }
+//  }
 };
 var event_ui_default={ 'view': 'live' };
 
