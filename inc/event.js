@@ -33,7 +33,7 @@ function mass_event(id, data) {
     param.time_shift=this.time_shift;
   param.id=this.id;
 
-  new ajax("get_trackers", param, null, this.update_callback.bind(this));
+  new ajax("get_trackers", param, null, this.update_callback.bind(this, true));
 }
 
 mass_event.prototype.init=function() {
@@ -103,17 +103,17 @@ mass_event.prototype.set_date=function(new_date) {
     param.time_shift=this.time_shift;
   param.id=this.id;
 
-  new ajax("get_trackers", param, null, this.update_callback.bind(this));
+  new ajax("get_trackers", param, null, this.update_callback.bind(this, true));
 
   // force update
-  this.update();
+  this.update(true);
 }
 
 mass_event.prototype.center_map=function() {
   map.setCenter(new OpenLayers.LonLat(this.data.begin_longitude, this.data.begin_latitude).transform(fromProjection, toProjection), this.data.begin_zoom);
 }
 
-mass_event.prototype.update=function() {
+mass_event.prototype.update=function(force) {
   var active=true;
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
 
@@ -148,10 +148,10 @@ mass_event.prototype.update=function() {
     param.time_shift=this.time_shift;
   param.id=this.id;
 
-  this.request=new ajax("update", param, null, this.update_callback.bind(this));
+  this.request=new ajax("update", param, null, this.update_callback.bind(this, force));
 }
 
-mass_event.prototype.update_callback=function(data) {
+mass_event.prototype.update_callback=function(force, data) {
   if(data.last_timestamp)
     this.last_timestamp=data.last_timestamp;
 
@@ -175,7 +175,11 @@ mass_event.prototype.update_callback=function(data) {
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
 
   this.refresh(this.current_time);
-  this.follow_visible();
+
+  if(force)
+    this.goto_position();
+  else
+    this.follow_visible();
 }
 
 mass_event.prototype.refresh=function(current) {
