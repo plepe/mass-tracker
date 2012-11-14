@@ -175,26 +175,39 @@ mass_event.prototype.update_callback=function(data) {
   this.current_time=new Date(now().getTime()+this.time_shift*1000);
 
   this.refresh(this.current_time);
+  this.goto_position();
 }
 
 mass_event.prototype.refresh=function(current) {
-  var center_pos=[];
-
   for(var i in this.tracker) {
     this.tracker[i].refresh(current);
   }
-
-  // calculate arithmetic center of all front positions and pan viewport there
-  var pos={ lon: 0.0, lat: 0.0 };
-  var center_count=0;
 
   var tracker_list=[];
 
   for(var i in this.tracker) {
     if(this.tracker[i].center_pos) {
+      tracker_list.push("<li>"+this.tracker[i].format_name()+"</li>");
+    }
+  }
+
+  // calculate arithmetic center of all front positions and pan viewport there
+  if(displays.tracker_list) {
+    if(tracker_list.length)
+      displays.tracker_list.set_value(tracker_list.length, "<ul>\n"+tracker_list.join("\n")+"</ul>\n");
+    else
+      displays.tracker_list.set_value(0, "");
+  }
+}
+
+mass_event.prototype.goto_position=function() {
+  var pos={ lon: 0.0, lat: 0.0 };
+  var center_count=0;
+
+  for(var i in this.tracker) {
+    if(this.tracker[i].center_pos) {
       pos.lon+=this.tracker[i].center_pos.lon;
       pos.lat+=this.tracker[i].center_pos.lat;
-      tracker_list.push("<li>"+this.tracker[i].format_name()+"</li>");
 
       center_count++;
     }
@@ -207,12 +220,5 @@ mass_event.prototype.refresh=function(current) {
     pos = new OpenLayers.LonLat(pos.lon, pos.lat);
 
     map.panTo(pos);
-  }
-
-  if(displays.tracker_list) {
-    if(center_count)
-      displays.tracker_list.set_value(center_count, "<ul>\n"+tracker_list.join("\n")+"</ul>\n");
-    else
-      displays.tracker_list.set_value(center_count, "");
   }
 }
