@@ -67,3 +67,6 @@ table.form {
 #icon_preview img.loaded {
   opacity: 1;
 }
+.note {
+  font-size: 0.5em;
+}

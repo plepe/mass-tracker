@@ -145,6 +145,12 @@ tracker.prototype.show_start_participate=function() {
 
   var dom=document.createElement("form");
 
+  var div=document.createElement("div");
+  div.className="note";
+  var note=document.createTextNode("Damit stellst Du Deine Geo-Information zur Verfügung, damit die Ausdehnung der Critical Mass beobachtet werden kann.");
+  div.appendChild(note);
+  dom.appendChild(div);
+
   this.show_form(dom);
 
   var input=document.createElement("input");

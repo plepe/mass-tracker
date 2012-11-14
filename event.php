@@ -55,7 +55,6 @@ if($event->data['status']=="current") {
   print "<form method='post'>\n";
   if(!isset($_SESSION['event_id'])) {
     print "<input type='submit' name='participate' value='An Ereignis teilnehmen'>\n";
-    print "<br>Damit stellst Du Deine Geo-Information zur Verfügung, damit die Ausdehnung der Critical Mass beobachtet werden kann.";
   }
   elseif($_SESSION['event_id']==$event->id) {
     print "<input type='submit' name='checkout' value='Von Ereignis abmelden'>\n";
