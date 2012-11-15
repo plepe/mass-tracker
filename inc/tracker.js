@@ -34,8 +34,8 @@ var tracker_data_form={
 };
 var tracker_data_form_default={
   'name': "Anonymous",
-  'color1': "#ff0000",
-  'color2': "#000000"
+  'color1': "#0000ff",
+  'color2': "#ffff00"
 };
 
 function tracker(id) {
