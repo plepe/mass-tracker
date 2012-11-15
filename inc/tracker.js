@@ -252,7 +252,7 @@ tracker.prototype.stop_participate=function() {
     'id': current_event.id
   };
 
-  this.participate=true;
+  this.participate=false;
   ajax("tracker_stop", param, this.stop_participate_callback.bind(this));
 }
 
