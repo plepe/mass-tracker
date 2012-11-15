@@ -32,6 +32,7 @@ gps.prototype.update=function(lonlat) {
 
   if(this_tracker.participate&&       // participating?
      (age<1000)&&                     // timestamp current?
+     (this.coords.accuracy<50)&&      // accuracy good enough
      ((this.last_submit===null)||     // never submitted?
       (current.getTime()>=this.last_submit.getTime()+gps_interval*1000))) { // not too often?
     ajax("gps_submit", this.coords, null, this.update_callback.bind(this));
