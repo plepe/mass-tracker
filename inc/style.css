@@ -84,3 +84,6 @@ table.form {
 #navigation a:hover {
   text-decoration: underline;
 }
+#debug pre {
+  font-size: 0.5em;
+}

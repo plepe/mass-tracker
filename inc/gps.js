@@ -29,6 +29,7 @@ gps.prototype.update=function(lonlat) {
 
   var current=now();
   var age=current.getTime()-new Date(this.coords.timestamp).getTime();
+  var sent=false;
 
   if(this_tracker.participate&&       // participating?
      (age<1000)&&                     // timestamp current?
@@ -37,7 +38,10 @@ gps.prototype.update=function(lonlat) {
       (current.getTime()>=this.last_submit.getTime()+gps_interval*1000))) { // not too often?
     ajax("gps_submit", this.coords, null, this.update_callback.bind(this));
     this.last_submit=current;
+    sent=true;
   }
+
+  displays.debug.set_value(null, "<pre>"+"Last submitted: "+this.last_submit+"\n"+JSON.stringify(this.coords, null, "  ")+"</pre>");
 
   if(this.vector) {
     vector_layer.removeFeatures([this.vector]);

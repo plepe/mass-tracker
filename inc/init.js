@@ -52,6 +52,9 @@ function init() {
     var d=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "integer", expanded_type: "html" });
     d.show(displays);
 
+    var d=new Display("debug", { title: "Debug", unit: "", type: "integer", expanded_type: "html" });
+    d.show(displays);
+
     // Initialize event
     if(current_event) {
       current_event.init();
