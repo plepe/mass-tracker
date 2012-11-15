@@ -19,7 +19,12 @@ gps.prototype.update_callback=function() {
 }
 
 gps.prototype.update=function(lonlat) {
-  this.coords=lonlat.coords;
+  // generate this.coords object from lonlat.coords
+  this.coords={};
+  for(var i in lonlat.coords)
+    this.coords[i]=lonlat.coords[i];
+  this.coords.timestamp=new Date(lonlat.timestamp).toISOString();
+
   this.pos=new OpenLayers.LonLat(lonlat.coords.longitude, lonlat.coords.latitude);
 
   var current=now();
