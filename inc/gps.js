@@ -8,7 +8,11 @@ function gps() {
   this.last_submit=null;
 
   if(navigator.geolocation)
-    this.watch=navigator.geolocation.watchPosition(this.update.bind(this));
+    this.watch=navigator.geolocation.watchPosition(
+      this.update.bind(this), null, {
+	enableHighAccuracy: true,
+	maximumAge: 1000, // no more than a second
+      });
 }
 
 gps.prototype.update_callback=function() {
