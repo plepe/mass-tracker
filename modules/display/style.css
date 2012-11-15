@@ -28,15 +28,15 @@
   content: ": ";
 }
 .display .value {
-  top: 0.3em;
-  right: 3em;
+  top: 0.6em;
+  right: 1.5em;
   display: block;
   position: absolute;
   background: rgba(255, 255, 255, 0.5);
 }
 .display .value span {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 .display .value.numeric {
 }
@@ -58,8 +58,9 @@
 }
 .display.expanded .expansion {
   display: block;
-  padding-top: 2.25em;
+  padding-top: 2.5em;
   padding-left: 2em;
+  padding-right: 2em;
   padding-bottom: 0.5em;
 }
 .display .expansion span {
