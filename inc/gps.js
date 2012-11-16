@@ -11,7 +11,7 @@ function gps() {
     this.watch=navigator.geolocation.watchPosition(
       this.update.bind(this), null, {
 	enableHighAccuracy: true,
-	maximumAge: 1000, // no more than a second
+	maximumAge: 1000 // no more than a second
       });
 }
 

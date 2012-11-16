@@ -54,7 +54,7 @@ mass_event.prototype.init=function() {
 
    $("#timeslider").slider({
             sliderOptions: {
-                orientation: 'horizontal',
+                orientation: 'horizontal'
 	    },
 
 	    min: this.begin_time.getTime() / 1000,

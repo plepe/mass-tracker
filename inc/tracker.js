@@ -326,6 +326,8 @@ tracker.prototype.refresh=function(current) {
 
     if((age>=600)||(age<0))
       continue;
+    if(!geo[age_category])
+      geo[age_category]=[[]];
     if(geo[age_category].length==0) {
       geo[age_category].push([]);
 
