@@ -2,8 +2,8 @@
 {{{
 git clone https://github.com/plepe/mass-tracker.git
 cd mass-tracker
-git submodules init
-git submodules update
+git submodule init
+git submodule update
 chmod 777 db
 }}}
 
@@ -15,3 +15,6 @@ Download the .tar.gz file and extract to lib/OpenLayers (so that lib/OpenLayers/
 * PHPJS
 From http://phpjs.org/ download the default package and place in lib/
 (so that lib/php.default.min.js points to the JavaScript file).
+
+* PHP5-SQLite
+Install (e.g. on Ubuntu 10.04) with 'apt-get install php5-sqlite'
