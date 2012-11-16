@@ -67,6 +67,10 @@ if($may_edit) {
 print "<a href='gpx.php?id={$event->id}'>Download as GPX</a>\n";
 print "</div>\n";
 
+print "<div id='footer'>\n";
+print "Mass-Tracker: AGPL 3.0, Stephan Plepelits 2012. Fork me on <a href='http://github.com/plepe/mass-tracker'>GitHub</a>.<br/>\n";
+print "Karte: CC-BY-SA 3.0 <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, Rendering: <a href='http://openstreetbrowser.org'>OpenStreetBrowser</a>.\n";
+print "</div>\n";
 ?>
 </div>  <!-- #container -->
 </div>  <!-- #content_container -->
