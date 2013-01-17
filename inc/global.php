@@ -1,12 +1,14 @@
 <?php
 if(!file_exists("db/sqlitedb")) {
-  $db = sqlite_open('db/sqlitedb');
-  sqlite_query($db, file_get_contents("init.sql"));
+  $db = new SQLite3('db/sqlitedb');
+  $db->query(file_get_contents("init.sql"));
 }
 else
-  $db = sqlite_open('db/sqlitedb');
+  $db = new SQLite3('db/sqlitedb');
 
 function sql_where_timestamp($param) {
+  global $db;
+
   if(isset($param['time_shift'])) {
     $now="'now', '{$param['time_shift']} second'";
     $where[]="timestamp<datetime($now)";
@@ -17,13 +19,13 @@ function sql_where_timestamp($param) {
   }
 
   if(isset($param['last_timestamp']))
-    $where[]="timestamp>='".sqlite_escape_string($param['last_timestamp'])."' and timestamp>=datetime($now, '-10 minute')";
+    $where[]="timestamp>='".$db->escapeString($param['last_timestamp'])."' and timestamp>=datetime($now, '-10 minute')";
   elseif(isset($param['all'])&&$param['all'])
     ;
   else
     $where[]="timestamp>=datetime($now, '-10 minute')";
 
-  $where[]="event_id='".sqlite_escape_string($param['id'])."'";
+  $where[]="event_id='".$db->escapeString($param['id'])."'";
 
   return $where;
 }
@@ -37,8 +39,8 @@ function ajax_update($param) {
   else
     $now="datetime('now')";
 
-  $res=sqlite_query($db, "select $now as last_timestamp");
-  $ret=sqlite_fetch_array($res, SQLITE_ASSOC);
+  $res=$db->query("select $now as last_timestamp");
+  $ret=$res->fetchArray(SQLITE3_ASSOC);
 
   call_hooks("update_send", &$ret, $param);
 

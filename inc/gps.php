@@ -9,18 +9,18 @@ function ajax_gps_submit() {
 
   $str=array(
     "'{$tracker->id}'",
-    "'".sqlite_escape_string($_SESSION['event_id'])."'",
+    "'".$db->escapeString($_SESSION['event_id'])."'",
     "datetime('now')"
   );
 
   foreach(array("longitude", "latitude", "altitude", "speed", "accuracy", "altitudeAccuracy", "heading") as $k) {
     if(isset($_REQUEST[$k])&&$_REQUEST[$k])
-      $str[]=sqlite_escape_string($_REQUEST[$k]);
+      $str[]=$db->escapeString($_REQUEST[$k]);
   }
 
   $str=implode(", ", $str);
 
-  sqlite_query($db, "insert into gps_log values ($str)");
+  $db->query("insert into gps_log values ($str)");
 
   return true;
 }

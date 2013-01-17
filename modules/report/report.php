@@ -18,20 +18,20 @@ class Report {
 
     $str=array(
       "'{$this->tracker->id}'",
-      "'".sqlite_escape_string($this->event_id)."'",
+      "'".$db->escapeString($this->event_id)."'",
       "'".$ajax_timestamp->format("Y-m-d H:i:s")."'",
     );
 
     foreach($report_fields as $k) {
       if(isset($post_data[$k])&&$post_data[$k])
-	$str[]="'".sqlite_escape_string($post_data[$k])."'";
+	$str[]="'".$db->escapeString($post_data[$k])."'";
       else
 	$str[]="null";
     }
 
     $str=implode(", ", $str);
 
-    sqlite_query($db, "insert into report values ($str)");
+    $db->query("insert into report values ($str)");
 
     return true;
   }
@@ -50,8 +50,8 @@ function report_update_send($ret, $param) {
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
 
-  $res=sqlite_query($db, "select * from report $where order by tracker_id, timestamp asc");
-  while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+  $res=$db->query("select * from report $where order by tracker_id, timestamp asc");
+  while($elem=$res->fetchArray(SQLITE3_ASSOC)) {
     global $report_fields;
 
     $d=array();

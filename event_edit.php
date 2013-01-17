@@ -63,7 +63,7 @@ if($form->is_complete()) {
   
   if($_REQUEST['id']) {
     $var[]="\"event_id\"";
-    $set[]="'".sqlite_escape_string($_REQUEST['id'])."'";
+    $set[]="'".$db->escapeString($_REQUEST['id'])."'";
   }
 
   foreach(array("begin_time", "end_time") as $k) {
@@ -80,13 +80,13 @@ if($form->is_complete()) {
 
   foreach(array("name", "description", "begin_time", "end_time", "timezone", "begin_longitude", "begin_latitude", "begin_zoom") as $k) {
     $var[]="\"$k\"";
-    $set[]="'".sqlite_escape_string($data[$k])."'";
+    $set[]="'".$db->escapeString($data[$k])."'";
   }
   $set=implode(", ", $set);
   $var=implode(", ", $var);
 
-  sqlite_query($db, "insert or replace into mass_event ($var) values ($set)");
-  $event=new mass_event(sqlite_last_insert_rowid($db));
+  $db->query("insert or replace into mass_event ($var) values ($set)");
+  $event=new mass_event($db->lastInsertRowID());
 
   Header("Location: event.php?id={$event->id}");
 }

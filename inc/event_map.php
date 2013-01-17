@@ -8,8 +8,8 @@ function event_map_update_send($ret, $param) {
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
 
-  $res=sqlite_query($db, "select * from gps_log $where order by tracker_id, timestamp asc");
-  while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+  $res=$db->query("select * from gps_log $where order by tracker_id, timestamp asc");
+  while($elem=$res->fetchArray(SQLITE3_ASSOC)) {
     if($elem['timestamp']>$last_timestamp)
       $last_timestamp=$elem['timestamp'];
 

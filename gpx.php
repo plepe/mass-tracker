@@ -47,14 +47,14 @@ $date=gpx_date($event->data['begin_time']);
 print "  <cmt>{$date}</cmt>\n";
 print "</wpt>\n";
 
-$where[]="event_id='".sqlite_escape_string($_REQUEST['id'])."'";
+$where[]="event_id='".$db->escapeString($_REQUEST['id'])."'";
 
 if(sizeof($where))
   $where="where ".implode(" and ", $where);
 
-$res=sqlite_query($db, "select * from gps_log $where order by tracker_id, timestamp asc");
+$res=$db->query("select * from gps_log $where order by tracker_id, timestamp asc");
 $current_trk=null;
-while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+while($elem=$res->fetchArray(SQLITE3_ASSOC)) {
   if($current_trk!=$elem['tracker_id']) {
     if($current_trk!=null) {
       print "  </trkseg>\n";

@@ -16,14 +16,14 @@ session_start();
   <body>
 <?
 function show_block($res, $title) {
-  if(!sqlite_num_rows($res))
-    return "";
+//  if(!$res->numRows())  TODO: there is no numRows() in SQLite3
+//    return "";
 
   $ret="";
   $ret.="<h2>$title</h2>\n";
 
   $ret.="<ul>\n";
-  while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+  while($elem=$res->fetchArray(SQLITE3_ASSOC)) {
     $ev=new mass_event($elem['event_id']);
     $ret.="<li>{$ev->index_info()}</li>\n";
   }
@@ -32,13 +32,13 @@ function show_block($res, $title) {
   return $ret;
 }
 
-$res=sqlite_query($db, "select * from mass_event where begin_time<=datetime('now') and end_time>datetime('now') order by begin_time asc");
+$res=$db->query("select * from mass_event where begin_time<=datetime('now') and end_time>datetime('now') order by begin_time asc");
 print show_block($res, "Aktuelle Ereignisse");
 
-$res=sqlite_query($db, "select * from mass_event where begin_time>datetime('now') order by begin_time asc limit 10");
+$res=$db->query("select * from mass_event where begin_time>datetime('now') order by begin_time asc limit 10");
 print show_block($res, "Kommende Ereignisse");
 
-$res=sqlite_query($db, "select * from mass_event where end_time<=datetime('now') order by end_time desc limit 10");
+$res=$db->query("select * from mass_event where end_time<=datetime('now') order by end_time desc limit 10");
 print show_block($res, "Letzte Ereignisse");
 
 print "<a href='event_edit.php'>Neues Ereignis anlegen</a>\n";

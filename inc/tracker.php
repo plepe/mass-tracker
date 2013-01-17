@@ -28,7 +28,7 @@ class Tracker {
 
     $str=array(
       "'{$this->id}'",
-      "'".sqlite_escape_string($this->event_id)."'",
+      "'".$db->escapeString($this->event_id)."'",
       "datetime('now')"
     );
 
@@ -37,12 +37,12 @@ class Tracker {
       if(!$this->data[$k])
 	$str[]="null";
       else
-	$str[]="'".sqlite_escape_string($this->data[$k])."'";
+	$str[]="'".$db->escapeString($this->data[$k])."'";
     }
 
     $str=implode(", ", $str);
 
-    sqlite_query($db, "insert into tracker_data values ($str)");
+    $db->query("insert into tracker_data values ($str)");
 
     return $this->data;
   }
@@ -51,13 +51,13 @@ class Tracker {
 function ajax_tracker_log() {
   $where=array();
 
-  $where[]="event_id='".sqlite_escape_string($_REQUEST['id'])."'";
+  $where[]="event_id='".$db->escapeString($_REQUEST['id'])."'";
 
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
 
-  $res=sqlite_query($db, "select * from gps_log $where order by tracker_id, timestamp asc");
-  while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+  $res=$db->query("select * from gps_log $where order by tracker_id, timestamp asc");
+  while($elem=$res->fetchArray(SQLITE3_ASSOC)) {
     if($elem['timestamp']>$last_timestamp)
       $last_timestamp=$elem['timestamp'];
 
@@ -94,8 +94,8 @@ function tracker_update_send($ret, $param) {
   if(sizeof($where))
     $where="where ".implode(" and ", $where);
 
-  $res=sqlite_query($db, "select * from tracker_data $where order by tracker_id, timestamp asc");
-  while($elem=sqlite_fetch_array($res, SQLITE_ASSOC)) {
+  $res=$db->query("select * from tracker_data $where order by tracker_id, timestamp asc");
+  while($elem=$res->fetchArray(SQLITE3_ASSOC)) {
     global $tracker_fields;
 
     $d=array();
