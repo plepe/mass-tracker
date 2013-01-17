@@ -3,6 +3,7 @@ include "conf.php";
 include "modulekit/loader.php"; /* loads all php-includes */
 Header("Content-Type: text/html; charset=utf-8");
 session_start();
+call_hooks("init");
 $body="";
 
 $form_def=array(
@@ -134,6 +135,7 @@ if(isset($event)) {
 <script type='text/javascript' src='lib/php.default.min.js'></script>
     <?php print modulekit_include_js(); /* prints all js-includes */ ?>
     <?php print modulekit_include_css(); /* prints all css-includes */ ?>
+    <?php print_add_html_headers(); ?>
   </head>
   <body>
 <?

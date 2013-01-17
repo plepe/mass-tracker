@@ -3,7 +3,7 @@ $name="Where is";
 
 $id="where_is";
 
-$depend=array("ajax", "form", "display", "lang", "base");
+$depend=array("lang", "ajax", "form", "display", "base");
 
 $include_php=array(
   "inc/global.php",
