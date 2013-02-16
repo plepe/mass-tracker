@@ -10,9 +10,10 @@ $form_def=array(
   'name'	=>array(
     'type'	=>"text",
     'name'	=>"Name",
+    'req'	=>true,
   ),
   'description'	=>array(
-    'type'	=>"text",
+    'type'	=>"textarea",
     'name'	=>"Beschreibung",
   ),
   'begin_time'	=>array(
@@ -36,8 +37,9 @@ $form_def=array(
     'name'	=>"Latitude Beginnort",
   ),
   'begin_zoom'	=>array(
-    'type'	=>"text",
+    'type'	=>"integer",
     'name'	=>"Default Zoom",
+    'default'	=>16,
   ),
 );
 
@@ -52,7 +54,7 @@ $form=new form("data", $form_def);
 
 if($form->errors()) {
   // $body.=errors
-  $body.="Errors in the form were found:";
+  $body.="Im Formular gibt es Fehler:";
   $body.=$form->show_errors();
 }
 

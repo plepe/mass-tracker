@@ -68,7 +68,7 @@ function init() {
 
   // Event Edit
   if(typeof form_data!="undefined") {
-    if(form_data.get_data().timezone=="")
+    if(form_data.get_data().timezone==null)
       form_data.set_data({ timezone: new Date().getTimezoneOffset() });
   }
 
