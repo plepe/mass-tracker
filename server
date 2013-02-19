@@ -9,6 +9,11 @@ var clients={};
 var webSocketServer=require('websocket').server;
 var http=require('http');
 
+var hooks=require('./modules/base/modules/hooks/hooks.js');
+var test=require('./server-test.js');
+test.register({hooks: hooks});
+hooks.call("server_init");
+
 var server=http.createServer(function(request, response) {
 });
 server.listen(config.port, function() {
@@ -40,18 +45,24 @@ function client(id, connection) {
   console.log((new Date())+" Connection "+id+" accepted");
 
   connection.on('message', function(message) {
+    var data=null;
+
     if(message.type==="utf8") {
       console.log((new Date())+" Received message from "+this.id);
-
       try {
-	var data=JSON.parse(message.utf8Data);
-	console.log(data);
+	data=JSON.parse(message.utf8Data);
       }
       catch(e) {
-	console.log("Message is not valid JSON: "+message.utf8Data);
+      }
+
+      if(data) {
+	hooks.call("message_received", data, this);
+
+	console.log(data);
       }
     }
-    else {
+
+    if(!data) {
       console.log((new Date())+" Illegal message received: ");
       console.log(message);
     }
