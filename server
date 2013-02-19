@@ -1,0 +1,62 @@
+#!/usr/bin/node
+// Code based on https://gist.github.com/martinsik/2031681
+
+"use strict";
+
+var config=require("./conf.js");
+var clients={};
+
+var webSocketServer=require('websocket').server;
+var http=require('http');
+
+var server=http.createServer(function(request, response) {
+});
+server.listen(config.port, function() {
+  console.log((new Date())+" HTTP server listening on port "+config.port);
+});
+
+var wsServer=new webSocketServer({
+  httpServer: server
+});
+
+var uniq_ids={};
+function uniq_id() {
+  var ret="";
+
+  do {
+    for(var i=0; i<4; i++)
+      ret+=String.fromCharCode(Math.floor(Math.random()*26)+65);
+  } while(uniq_ids[i]);
+
+  uniq_ids[ret]=true;
+
+  return ret;
+}
+
+wsServer.on('request', function(request) {
+  console.log((new Date())+" Connection from "+request.origin);
+
+  var connection=request.accept(null, request.origin);
+  var id=uniq_id();
+  clients[id]=connection;
+
+  console.log((new Date())+" Connection "+id+" accepted");
+
+  connection.sendUTF("Welcome");
+
+  connection.on('message', function(message) {
+    if(message.type==="utf8") {
+      console.log((new Date())+" Received message from "+id+": "+
+	message.utf8Data);
+    }
+    else {
+      console.log((new Date())+" Illegal message received: ");
+      console.log(message);
+    }
+  });
+
+  connection.on('close', function(connection) {
+    delete(clients[id]);
+    console.log((new Date())+" Connection "+id+" closed");
+  });
+});

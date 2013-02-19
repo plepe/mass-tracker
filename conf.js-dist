@@ -1,0 +1,5 @@
+var config={};
+
+config.port=6777; // C=67, M=77
+
+module.exports=config;

@@ -2,3 +2,5 @@
 $title="Mass Tracker";
 
 $modulekit_load=array("report");
+
+$websocket_url="ws://127.0.0.1:6777";
