@@ -40,11 +40,13 @@ function uniq_id() {
 
 function client(id, connection) {
   this.id=id;
+  this.connection=connection;
+
   clients[id]=this;
-  connection.sendUTF("Welcome");
+  this.connection.sendUTF("Welcome");
   console.log((new Date())+" Connection "+id+" accepted");
 
-  connection.on('message', function(message) {
+  this.connection.on('message', function(message) {
     var data=null;
 
     if(message.type==="utf8") {
@@ -68,7 +70,7 @@ function client(id, connection) {
     }
   }.bind(this));
 
-  connection.on('close', function(connection) {
+  this.connection.on('close', function() {
     delete(clients[this.id]);
     console.log((new Date())+" Connection "+this.id+" closed");
   }.bind(this));
