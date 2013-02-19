@@ -8,6 +8,34 @@ var clients={};
 
 var webSocketServer=require('websocket').server;
 var http=require('http');
+var fs=require('fs');
+
+var sqlite3=require('sqlite3');
+var db=new sqlite3.Database(config.database, function(error) {
+  if(error) {
+    console.log("Can't open SQLITE database: "+error.message);
+    process.exit(1);
+  }
+
+  db.exec("select * from mass_event", function(error) {
+    if(error) {
+      console.log("Database seems to be empty -> initializing");
+      fs.readFile("./init.sql", "utf8", function(error, text) {
+	if(error) {
+	  console.log("Error reading init.sql");
+	  process.exit(1);
+	}
+
+	db.exec(text, function(error) {
+	  if(error) {
+	    console.log("Error initializing database: "+error.message);
+	    process.exit(1);
+	  }
+	});
+      });
+    }
+  });
+});
 
 var hooks=require('./modules/base/modules/hooks/hooks.js');
 var test=require('./server-test.js');

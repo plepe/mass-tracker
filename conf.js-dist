@@ -2,4 +2,6 @@ var config={};
 
 config.port=6777; // C=67, M=77
 
+config.database="db/sqlitedb";
+
 module.exports=config;
