@@ -58,9 +58,16 @@ function client(id, connection) {
       }
 
       if(data) {
+	data.client=this.id;
+
 	hooks.call("message_received", data, this);
 
 	console.log(data);
+
+	for(var i in clients) {
+	  if(i!=this.id)
+	    clients[i].send(data);
+	}
       }
     }
 
@@ -74,6 +81,10 @@ function client(id, connection) {
     delete(clients[this.id]);
     console.log((new Date())+" Connection "+this.id+" closed");
   }.bind(this));
+}
+
+client.prototype.send=function(data) {
+  this.connection.sendUTF(JSON.stringify(data));
 }
 
 wsServer.on('request', function(request) {

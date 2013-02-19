@@ -18,7 +18,10 @@ function Connection(url) {
   }
 
   this.connection.onmessage=function(message) {
-    alert("message received: "+message.data);
+    var data=JSON.parse(message.data);
+
+    alert("message received:\n"+JSON.stringify(data, null, "  "));
+    console.log(message);
   }
 }
 
