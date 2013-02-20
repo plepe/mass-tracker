@@ -6,6 +6,7 @@ require "conf.php";
 <head>
 <script type='text/javascript' src='lib/jquery.js'></script>
 <script type='text/javascript' src='client.js'></script>
+<script type='text/javascript' src='inc/messages.js'></script>
 <script type='text/javascript'>
 var connection=new Connection("<?=$websocket_url?>");
 function client_send(text) {

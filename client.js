@@ -40,6 +40,8 @@ function Connection(url) {
       alert("message received:\n"+JSON.stringify(param, null, "  "));
     }
 
+    this.messages.receive(param);
+
     if(param.msg_num>this.max_msg_num) {
       this.max_msg_num=param.msg_num;
     }
