@@ -9,7 +9,7 @@ require "conf.php";
 <script type='text/javascript'>
 var connection=new Connection("<?=$websocket_url?>");
 function client_send(text) {
-  connection.send({ msg: text });
+  connection.send({ msg: text }, 'chat');
 }
 </script>
 </head>

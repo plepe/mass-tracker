@@ -75,34 +75,34 @@ function client(id, connection) {
   console.log((new Date())+" Connection "+id+" accepted");
 
   this.connection.on('message', function(message) {
-    var data=null;
+    var param=null;
 
     if(message.type==="utf8") {
       console.log((new Date())+" Received message from "+this.id);
       try {
-	data=JSON.parse(message.utf8Data);
+	param=JSON.parse(message.utf8Data);
       }
       catch(e) {
       }
 
-      if(data) {
-	data.client=this.id;
+      if(param) {
+	param.client=this.id;
 	var current_client=this;
 
-	db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, 'now', 'test', ?)",
-	    [ this.id, JSON.stringify(data) ], function(error) {
+	db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, ?, ?, ?)",
+	    [ this.id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
 	      if(error) {
 		console.log("Error inserting into database: "+error.message);
 	      }
 	      else {
-		data.msg_num=this.lastID;
-		current_client.db_callback_message(data, this);
+		param.msg_num=this.lastID;
+		current_client.db_callback_message(param, this);
 	      }
 	    });
       }
     }
 
-    if(!data) {
+    if(!param) {
       console.log((new Date())+" Illegal message received: ");
       console.log(message);
     }
@@ -114,14 +114,14 @@ function client(id, connection) {
   }.bind(this));
 }
 
-client.prototype.db_callback_message=function(data, row) {
-  hooks.call("message_received", data, this);
+client.prototype.db_callback_message=function(param, row) {
+  hooks.call("message_received", param, this);
 
-  console.log(data);
+  console.log(param);
 
   for(var i in clients) {
     if(i!=this.id)
-      clients[i].send(data);
+      clients[i].send(param);
   }
 }
 

@@ -14,7 +14,7 @@ function Connection(url) {
   this.connection.onopen=function() {
     alert("onopen called");
 
-    connection.send("Test message");
+    this.send("Test message");
   }
 
   this.connection.onmessage=function(message) {
@@ -25,6 +25,12 @@ function Connection(url) {
   }
 }
 
-Connection.prototype.send=function(data) {
-  this.connection.send(JSON.stringify(data));
+Connection.prototype.send=function(data, type) {
+  var param={
+    timestamp: new Date().toISOString(),
+    type: type,
+    data: data
+  };
+
+  this.connection.send(JSON.stringify(param));
 }
