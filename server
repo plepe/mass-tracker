@@ -122,6 +122,8 @@ client.prototype.db_callback_message=function(param, row) {
   for(var i in clients) {
     if(i!=this.id)
       clients[i].send(param);
+    else
+      clients[i].send({ ack: param.timestamp });
   }
 }
 

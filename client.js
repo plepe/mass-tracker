@@ -10,6 +10,7 @@ function Connection(url) {
   }
 
   this.connection=new WebSocket(url);
+  this.to_send=[];
 
   this.connection.onopen=function() {
     alert("onopen called");
@@ -20,9 +21,20 @@ function Connection(url) {
   this.connection.onmessage=function(message) {
     var data=JSON.parse(message.data);
 
-    alert("message received:\n"+JSON.stringify(data, null, "  "));
-    console.log(message);
-  }
+    if(data.ack) {
+      for(var i=0; i<this.to_send.length; i++) {
+	if(this.to_send[i].timestamp==data.ack) {
+          console.log('success');
+	  this.to_send.splice(i, 1);
+	  return;
+	}
+      }
+    }
+    else {
+      alert("message received:\n"+JSON.stringify(data, null, "  "));
+    }
+
+  }.bind(this);
 }
 
 Connection.prototype.send=function(data, type) {
@@ -32,5 +44,10 @@ Connection.prototype.send=function(data, type) {
     data: data
   };
 
+  this.to_send.push(param);
+
   this.connection.send(JSON.stringify(param));
+}
+
+Connection.prototype.check_to_send=function() {
 }
