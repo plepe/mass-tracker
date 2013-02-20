@@ -87,15 +87,18 @@ function client(id, connection) {
 
       if(data) {
 	data.client=this.id;
+	var current_client=this;
 
-	hooks.call("message_received", data, this);
-
-	console.log(data);
-
-	for(var i in clients) {
-	  if(i!=this.id)
-	    clients[i].send(data);
-	}
+	db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, 'now', 'test', ?)",
+	    [ this.id, JSON.stringify(data) ], function(error) {
+	      if(error) {
+		console.log("Error inserting into database: "+error.message);
+	      }
+	      else {
+		data.msg_num=this.lastID;
+		current_client.db_callback_message(data, this);
+	      }
+	    });
       }
     }
 
@@ -109,6 +112,17 @@ function client(id, connection) {
     delete(clients[this.id]);
     console.log((new Date())+" Connection "+this.id+" closed");
   }.bind(this));
+}
+
+client.prototype.db_callback_message=function(data, row) {
+  hooks.call("message_received", data, this);
+
+  console.log(data);
+
+  for(var i in clients) {
+    if(i!=this.id)
+      clients[i].send(data);
+  }
 }
 
 client.prototype.send=function(data) {
