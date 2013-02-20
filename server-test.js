@@ -1,5 +1,5 @@
-function server_test_received(data, client) {
-  data.foo="bar";
+function server_test_received(message, client) {
+  message.data.foo="bar";
 }
 
 module.exports.register=function(modules) {

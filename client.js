@@ -11,6 +11,8 @@ function Connection(url) {
 
   this.connection=new WebSocket(url);
   this.to_send=[];
+  this.max_msg_num=null;
+  this.messages=new Messages();
 
   this.connection.onopen=function() {
     alert("onopen called");
@@ -19,19 +21,27 @@ function Connection(url) {
   }
 
   this.connection.onmessage=function(message) {
-    var data=JSON.parse(message.data);
+    var param=JSON.parse(message.data);
 
-    if(data.ack) {
+    if(param.ack) {
       for(var i=0; i<this.to_send.length; i++) {
-	if(this.to_send[i].timestamp==data.ack) {
-          console.log('success');
+	if(this.to_send[i].timestamp==param.ack) {
+
+	  this.to_send[i].msg_num=param.msg_num;
+	  if('data' in param)
+	    this.to_send[i].data=param.data;
+
 	  this.to_send.splice(i, 1);
-	  return;
+	  break;
 	}
       }
     }
     else {
-      alert("message received:\n"+JSON.stringify(data, null, "  "));
+      alert("message received:\n"+JSON.stringify(param, null, "  "));
+    }
+
+    if(param.msg_num>this.max_msg_num) {
+      this.max_msg_num=param.msg_num;
     }
 
   }.bind(this);

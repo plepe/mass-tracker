@@ -86,7 +86,7 @@ function client(id, connection) {
       }
 
       if(param) {
-	param.client=this.id;
+	param.peer_id=this.id;
 	var current_client=this;
 
 	db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, ?, ?, ?)",
@@ -123,7 +123,11 @@ client.prototype.db_callback_message=function(param, row) {
     if(i!=this.id)
       clients[i].send(param);
     else
-      clients[i].send({ ack: param.timestamp });
+      clients[i].send({
+	ack: param.timestamp,
+	msg_num: param.msg_num,
+	data: param.data   // TODO: check for changed data
+      });
   }
 }
 
