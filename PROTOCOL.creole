@@ -1,0 +1,151 @@
+{{{
+          Server
+            |
+    +-------+-------+
+    |       |       |
+ Peer A   Peer B  Peer C
+}}}
+
+All peers gather information and pass them to the Server, which broadcasts the
+messages to the other peers.
+
+This is what a message looks like:
+
+{{{
+{
+  timestamp: '2013-02-20T15:19:11.943Z'   // ISO-8601 date (unique for a peer)
+  msg_num: 5,                             // set by server
+  peer_id: 'ABCD',                        // set by server
+  type: 'chat',
+  data: .....                             // payload
+}
+}}}
+
+The msg_num is an auto incremented value set by the server in order of arrival.
+They might not be in order of timestamp (even for a single peer). Clients may
+use the msg_num after re-connecting to request missing messages.
+
+When a peer sends a message to the server, the server responds with a message:
+{{{
+{
+  ack: '2013-02-20T15:19:11.943Z',        // timestamp of original message
+  msg_num: 5,
+  data: .....                             // optional, only when modified
+}
+}}}
+
+Therefore a peer may update its message with the msg_num.
+
+== Scenarios ==
+
+We have to consider the following scenarios:
+=== Live update ===
+Peer A has a message -> transmits to server -> broadcasts to peers B and C; give acknowledgement to peer A.
+
+=== Connection failure ===
+Peer A accumulates messages which were not yet sent to the server (or at least didn't get response about successful transmission). Furthermore broadcasts from the server do not reach peer A. Therefore, after re-connect, peer A needs to submit missing messages (Server can detect already received messages from the timestamp) and needs to request missing broadcasts (it knows the highest received msg_num and can continue from there).
+
+Re-sent messages should a a key 'resend' with value true, therefore Server can check for duplicate messages. Server should reply with an 'ack' message in any case.
+
+Request for missing messages:
+{{{
+{
+  request: 'all',
+  min_msg_num: 9                          // highest known msg_num
+}
+}}}
+
+Reply with messages msg_num > 9.
+
+=== Playback ===
+In 'Playback'-mode it's more advisable to request messages from timestamp.
+{{{
+{
+  request: 'all',
+  min_timestamp: '2013-02-20T15:19:11.943Z', // highest known timestamp
+  max_timestamp: '2013-02-20T15:30:11Z'      // up to (including) this timestamp
+}
+}}}
+
+Reply with messages > '2013-02-20T15:19:11.943Z' and <= '2013-02-20T15:30:11Z'
+
+=== Connect / Authentication ===
+Currently we do not define authentication.
+
+After connecting, Server sends a message to the peer:
+{{{
+{
+  type: 'welcome',
+  msg_num: 5,
+  timestamp: '2013-02-20T15:30:11Z',      // peer should syncronize it's clock
+  peer_id: 'ABCD'
+}
+}}}
+
+It also sends a message to the other peers:
+{{{
+{
+  type: 'connect',
+  msg_num: 5,
+  timestamp: '2013-02-20T15:30:11Z',
+  peer_id: 'ABCD'
+}
+}}}
+
+=== Disconnect ===
+When a client breaks the connection to the server, the server broadcasts a message to the peers:
+{{{
+{
+  type: 'disconnect',
+  msg_num: 5,
+  timestamp: '2013-02-20T15:30:11Z',
+  peer_id: 'ABCD'
+}
+}}}
+
+resp. the client may initiate a disconnect by sending:
+{{{
+{
+  type: 'disconnect',
+  timestamp: '2013-02-20T15:30:11Z',
+}
+}}}
+
+=== Connect / Playback ===
+When connecting we might need some messages, e.g. all messages of a specific type (e.g. Pictures taken) or the last messages of all peers of a specific type (e.g. Name changes). Therefore we define more requests:
+
+Request all messages of a specific type:
+{{{
+{
+  request: 'all',
+  type: 'chat'
+}
+}}}
+
+Request last messages of peers of a specific type:
+{{{
+  request: 'newest',
+  type: 'avatar'
+}}}
+
+Request last messages of peers of a specific type up to a timestamp:
+{{{
+  request: 'newest',
+  type: 'avatar',
+  max_timestamp: '2013-02-20T15:30:11Z'
+}}}
+
+=== Summary of request ===
+{{{
+{
+  request: 'all' or 'newest',             // see above
+  type: null or string,                   // filter for type
+  peer_id: null or string,                // filter for a peer
+  min_msg_num: null or integer,           // > min_msg_num
+  max_msg_num: null or integer,           // <= max_msg_num
+  min_timestamp: null or ISO-date,        // > min_timestamp
+  max_timestamp: null or ISO-date,        // <= max_timestamp
+}
+}}}
+
+A request may not contain filters for msg_num AND timestamp.
