@@ -93,7 +93,11 @@ function client(connection, request) {
 	// TODO: get peer_id of previous connection
 	if(clients[this.client_id]) {
 	  this.peer_id=clients[this.client_id].peer_id;
-	  clients[this.client_id].close();
+
+	  if(this!=clients[this.client_id]) {
+	    console.log("Replace connection");
+	    clients[this.client_id].close();
+	  }
 	}
 	else {
 	  if(peers[this.client_id])
