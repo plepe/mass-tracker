@@ -93,6 +93,7 @@ function client(connection, request) {
 	// TODO: get peer_id of previous connection
 	if(clients[this.client_id]) {
 	  this.peer_id=clients[this.client_id].peer_id;
+	  clients[this.client_id].close();
 	}
 	else {
 	  if(peers[this.client_id])
@@ -142,6 +143,11 @@ function client(connection, request) {
       }
     }
 
+    // Request for disconnect -> close connection to peer
+    if(param&&param.type=="disconnect") {
+      this.close();
+    }
+
     if(!param) {
       console.log((new Date())+" Illegal message received: ");
       console.log(message);
@@ -181,3 +187,7 @@ wsServer.on('request', function(request) {
   var connection=request.accept(null, request.origin);
   new client(connection, request);
 });
+
+client.prototype.close=function() {
+  this.connection.close();
+}

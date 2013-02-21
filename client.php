@@ -19,5 +19,6 @@ function client_send(data, type) {
 </head>
 <body>
 <input type='button' onclick='client_send({msg: "foobar"})' value='send'>
+<input type='button' onclick='client_send({}, "disconnect")' value='disconnect'>
 </body>
 </html>
