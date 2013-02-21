@@ -38,7 +38,7 @@ Connection.prototype.connect=function() {
       client_id: this.conf.client_id
     };
 
-    this.send(msg, 'hello');
+    this.send_raw({ type: 'hello', data: { client_id: this.conf.client_id }});
   }.bind(this);
 
   this.connection.onmessage=function(message) {
@@ -68,6 +68,13 @@ Connection.prototype.connect=function() {
 
 	this.conf.client_id=this.client_id;
 	this.set_cookie('mass_tracker', this.conf);
+
+	// Re-send queued messages
+	for(var i=0; i<this.to_send.length; i++) {
+	  this.to_send[i].resend=true;
+
+	  this.send_raw(this.to_send[i]);
+	}
       }
     }
 
@@ -94,6 +101,10 @@ Connection.prototype.send=function(data, type) {
 
   this.to_send.push(param);
 
+  this.send_raw(param);
+}
+
+Connection.prototype.send_raw=function(param) {
   console.log('SEND');
   console.log(param);
   this.connection.send(JSON.stringify(param));
