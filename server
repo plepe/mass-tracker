@@ -125,21 +125,11 @@ function client(connection, request) {
 
       if(param) {
 	param.peer_id=this.peer_id;
-	var current_client=this;
 
 	if(!('data' in param))
 	  param.data={};
 
-	db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, ?, ?, ?)",
-	    [ this.peer_id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
-	      if(error) {
-		console.log("Error inserting into database: "+error.message);
-	      }
-	      else {
-		param.msg_num=this.lastID;
-		current_client.db_callback_message(param, this);
-	      }
-	    });
+	this.broadcast(param);
       }
     }
 
@@ -157,6 +147,12 @@ function client(connection, request) {
   this.connection.on('close', function() {
     delete(clients[this.client_id]);
     console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" closed");
+
+    this.broadcast({
+      type: 'disconnect',
+      timestamp: new Date().toISOString(),
+      peer_id: this.peer_id
+    });
   }.bind(this));
 }
 
@@ -175,6 +171,24 @@ client.prototype.db_callback_message=function(param, row) {
 	data: param.data   // TODO: check for changed data
       });
   }
+}
+
+client.prototype.broadcast=function(param) {
+  var current_client=this;
+
+  if(!param.data)
+    param.data={};
+
+  db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, ?, ?, ?)",
+      [ this.peer_id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
+	if(error) {
+	  console.log("Error inserting into database: "+error.message);
+	}
+	else {
+	  param.msg_num=this.lastID;
+	  current_client.db_callback_message(param, this);
+	}
+      });
 }
 
 client.prototype.send=function(data) {
