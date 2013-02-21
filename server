@@ -66,13 +66,8 @@ function uniq_id() {
   return ret;
 }
 
-function client(id, connection) {
-  this.id=id;
+function client(connection, request) {
   this.connection=connection;
-
-  clients[id]=this;
-  this.connection.sendUTF("Welcome");
-  console.log((new Date())+" Connection "+id+" accepted");
 
   this.connection.on('message', function(message) {
     var param=null;
@@ -85,12 +80,50 @@ function client(id, connection) {
       catch(e) {
       }
 
+      if(param&&param.type=="hello") {
+	if(param.data.client_id) {
+	  this.client_id=param.data.client_id;
+	}
+	else {
+	  this.client_id=uniq_id();
+	}
+	console.log("Connect from "+this.client_id);
+
+	// TODO: get peer_id of previous connection
+	if(clients[this.client_id])
+	  this.peer_id=clients[this.client_id].peer_id;
+	else
+	  this.peer_id=uniq_id();
+
+	clients[this.client_id]=this;
+
+	console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" accepted");
+
+	this.send({
+	  type: 'welcome',
+	  timestamp: new Date().toISOString(),
+	  peer_id: this.peer_id,
+	  data: {
+	    client_id: this.client_id
+	  }
+	});
+
+	param={
+	  type: 'connect',
+	  timestamp: new Date().toISOString(),
+	  peer_id: this.peer_id
+	};
+      }
+
       if(param) {
-	param.peer_id=this.id;
+	param.peer_id=this.peer_id;
 	var current_client=this;
 
+	if(!('data' in param))
+	  param.data={};
+
 	db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, ?, ?, ?)",
-	    [ this.id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
+	    [ this.peer_id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
 	      if(error) {
 		console.log("Error inserting into database: "+error.message);
 	      }
@@ -109,8 +142,8 @@ function client(id, connection) {
   }.bind(this));
 
   this.connection.on('close', function() {
-    delete(clients[this.id]);
-    console.log((new Date())+" Connection "+this.id+" closed");
+    delete(clients[this.client_id]);
+    console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" closed");
   }.bind(this));
 }
 
@@ -120,7 +153,7 @@ client.prototype.db_callback_message=function(param, row) {
   console.log(param);
 
   for(var i in clients) {
-    if(i!=this.id)
+    if(i!=this.client_id)
       clients[i].send(param);
     else
       clients[i].send({
@@ -139,6 +172,5 @@ wsServer.on('request', function(request) {
   console.log((new Date())+" Connection from "+request.origin);
 
   var connection=request.accept(null, request.origin);
-  var id=uniq_id();
-  new client(id, connection);
+  new client(connection, request);
 });

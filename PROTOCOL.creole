@@ -72,13 +72,22 @@ Reply with messages > '2013-02-20T15:19:11.943Z' and <= '2013-02-20T15:30:11Z'
 === Connect / Authentication ===
 Currently we do not define authentication.
 
-After connecting, Server sends a message to the peer:
+After connecting, the Peer sends a message to Server:
+{{{
+{
+  type: 'hello',
+  client_id: 'DCBA',                      // null if no cookie found
+}
+}}}
+
+Server replies with a message to the peer:
 {{{
 {
   type: 'welcome',
-  msg_num: 5,
   timestamp: '2013-02-20T15:30:11Z',      // peer should syncronize it's clock
-  peer_id: 'ABCD'
+  peer_id: 'ABCD',
+  client_id: 'DCBA'                       // authentication of client, will be
+                                          // set as cookie on the client
 }
 }}}
 
