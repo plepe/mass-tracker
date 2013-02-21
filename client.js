@@ -9,10 +9,27 @@ function Connection(url) {
     return;
   }
 
-  this.connection=new WebSocket(url);
+  this.url=url;
   this.to_send=[];
   this.max_msg_num=null;
   this.messages=new Messages();
+  this.connect();
+}
+
+Connection.prototype.connect=function() {
+  this.keep_closed=false;
+  this.connection=new WebSocket(this.url);
+
+  this.connection.onerror=function(error) {
+    alert("Sorry, but there's some problem with your connection or the server is down.");
+  }.bind(this);
+
+  this.connection.onclose=function() {
+    if(!this.keep_closed) {
+      alert("Connection to server closed. Something wrong? Trying to reconnect.");
+      this.connect();
+    }
+  }.bind(this);
 
   this.connection.onopen=function() {
     this.conf=this.get_cookie("mass_tracker");
@@ -61,6 +78,11 @@ function Connection(url) {
     }
 
   }.bind(this);
+}
+
+Connection.prototype.disconnect=function() {
+  this.keep_closed=true;
+  this.connection.close();
 }
 
 Connection.prototype.send=function(data, type) {
