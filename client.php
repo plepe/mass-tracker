@@ -9,12 +9,15 @@ require "conf.php";
 <script type='text/javascript' src='inc/messages.js'></script>
 <script type='text/javascript'>
 var connection=new Connection("<?=$websocket_url?>");
-function client_send(text) {
-  connection.send({ msg: text }, 'chat');
+function client_send(data, type) {
+  if(!type)
+    type='chat';
+
+  connection.send(data, type);
 }
 </script>
 </head>
 <body>
-<input type='button' onclick='client_send("foobar")' value='send'>
+<input type='button' onclick='client_send({msg: "foobar"})' value='send'>
 </body>
 </html>
