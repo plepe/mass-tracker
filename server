@@ -5,6 +5,7 @@
 
 var config=require("./conf.js");
 var clients={};
+var peers={};
 
 var webSocketServer=require('websocket').server;
 var http=require('http');
@@ -90,12 +91,18 @@ function client(connection, request) {
 	console.log("Connect from "+this.client_id);
 
 	// TODO: get peer_id of previous connection
-	if(clients[this.client_id])
+	if(clients[this.client_id]) {
 	  this.peer_id=clients[this.client_id].peer_id;
-	else
-	  this.peer_id=uniq_id();
+	}
+	else {
+	  if(peers[this.client_id])
+	    this.peer_id=peers[this.client_id];
+          else
+	    this.peer_id=uniq_id();
+	}
 
 	clients[this.client_id]=this;
+	peers[this.client_id]=this.peer_id;
 
 	console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" accepted");
 
