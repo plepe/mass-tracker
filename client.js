@@ -60,7 +60,7 @@ Connection.prototype.connect=function() {
       }
     }
     else {
-      alert("message received:\n"+JSON.stringify(param, null, "  "));
+      hooks.call("message_received", param, null);
 
       if(param.type=='welcome') {
 	this.peer_id=param.peer_id;
@@ -100,8 +100,9 @@ Connection.prototype.send=function(data, type) {
   };
 
   this.to_send.push(param);
-
   this.send_raw(param);
+
+  hooks.call("message_received", param, null);
 }
 
 Connection.prototype.send_raw=function(param) {
