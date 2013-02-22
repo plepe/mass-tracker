@@ -29,11 +29,20 @@ hooks.register("message_received", function(msg, peer) {
   var block=document.getElementById("messages");
   var div=document.createElement("div");
   div.appendChild(document.createTextNode(JSON.stringify(msg, null, '  ')));
+  div.timestamp=msg.timestamp;
 
-  if(block.firstChild)
-    block.insertBefore(div, block.firstChild)
-  else
-    block.appendChild(div);
+  var current=block.firstChild;
+  while(current) {
+    if((typeof(current.timestamp)!="undefined")&&
+       (msg.timestamp>current.timestamp)) {
+      block.insertBefore(div, current);
+      return;
+    }
+
+    current=current.nextSibling;
+  }
+
+  block.appendChild(div);
 });
 
 </script>
