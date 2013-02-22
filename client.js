@@ -25,6 +25,9 @@ Connection.prototype.connect=function() {
   }.bind(this);
 
   this.connection.onclose=function() {
+    if(typeof(this.disconnect_msg_num)=="undefined")
+      this.disconnect_msg_num=this.max_msg_num;
+
     if(!this.keep_closed) {
       alert("Connection to server closed. Something wrong? Trying to reconnect.");
       this.connect();
@@ -68,6 +71,15 @@ Connection.prototype.connect=function() {
 
 	this.conf.client_id=this.client_id;
 	this.set_cookie('mass_tracker', this.conf);
+
+	// Request missed messages
+	var newmsg={
+	  request: 'all'
+	};
+	if(this.disconnect_msg_num)
+	  newmsg.min_msg_num=this.disconnect_msg_num;
+
+	this.send_raw(newmsg);
 
 	// Re-send queued messages
 	for(var i=0; i<this.to_send.length; i++) {
