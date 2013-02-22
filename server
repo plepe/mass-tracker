@@ -81,6 +81,24 @@ function client(connection, request) {
       catch(e) {
       }
 
+      // answer request
+      if(param&&param.request) {
+	db.each("select * from tracker_message",
+	    [ ],
+	    function(error, row) {
+	      if(error) {
+		console.log("Error select from database: "+error.message);
+	      }
+	      else {
+		row.data=JSON.parse(row.data);
+		this.send(row);
+	      }
+	    }.bind(this)
+	  );
+
+	return;
+      }
+
       if(param&&param.type=="hello") {
 	if(param.data.client_id) {
 	  this.client_id=param.data.client_id;
