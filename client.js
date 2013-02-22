@@ -63,8 +63,6 @@ Connection.prototype.connect=function() {
       }
     }
     else {
-      hooks.call("message_received", param, null);
-
       if(param.type=='welcome') {
 	this.peer_id=param.peer_id;
 	this.client_id=param.data.client_id;
@@ -114,7 +112,8 @@ Connection.prototype.send=function(data, type) {
   this.to_send.push(param);
   this.send_raw(param);
 
-  hooks.call("message_received", param, null);
+  param.peer_id=this.peer_id;
+  this.messages.receive(param);
 }
 
 Connection.prototype.send_raw=function(param) {
