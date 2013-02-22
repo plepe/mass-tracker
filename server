@@ -83,7 +83,7 @@ function client(connection, request) {
 
       // answer request
       if(param&&param.request) {
-	db.each("select * from tracker_message",
+	db.each("select * from message",
 	    [ ],
 	    function(error, row) {
 	      if(error) {
@@ -201,7 +201,7 @@ client.prototype.broadcast=function(param) {
   if(!param.data)
     param.data={};
 
-  db.run("insert into tracker_message (tracker_id, timestamp, type, data) values (?, ?, ?, ?)",
+  db.run("insert into message (peer_id, timestamp, type, data) values (?, ?, ?, ?)",
       [ this.peer_id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
 	if(error) {
 	  console.log("Error inserting into database: "+error.message);

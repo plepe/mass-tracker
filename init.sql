@@ -9,9 +9,9 @@ create table mass_event (
   begin_zoom	integer		null
 );
 
-create table tracker_message (
+create table message (
   msg_num	integer		primary key autoincrement,
-  tracker_id	varchar(32)	not null,
+  peer_id	varchar(32)	not null,
   timestamp	datetime	not null,
   type		text		not null,
   data		text		null
