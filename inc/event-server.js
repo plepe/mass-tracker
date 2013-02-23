@@ -1,3 +1,5 @@
+var EventEmitter=require('events').EventEmitter;
+var util=require('util');
 var sqlite3=require('sqlite3');
 var fs=require('fs');
 var events={};
@@ -17,6 +19,7 @@ function Event(event_id) {
     }
   }.bind(this));
 }
+util.inherits(Event, EventEmitter);
 
 Event.prototype.open_db=function(init_db) {
   this.db=new sqlite3.Database('db/'+this.id+'/db.sqlite',
@@ -53,15 +56,25 @@ Event.prototype.open_db=function(init_db) {
 Event.prototype.set_ready=function() {
   this.ready=true;
   console.log("Event "+this.id+" ready!");
+
+  this.emit('ready', this);
 }
 
 module.exports.Event=Event;
-module.exports.get_event=function(event_id) {
+module.exports.get_event=function(event_id, callback) {
   if(events[event_id]) {
+    if(callback)
+      callback(events[event_id]);
 
     return events[event_id];
   }
 
-  var ev=new Event(event_id, callback);
+  var ev=new Event(event_id);
+
+  if(callback)
+    ev.once('ready', function(event) {
+      callback(event);
+    });
+
   return ev;
 }
