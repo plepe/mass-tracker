@@ -11,6 +11,8 @@ var webSocketServer=require('websocket').server;
 var http=require('http');
 var fs=require('fs');
 
+var Event=require('./inc/event-server.js');
+
 var sqlite3=require('sqlite3');
 var db=new sqlite3.Database(config.database, function(error) {
   if(error) {
@@ -18,7 +20,7 @@ var db=new sqlite3.Database(config.database, function(error) {
     process.exit(1);
   }
 
-  db.exec("select * from mass_event", function(error) {
+  db.exec("select * from event", function(error) {
     if(error) {
       console.log("Database seems to be empty -> initializing");
       fs.readFile("./init.sql", "utf8", function(error, text) {

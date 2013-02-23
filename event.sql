@@ -1,5 +1,4 @@
 create table event (
-  event_id	varchar(32)	primary key,
   name		text		null,
   description	text		null,
   begin_time	datetime	null,
@@ -10,4 +9,10 @@ create table event (
   begin_zoom	integer		null
 );
 
-
+create table message (
+  peer_id	varchar(32)	not null,
+  timestamp	datetime	not null,
+  received	datetime	primary key,
+  type		text		not null,
+  data		text		null
+);
