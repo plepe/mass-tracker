@@ -36,12 +36,14 @@ Connection.prototype.connect=function() {
 
   this.connection.onopen=function() {
     this.conf=this.get_cookie("mass_tracker");
+    this.conf.event_id='foobar'; // get event_id from parameter or so
 
     var msg={
-      client_id: this.conf.client_id
+      client_id: this.conf.client_id,
+      event_id: this.conf.event_id
     };
 
-    this.send_raw({ type: 'hello', data: { client_id: this.conf.client_id }});
+    this.send_raw({ type: 'hello', data: msg });
   }.bind(this);
 
   this.connection.onmessage=function(message) {

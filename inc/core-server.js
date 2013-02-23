@@ -67,7 +67,7 @@ Core.prototype.handle_new_connection=function(request) {
 
     // check validity of message, authentication, ...
 
-    Event.get_event(message.event_id, function(ev) {
+    Event.get_event(message.data.event_id, function(ev) {
       console.log('event ready');
       console.log(ev);
     }.bind(this));
