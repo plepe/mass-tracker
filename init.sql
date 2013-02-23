@@ -10,9 +10,9 @@ create table mass_event (
 );
 
 create table message (
-  msg_num	integer		primary key autoincrement,
   peer_id	varchar(32)	not null,
   timestamp	datetime	not null,
+  received	datetime	primary key,
   type		text		not null,
   data		text		null
 );

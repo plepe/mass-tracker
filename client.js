@@ -11,7 +11,7 @@ function Connection(url) {
 
   this.url=url;
   this.to_send=[];
-  this.max_msg_num=null;
+  this.max_received=null;
   this.messages=new Messages();
   this.connect();
 }
@@ -25,8 +25,8 @@ Connection.prototype.connect=function() {
   }.bind(this);
 
   this.connection.onclose=function() {
-    if(typeof(this.disconnect_msg_num)=="undefined")
-      this.disconnect_msg_num=this.max_msg_num;
+    if(typeof(this.disconnect_received)=="undefined")
+      this.disconnect_received=this.max_received;
 
     if(!this.keep_closed) {
       alert("Connection to server closed. Something wrong? Trying to reconnect.");
@@ -53,7 +53,7 @@ Connection.prototype.connect=function() {
       for(var i=0; i<this.to_send.length; i++) {
 	if(this.to_send[i].timestamp==param.ack) {
 
-	  this.to_send[i].msg_num=param.msg_num;
+	  this.to_send[i].received=param.received;
 	  if('data' in param)
 	    this.to_send[i].data=param.data;
 
@@ -74,8 +74,8 @@ Connection.prototype.connect=function() {
 	var newmsg={
 	  request: 'all'
 	};
-	if(this.disconnect_msg_num)
-	  newmsg.min_msg_num=this.disconnect_msg_num;
+	if(this.disconnect_received)
+	  newmsg.min_received=this.disconnect_received;
 
 	this.send_raw(newmsg);
 
@@ -90,8 +90,8 @@ Connection.prototype.connect=function() {
 
     this.messages.receive(param);
 
-    if(param.msg_num>this.max_msg_num) {
-      this.max_msg_num=param.msg_num;
+    if(param.received>this.max_received) {
+      this.max_received=param.received;
     }
 
   }.bind(this);

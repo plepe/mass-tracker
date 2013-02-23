@@ -69,6 +69,7 @@ function uniq_id() {
 
 function client(connection, request) {
   this.connection=connection;
+  this.last_received=0;
 
   this.connection.on('message', function(message) {
     var param=null;
@@ -189,10 +190,23 @@ client.prototype.db_callback_message=function(param, row) {
     else
       clients[i].send({
 	ack: param.timestamp,
-	msg_num: param.msg_num,
+	received: param.received,
 	data: param.data   // TODO: check for changed data
       });
   }
+}
+
+client.prototype.get_received=function() {
+  var current=new Date();
+  var ret=current.toISOString();
+
+  while(this.last_received>=ret) {
+    current=new Date(current.getTime()+1);
+    ret=current.toISOString();
+  }
+
+  this.last_received=ret;
+  return ret;
 }
 
 client.prototype.broadcast=function(param) {
@@ -201,13 +215,15 @@ client.prototype.broadcast=function(param) {
   if(!param.data)
     param.data={};
 
-  db.run("insert into message (peer_id, timestamp, type, data) values (?, ?, ?, ?)",
-      [ this.peer_id, param.timestamp, param.type, JSON.stringify(param.data) ], function(error) {
+  var received=this.get_received();
+
+  db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
+      [ this.peer_id, param.timestamp, received, param.type, JSON.stringify(param.data) ], function(error) {
 	if(error) {
 	  console.log("Error inserting into database: "+error.message);
 	}
 	else {
-	  param.msg_num=this.lastID;
+	  param.received=received;
 	  current_client.db_callback_message(param, this);
 	}
       });

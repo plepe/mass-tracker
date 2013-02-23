@@ -14,27 +14,29 @@ This is what a message looks like:
 {{{
 {
   timestamp: '2013-02-20T15:19:11.943Z'   // ISO-8601 date (unique for a peer)
-  msg_num: 5,                             // set by server
+  received: '2013-02-20T15:19:12.123Z',   // ISO-8601 date (set by server, 
+                                          // unique for event)
   peer_id: 'ABCD',                        // set by server
   type: 'chat',
   data: .....                             // payload
 }
 }}}
 
-The msg_num is an auto incremented value set by the server in order of arrival.
-They might not be in order of timestamp (even for a single peer). Clients may
-use the msg_num after re-connecting to request missing messages.
+Received is a unique value set by the server in order of arrival. If a message
+is received at the same time, the milliseconds are increased until a free value
+is found. They might not be in order of timestamp (even for a single peer).
+Clients may use received after re-connecting to request missing messages.
 
 When a peer sends a message to the server, the server responds with a message:
 {{{
 {
   ack: '2013-02-20T15:19:11.943Z',        // timestamp of original message
-  msg_num: 5,
+  received: '2013-02-20T15:19:12.123Z',
   data: .....                             // optional, only when modified
 }
 }}}
 
-Therefore a peer may update its message with the msg_num.
+Therefore a peer may update its message with the received timestamp.
 
 == Scenarios ==
 
@@ -43,7 +45,7 @@ We have to consider the following scenarios:
 Peer A has a message -> transmits to server -> broadcasts to peers B and C; give acknowledgement to peer A.
 
 === Connection failure ===
-Peer A accumulates messages which were not yet sent to the server (or at least didn't get response about successful transmission). Furthermore broadcasts from the server do not reach peer A. Therefore, after re-connect, peer A needs to submit missing messages (Server can detect already received messages from the timestamp) and needs to request missing broadcasts (it knows the highest received msg_num and can continue from there).
+Peer A accumulates messages which were not yet sent to the server (or at least didn't get response about successful transmission). Furthermore broadcasts from the server do not reach peer A. Therefore, after re-connect, peer A needs to submit missing messages (Server can detect already received messages from the timestamp) and needs to request missing broadcasts (it knows the highest received timestamp and can continue from there).
 
 Re-sent messages should a a key 'resend' with value true, therefore Server can check for duplicate messages. Server should reply with an 'ack' message in any case.
 
@@ -51,11 +53,11 @@ Request for missing messages:
 {{{
 {
   request: 'all',
-  min_msg_num: 9                          // highest known msg_num
+  min_received: '2013-02-20T15:19:12.123Z' // highest known received timestamp
 }
 }}}
 
-Reply with messages msg_num > 9.
+Reply with messages received > '2013-02-20T15:19:12.123Z'.
 
 === Playback ===
 In 'Playback'-mode it's more advisable to request messages from timestamp.
@@ -95,7 +97,7 @@ It also sends a message to the other peers:
 {{{
 {
   type: 'connect',
-  msg_num: 5,
+  received: '2013-02-20T15:19:12.123Z',
   timestamp: '2013-02-20T15:30:11Z',
   peer_id: 'ABCD'
 }
@@ -106,7 +108,7 @@ When a client breaks the connection to the server, the server broadcasts a messa
 {{{
 {
   type: 'disconnect',
-  msg_num: 5,
+  received: '2013-02-20T15:19:12.123Z',
   timestamp: '2013-02-20T15:30:11Z',
   peer_id: 'ABCD'
 }
@@ -150,11 +152,11 @@ Request last messages of peers of a specific type up to a timestamp:
   request: 'all' or 'newest',             // see above
   type: null or string,                   // filter for type
   peer_id: null or string,                // filter for a peer
-  min_msg_num: null or integer,           // > min_msg_num
-  max_msg_num: null or integer,           // <= max_msg_num
+  min_received: null or ISO-date,         // > min_received
+  max_received: null or ISO-date,         // <= max_received
   min_timestamp: null or ISO-date,        // > min_timestamp
   max_timestamp: null or ISO-date,        // <= max_timestamp
 }
 }}}
 
-A request may not contain filters for msg_num AND timestamp.
+A request may not contain filters for received AND timestamp.
