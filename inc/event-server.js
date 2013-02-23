@@ -57,8 +57,11 @@ Event.prototype.set_ready=function() {
 
 module.exports.Event=Event;
 module.exports.get_event=function(event_id) {
-  if(events[event_id])
-    return events[event_id];
+  if(events[event_id]) {
 
-  return new Event(event_id);
+    return events[event_id];
+  }
+
+  var ev=new Event(event_id, callback);
+  return ev;
 }
