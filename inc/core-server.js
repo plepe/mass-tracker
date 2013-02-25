@@ -3,19 +3,20 @@ var http=require('http');
 var fs=require('fs');
 var sqlite3=require('sqlite3');
 var Event=require('./event-server.js');
+var Client=require('./client-server.js');
 //var Event=require('./client-server.js');
 
 function Core() {
 }
 
 Core.prototype.init=function(config) {
-  this.db=new sqlite3.Database(config.database, function(error) {
+  global.db=new sqlite3.Database(config.database, function(error) {
     if(error) {
       console.log("Can't open SQLITE database: "+error.message);
       process.exit(1);
     }
 
-    this.db.exec("select * from event", function(error) {
+    db.exec("select * from event", function(error) {
       if(error) {
 	console.log("Database seems to be empty -> initializing");
 	fs.readFile("./init.sql", "utf8", function(error, text) {
@@ -53,9 +54,6 @@ Core.prototype.handle_new_connection=function(request) {
 
   var connection=request.accept(null, request.origin);
   connection.once('message', function(connection, message) {
-    console.log((new Date())+" Received first message:");
-    console.log(JSON.stringify(message, null, '  '));
-
     if(message.type!=="utf8") {
       console.log("Wrong message format!");
       connection.send("Sorry dude, wrong message format!");
@@ -64,12 +62,25 @@ Core.prototype.handle_new_connection=function(request) {
     }
 
     message=JSON.parse(message.utf8Data);
+    console.log((new Date())+" Received first message:");
+    console.log(JSON.stringify(message, null, '  '));
+
+    // create client
+    var client=new Client.Client(connection);
 
     // check validity of message, authentication, ...
+    client.authenticate(message, function(error) {
+      // not authenticated -> forget it
+      if(error) {
+	console.log(error.message);
+	return;
+      }
 
-    Event.get_event(message.data.event_id, function(ev) {
-      console.log('event ready');
-      console.log(ev);
+      // create event, as soon as ready, add client as peer
+      Event.get_event(message.data.event_id, function(ev) {
+	ev.add_peer(client);
+
+      }.bind(this));
     }.bind(this));
   }.bind(this, connection));
 }

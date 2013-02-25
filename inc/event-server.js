@@ -7,6 +7,7 @@ var events={};
 function Event(event_id) {
   this.id=event_id;
   this.ready=false;
+  this.peers={};
   events[this.id]=this;
 
   fs.stat('db/'+this.id, function(error, stat) {
@@ -58,6 +59,12 @@ Event.prototype.set_ready=function() {
   console.log("Event "+this.id+" ready!");
 
   this.emit('ready', this);
+}
+
+Event.prototype.add_peer=function(client) {
+  this.peers[client.peer_id]=client;
+
+  client.send();
 }
 
 module.exports.Event=Event;
