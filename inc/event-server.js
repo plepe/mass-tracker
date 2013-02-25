@@ -66,7 +66,21 @@ Event.prototype.add_peer=function(client) {
   this.peers[client.peer_id]=client;
   client.set_event(this);
 
-  //client.send();
+  this.receive_message({
+      type: 'connect',
+      timestamp: new Date().toISOString(),
+      peer_id: client.peer_id
+    }, client);
+}
+
+Event.prototype.remove_peer=function(client) {
+  delete(this.peers[client.peer_id]);
+
+  this.receive_message({
+      type: 'disconnect',
+      timestamp: new Date().toISOString(),
+      peer_id: client.peer_id
+    }, client);
 }
 
 Event.prototype.get_received=function() {
@@ -110,9 +124,12 @@ Event.prototype.receive_message=function(message, client, callback) {
   // TODO? wait for callbacks?
   hooks.call("message_received", message, this);
 
-  // Broadcast, resp. send ack
+  // Broadcast
   this.broadcast(message, client);
-  callback(message);
+
+  // call callback (eg. for sending ack)
+  if(callback)
+    callback(message);
 
   // Insert to database
   this.db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",

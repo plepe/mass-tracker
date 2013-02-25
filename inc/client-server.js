@@ -53,11 +53,7 @@ function Client(connection) {
     delete(clients[this.client_id]);
     console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" closed");
 
-    this.broadcast({
-      type: 'disconnect',
-      timestamp: new Date().toISOString(),
-      peer_id: this.peer_id
-    });
+    this.event.remove_peer(this);
   }.bind(this));
 }
 
