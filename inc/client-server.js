@@ -8,52 +8,45 @@ function Client(connection) {
   this.connection.on('message', function(message) {
     var param=null;
 
-    if(message.type==="utf8") {
-      console.log((new Date())+" Received message from "+this.id);
-      try {
-	param=JSON.parse(message.utf8Data);
-      }
-      catch(e) {
-      }
-
-      // answer request
-      if(param&&param.request) {
-	db.each("select * from message",
-	    [ ],
-	    function(error, row) {
-	      if(error) {
-		console.log("Error select from database: "+error.message);
-	      }
-	      else {
-		row.data=JSON.parse(row.data);
-		this.send(row);
-	      }
-	    }.bind(this)
-	  );
-
-	return;
-      }
-
-
-      if(param) {
-	param.peer_id=this.peer_id;
-
-	if(!('data' in param))
-	  param.data={};
-
-	this.broadcast(param);
-      }
+    if(message.type!=="utf8") {
+      console.log("Invalid message received from "+this.id+":");
+      console.log(message);
+      return;
     }
 
-    // Request for disconnect -> close connection to peer
-    if(param&&param.type=="disconnect") {
+    try {
+      message=JSON.parse(message.utf8Data);
+    }
+    catch(e) {
+      console.log("Invalid message received from "+this.id+":");
+      console.log(message);
+      return;
+    }
+
+    // ok, 'message' is now the submitted message - see what we can do with it
+
+    // message can be handled by me
+    if(message.type=="disconnect") {
+      // Request for disconnect -> close connection to peer
       this.close();
     }
 
-    if(!param) {
-      console.log((new Date())+" Illegal message received: ");
-      console.log(message);
-    }
+    // let event process the message
+    this.event.receive_message(message, this, function(message) {
+      if(!message)
+	return;
+
+      // send ack to client
+      this.send({
+	ack: message.timestamp,
+	received: message.received,
+	data: message.data   // TODO: check for changed data
+      });
+    }.bind(this));
+
+/*
+    */
+
   }.bind(this));
 
   this.connection.on('close', function() {
@@ -66,56 +59,6 @@ function Client(connection) {
       peer_id: this.peer_id
     });
   }.bind(this));
-}
-
-Client.prototype.db_callback_message=function(param, row) {
-  hooks.call("message_received", param, this);
-
-  console.log(param);
-
-  for(var i in clients) {
-    if(i!=this.client_id)
-      clients[i].send(param);
-    else
-      clients[i].send({
-	ack: param.timestamp,
-	received: param.received,
-	data: param.data   // TODO: check for changed data
-      });
-  }
-}
-
-Client.prototype.get_received=function() {
-  var current=new Date();
-  var ret=current.toISOString();
-
-  while(this.last_received>=ret) {
-    current=new Date(current.getTime()+1);
-    ret=current.toISOString();
-  }
-
-  this.last_received=ret;
-  return ret;
-}
-
-Client.prototype.broadcast=function(param) {
-  var current_client=this;
-
-  if(!param.data)
-    param.data={};
-
-  var received=this.get_received();
-
-  db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
-      [ this.peer_id, param.timestamp, received, param.type, JSON.stringify(param.data) ], function(error) {
-	if(error) {
-	  console.log("Error inserting into database: "+error.message);
-	}
-	else {
-	  param.received=received;
-	  current_client.db_callback_message(param, this);
-	}
-      });
 }
 
 Client.prototype.send=function(data) {
@@ -175,6 +118,10 @@ Client.prototype.authenticate=function(message, callback) {
       });
 
   callback();
+}
+
+Client.prototype.set_event=function(event) {
+  this.event=event;
 }
 
 module.exports.Client=Client;

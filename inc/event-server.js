@@ -1,4 +1,5 @@
 var EventEmitter=require('events').EventEmitter;
+var hooks=require('../modules/base/modules/hooks/hooks.js');
 var util=require('util');
 var sqlite3=require('sqlite3');
 var fs=require('fs');
@@ -63,8 +64,70 @@ Event.prototype.set_ready=function() {
 
 Event.prototype.add_peer=function(client) {
   this.peers[client.peer_id]=client;
+  client.set_event(this);
 
-  client.send();
+  //client.send();
+}
+
+Event.prototype.get_received=function() {
+  var current=new Date();
+  var ret=current.toISOString();
+
+  while(this.last_received>=ret) {
+    current=new Date(current.getTime()+1);
+    ret=current.toISOString();
+  }
+
+  this.last_received=ret;
+  return ret;
+}
+
+Event.prototype.receive_message=function(message, client, callback) {
+  // complete message
+  message.received=this.get_received();
+  message.peer_id=client.peer_id;
+  if(!('data' in message))
+    message.data={};
+
+  // answer request
+  if(message.request) {
+    this.db.each("select * from message",
+	[ ],
+	function(error, row) {
+	  if(error) {
+	    console.log("Error select from database: "+error.message);
+	  }
+	  else {
+	    row.data=JSON.parse(row.data);
+	    client.send(row);
+	  }
+	}.bind(this)
+      );
+
+    return;
+  }
+
+  // TODO? wait for callbacks?
+  hooks.call("message_received", message, this);
+
+  // Broadcast, resp. send ack
+  this.broadcast(message, client);
+  callback(message);
+
+  // Insert to database
+  this.db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
+      [ client.peer_id, message.timestamp, message.received, message.type, JSON.stringify(message.data) ], function(error) {
+	if(error) {
+	  console.log("Error inserting into database: "+error.message);
+	}
+      }.bind(this));
+}
+
+Event.prototype.broadcast=function(message, exclude) {
+  for(var i in this.peers) {
+    if(this.peers[i]!=exclude)
+      this.peers[i].send(message);
+  }
 }
 
 module.exports.Event=Event;
