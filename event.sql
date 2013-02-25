@@ -16,3 +16,7 @@ create table message (
   type		text		not null,
   data		text		null
 );
+
+insert into event values (
+  '', '', 'now', 'now', 0, 0, 0, 16
+);

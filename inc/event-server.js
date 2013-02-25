@@ -4,6 +4,7 @@ var util=require('util');
 var sqlite3=require('sqlite3');
 var fs=require('fs');
 var events={};
+var event_db_fields=[ 'name', 'description', 'begin_time', 'end_time', 'timezone', 'begin_longitude', 'begin_latitude', 'begin_zoom' ];
 
 function Event(event_id) {
   this.id=event_id;
@@ -20,6 +21,8 @@ function Event(event_id) {
       this.open_db(false);
     }
   }.bind(this));
+
+  this.on('message_received', this.check_message_received.bind(this));
 }
 util.inherits(Event, EventEmitter);
 
@@ -123,6 +126,7 @@ Event.prototype.receive_message=function(message, client, callback) {
 
   // TODO? wait for callbacks?
   hooks.call("message_received", message, this);
+  this.emit("message_received", message);
 
   // Broadcast
   this.broadcast(message, client);
@@ -144,6 +148,28 @@ Event.prototype.broadcast=function(message, exclude) {
   for(var i in this.peers) {
     if(this.peers[i]!=exclude)
       this.peers[i].send(message);
+  }
+}
+
+Event.prototype.check_message_received=function(message) {
+  if(message.type=="change_event") {
+    var f1=[];
+    var f2=[];
+
+    for(var i=0; i<event_db_fields.length; i++) {
+      if(message.data[event_db_fields[i]]) {
+	f1.push(event_db_fields[i]+"=?");
+	f2.push(message.data[event_db_fields[i]]);
+      }
+    }
+
+    f1=f1.join(", ");
+    this.db.run("update event set "+f1, f2, function(error) {
+      if(error) {
+	console.log("Error changing event:");
+	console.log(error.message);
+      }
+    }.bind(this));
   }
 }
 
