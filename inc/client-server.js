@@ -4,10 +4,10 @@ var peers={};
 function Client(connection) {
   this.connection=connection;
   this.last_received=0;
+  this.receive_queue=[];
 
   this.connection.on('message', function(message) {
-    var param=null;
-
+    // check for validity of message
     if(message.type!=="utf8") {
       console.log("Invalid message received from "+this.id+":");
       console.log(message);
@@ -31,22 +31,16 @@ function Client(connection) {
       this.close();
     }
 
+    if(!this.event) {
+      this.receive_queue.push(message);
+      return;
+    }
+
     // let event process the message
-    this.event.receive_message(message, this, function(message) {
-      if(!message)
-	return;
+    this.event.receive_message(message, this,
+      this.receive_callback.bind(this));
 
-      // send ack to client
-      this.send({
-	ack: message.timestamp,
-	received: message.received,
-	data: message.data   // TODO: check for changed data
-      });
-    }.bind(this));
-
-/*
-    */
-
+    // done.
   }.bind(this));
 
   this.connection.on('close', function() {
@@ -55,6 +49,18 @@ function Client(connection) {
 
     this.event.remove_peer(this);
   }.bind(this));
+}
+
+Client.prototype.receive_callback=function(message) {
+  if(!message)
+    return;
+
+  // send ack to client
+  this.send({
+    ack: message.timestamp,
+    received: message.received,
+    data: message.data   // TODO: check for changed data
+  });
 }
 
 Client.prototype.send=function(data) {
@@ -118,6 +124,13 @@ Client.prototype.authenticate=function(message, callback) {
 
 Client.prototype.set_event=function(event) {
   this.event=event;
+
+  // we already got messages? pass to event
+  for(var i=0; i<this.receive_queue.length; i++)
+    this.event.receive_message(this.receive_queue[i], this,
+      this.receive_callback.bind(this));
+
+  this.receive_queue=[];
 }
 
 module.exports.Client=Client;
