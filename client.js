@@ -112,7 +112,7 @@ Connection.prototype.disconnect=function() {
 
 Connection.prototype.send=function(data, type) {
   var param={
-    timestamp: new Date().toISOString(),
+    timestamp: ServerDate().toISOString(),
     type: type,
     data: data
   };
