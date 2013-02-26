@@ -124,24 +124,26 @@ Event.prototype.receive_message=function(message, client, callback) {
     return;
   }
 
-  // TODO? wait for callbacks?
-  hooks.call("message_received", message, this);
   this.emit("message_received", message);
 
-  // Broadcast
-  this.broadcast(message, client);
+  // The hooks may modify the message, wait for changes before
+  // passing broadcasting and writing to database
+  hooks.call_callback("message_received", message, this, function(ret) {
+    // Broadcast
+    this.broadcast(message, client);
 
-  // call callback (eg. for sending ack)
-  if(callback)
-    callback(message);
+    // call callback (eg. for sending ack)
+    if(callback)
+      callback(message);
 
-  // Insert to database
-  this.db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
-      [ client.peer_id, message.timestamp, message.received, message.type, JSON.stringify(message.data) ], function(error) {
-	if(error) {
-	  console.log("Error inserting into database: "+error.message);
-	}
-      }.bind(this));
+    // Insert to database
+    this.db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
+	[ client.peer_id, message.timestamp, message.received, message.type, JSON.stringify(message.data) ], function(error) {
+	  if(error) {
+	    console.log("Error inserting into database: "+error.message);
+	  }
+	}.bind(this));
+  }.bind(this));
 }
 
 Event.prototype.broadcast=function(message, exclude) {
