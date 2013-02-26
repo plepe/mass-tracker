@@ -106,6 +106,26 @@ Event.prototype.receive_message=function(message, client, callback) {
   if(!('data' in message))
     message.data={};
 
+  // check if message has already been received
+  this.db.each("select * from message where timestamp=? and peer_id=?",
+    [ message.timestamp, message.peer_id ],
+
+    // a row found: message already received
+    function(callback, error, row) {
+      console.log("message already received, answer ack");
+      callback(row);
+    }.bind(this, callback),
+
+    // when count=0, message was not received - continue processing
+    function(message, client, callback, error, count) {
+      if(count==0) {
+	console.log("message not received, continue");
+	this.receive_message_continue(message, client, callback);
+      }
+    }.bind(this, message, client, callback));
+}
+
+Event.prototype.receive_message_continue=function(message, client, callback) {
   // answer request
   if(message.request) {
     this.db.each("select * from message",
