@@ -44,6 +44,7 @@ Connection.prototype.connect=function() {
     };
 
     this.send_raw({ type: 'hello', data: msg });
+    this.send_raw({ type: 'timesync', data: { timestamp: new Date().toISOString() }});
   }.bind(this);
 
   this.connection.onmessage=function(message) {
@@ -87,6 +88,11 @@ Connection.prototype.connect=function() {
 
 	  this.send_raw(this.to_send[i]);
 	}
+      }
+      else if(param.type=="timesync") {
+	param.data.receive_back=new Date().toISOString();
+	ServerDate.set(param.data);
+	return;
       }
     }
 

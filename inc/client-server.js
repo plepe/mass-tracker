@@ -30,6 +30,11 @@ function Client(connection) {
       // Request for disconnect -> close connection to peer
       this.close();
     }
+    else if(message.type=="timesync") {
+      message.data.received=new Date().toISOString();
+      this.send(message);
+      return;
+    }
 
     if(!this.event) {
       this.receive_queue.push(message);
