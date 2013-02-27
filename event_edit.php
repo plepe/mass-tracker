@@ -88,7 +88,7 @@ if($form->is_complete()) {
   $set=implode(", ", $set);
   $var=implode(", ", $var);
 
-  $db->query("insert or replace into mass_event ($var) values ($set)");
+  $db->query("insert or replace into event ($var) values ($set)");
   $event=new mass_event($db->lastInsertRowID());
 
   Header("Location: event.php?id={$event->id}");

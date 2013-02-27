@@ -1,10 +1,10 @@
 <?php
-if(!file_exists("db/sqlitedb")) {
-  $db = new SQLite3('db/sqlitedb');
+if(!file_exists("db/db.sqlite")) {
+  $db = new SQLite3('db/db.sqlite');
   $db->query(file_get_contents("init.sql"));
 }
 else
-  $db = new SQLite3('db/sqlitedb');
+  $db = new SQLite3('db/db.sqlite');
 
 function sql_where_timestamp($param) {
   global $db;

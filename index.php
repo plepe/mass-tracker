@@ -34,13 +34,13 @@ function show_block($res, $title) {
   return $ret;
 }
 
-$res=$db->query("select * from mass_event where begin_time<=datetime('now') and end_time>datetime('now') order by begin_time asc");
+$res=$db->query("select * from event where begin_time<=datetime('now') and end_time>datetime('now') order by begin_time asc");
 print show_block($res, "Aktuelle Ereignisse");
 
-$res=$db->query("select * from mass_event where begin_time>datetime('now') order by begin_time asc limit 10");
+$res=$db->query("select * from event where begin_time>datetime('now') order by begin_time asc limit 10");
 print show_block($res, "Kommende Ereignisse");
 
-$res=$db->query("select * from mass_event where end_time<=datetime('now') order by end_time desc limit 10");
+$res=$db->query("select * from event where end_time<=datetime('now') order by end_time desc limit 10");
 print show_block($res, "Letzte Ereignisse");
 
 print "<a href='event_edit.php'>Neues Ereignis anlegen</a>\n";
