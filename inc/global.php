@@ -46,3 +46,16 @@ function ajax_update($param) {
 
   return $ret;
 }
+
+function uniq_id() {
+  $iso_time=explode(" ", microtime());
+  $datetime=new DateTime("@{$iso_time[1]}");
+  $milli=round($iso_time[0]*1000000);
+  $crypt=md5($datetime->format("Y-m-d\TH:i:s.{$milli}O"));
+
+  $n="";
+  for($i=0; $i<6; $i++) {
+    $n.=chr(hexdec(substr($crypt, $i*2, 2)));
+  }
+  return strtr(base64_encode($n), array("+"=>".", "/"=>"_"));
+}
