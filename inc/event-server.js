@@ -15,7 +15,7 @@ function Event(event_id) {
   fs.stat('db/'+this.id, function(error, stat) {
     if(!stat) {
       console.log("create directory");
-      fs.mkdir('db/'+this.id, this.open_db.bind(this, true));
+      fs.mkdir('db/'+this.id, config.dir_mode, this.open_db.bind(this, true));
     }
     else {
       this.open_db(false);
@@ -35,6 +35,8 @@ Event.prototype.open_db=function(init_db) {
       }
 
       if(init_db) {
+	fs.chmod('db/'+this.id+'/db.sqlite', config.file_mode);
+
 	console.log("Initializing database for event "+this.id);
 	fs.readFile("./event.sql", "utf8", function(error, text) {
 	  if(error) {

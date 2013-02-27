@@ -3,7 +3,10 @@
 
 "use strict";
 
-var config=require("./conf.js");
+global.config=require("./conf.js");
+
+if(config.umask)
+  process.umask(config.umask);
 
 var Core=require('./inc/core-server.js');
 var core=new Core.Core();

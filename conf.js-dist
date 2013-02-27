@@ -4,4 +4,7 @@ config.port=6777; // C=67, M=77
 
 config.database="db/db.sqlite";
 
+config.file_mode=0666;
+config.dir_mode=0777;
+
 module.exports=config;

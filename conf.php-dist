@@ -4,3 +4,6 @@ $title="Mass Tracker";
 $modulekit_load=array("report");
 
 $websocket_url="ws://127.0.0.1:6777";
+
+$file_mode=0666;
+$dir_mode=0777;

@@ -2,6 +2,7 @@
 if(!file_exists("db/db.sqlite")) {
   $db = new SQLite3('db/db.sqlite');
   $db->query(file_get_contents("init.sql"));
+  chmod('db/db.sqlite', $file_mode);
 }
 else
   $db = new SQLite3('db/db.sqlite');
