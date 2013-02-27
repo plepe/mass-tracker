@@ -56,6 +56,13 @@ Event.prototype.open_db=function(init_db) {
 	this.set_ready();
       }
   }.bind(this, init_db));
+
+  global.db.run("insert or ignore into event (event_id) values (?)", this.id, function(error) {
+    if(error) {
+      console.log("Error creating global event");
+      console.log(error.message);
+    }
+  });
 }
 
 Event.prototype.set_ready=function() {
@@ -192,7 +199,15 @@ Event.prototype.check_message_received=function(message) {
 	console.log(error.message);
       }
     }.bind(this));
-  }
+
+    f2.push(this.id);
+    global.db.run("update event set "+f1+" where event_id=?", f2, function(error) {
+      if(error) {
+	console.log("Error changing (global) event:");
+	console.log(error.message);
+      }
+    }.bind(this));
+}
 }
 
 module.exports.Event=Event;
