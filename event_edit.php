@@ -63,33 +63,19 @@ if($form->is_complete()) {
 
   $set=array();
   $var=array();
-  
-  if($_REQUEST['id']) {
-    $var[]="\"event_id\"";
-    $set[]="'".$db->escapeString($_REQUEST['id'])."'";
-  }
 
-  foreach(array("begin_time", "end_time") as $k) {
-    $d=new DateTime($data[$k]);
-    if($data['timezone']<0) {
-      $t=-$data['timezone'];
-      $d->sub(new DateInterval("PT{$t}M"));
+  if((!isset($_REQUEST['id']))||(!$_REQUEST['id'])) {
+    $id=uniq_id();
+    $event=new mass_event($id);
+  }
+  else {
+    $event=get_event($_REQUEST['id']);
+    if(!$event) {
+      print "No such event!";
     }
-    else
-      $d->add(new DateInterval("PT{$data['timezone']}M"));
-
-    $data[$k]=$d->format("Y-m-d H:i:00");
   }
 
-  foreach(array("name", "description", "begin_time", "end_time", "timezone", "begin_longitude", "begin_latitude", "begin_zoom") as $k) {
-    $var[]="\"$k\"";
-    $set[]="'".$db->escapeString($data[$k])."'";
-  }
-  $set=implode(", ", $set);
-  $var=implode(", ", $var);
-
-  $db->query("insert or replace into event ($var) values ($set)");
-  $event=new mass_event($db->lastInsertRowID());
+  $event->save($data);
 
   Header("Location: event.php?id={$event->id}");
 }
