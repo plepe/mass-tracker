@@ -24,9 +24,14 @@ call_hooks("init");
   <body>
 
 <?
-$event=new mass_event($_REQUEST['id']);
+$event=get_event($_REQUEST['id']);
+if(!$event) {
+  print "No such event";
+  exit;
+}
+
 print "<script type='text/javascript'>\n";
-print "var current_event=new mass_event({$_REQUEST['id']}, ".json_encode($event->data).");\n";
+print "var current_event=new mass_event('{$_REQUEST['id']}', ".json_encode($event->data).");\n";
 print "</script>\n";
 
 if(isset($_REQUEST['participate'])) {
