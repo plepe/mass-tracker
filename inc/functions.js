@@ -27,3 +27,17 @@ function now() {
 
   return new Date(new Date().getTime()-client_time_offset);
 }
+
+var last_received_timestamp=0;
+global.get_received_timestamp=function() {
+  var current=new Date();
+  var ret=current.toISOString();
+
+  while(last_received_timestamp>=ret) {
+    current=new Date(current.getTime()+1);
+    ret=current.toISOString();
+  }
+
+  last_received_timestamp=ret;
+  return ret;
+}

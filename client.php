@@ -6,24 +6,27 @@ require "conf.php";
 <head>
 <script type='text/javascript' src='modules/base/modules/hooks/hooks.js'></script>
 <script type='text/javascript' src='lib/jquery.js'></script>
-<script type='text/javascript' src='client.js'></script>
-<script type='text/javascript' src='inc/messages.js'></script>
+<script type='text/javascript' src='inc/client-client.js'></script>
+<script type='text/javascript' src='inc/connection-client.js'></script>
+<script type='text/javascript' src='inc/event-client.js'></script>
+<script type='text/javascript' src='inc/messages-client.js'></script>
 <script type='text/javascript' src='inc/serverdate.js'></script>
+<script type='text/javascript' src='client.js'></script>
 <script type='text/javascript'>
-var connection=new Connection("<?=$websocket_url?>");
+var websocket_url="<?=$websocket_url?>";
 function client_send(data, type) {
   if(!type)
     type='chat';
 
-  connection.send(data, type);
+  client.send(data, type);
 }
 
 function client_connect() {
-  connection.connect();
+  client.connect();
 }
 
 function client_disconnect() {
-  connection.disconnect();
+  client.disconnect();
 }
 
 hooks.register("message_received", function(msg, peer) {

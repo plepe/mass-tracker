@@ -1,75 +1,83 @@
-var clients={};
-var peers={};
+var Connection=require('./connection-server.js');
+var Event=require('./event-server.js');
 
-function Client(connection) {
-  this.connection=connection;
+var clients={};
+var client_ids={};
+
+function Client(request) {
+  var websocket=request.accept(null, request.origin);
+  this.connection=new Connection(websocket, this);
   this.last_received=0;
   this.receive_queue=[];
 
-  this.connection.on('message', function(message) {
-    // check for validity of message
-    if(message.type!=="utf8") {
-      console.log("Invalid message received from "+this.id+":");
-      console.log(message);
-      return;
-    }
+  this.secret_id=null;
+  this.client_id=null;
+}
 
-    try {
-      message=JSON.parse(message.utf8Data);
-    }
-    catch(e) {
-      console.log("Invalid message received from "+this.id+":");
-      console.log(message);
-      return;
-    }
+Client.prototype.receive_message=function(message, callback) {
+  // TODO: check if message has already been received!
 
-    // ok, 'message' is now the submitted message - see what we can do with it
-
-    // message can be handled by me
-    if(message.type=="disconnect") {
-      // Request for disconnect -> close connection to peer
-      this.close();
-    }
-    else if(message.type=="timesync") {
+  // message can be handled by me
+  switch(message.type) {
+    case "disconnect":
+      // Request for disconnect -> close connection to client
+      this.connection.close();
+      break;
+    case "timesync":
       message.data.received=new Date().toISOString();
-      this.send(message);
-      return;
-    }
 
-    if(!this.event) {
-      this.receive_queue.push(message);
-      return;
-    }
+      callback(message);
+      break;
+    case "hello":
+      this.authenticate(message, function(error) {
+	if(error) {
+	  console.log(error.message);
+	  return;
+	}
 
-    // let event process the message
-    this.event.receive_message(message, this,
-      this.receive_callback.bind(this));
+	Event.get_event(message.data.event_id, function(ev) {
+	  ev.add_client(this);
+	}.bind(this));
+      }.bind(this));
+      break;
+    default:
+      if(!this.event) {
+	this.receive_queue.push(message);
+	return;
+      }
 
-    // done.
-  }.bind(this));
-
-  this.connection.on('close', function() {
-    delete(clients[this.client_id]);
-    console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" closed");
-
-    this.event.remove_peer(this);
-  }.bind(this));
+      // let event process the message
+      this.event.receive_message(message, this,
+	this.receive_callback.bind(this, callback));
+      break;
+  }
 }
 
-Client.prototype.receive_callback=function(message) {
-  if(!message)
-    return;
-
-  // send ack to client
-  this.send({
-    ack: message.timestamp,
-    received: message.received,
-    data: message.data   // TODO: check for changed data
-  });
+Client.prototype.receive_callback=function(callback, message) {
+  callback(message);
 }
 
-Client.prototype.send=function(data) {
-  this.connection.sendUTF(JSON.stringify(data));
+Client.prototype.send=function(data, type) {
+  var message={
+    type: type,
+    client_id: this.client_id,
+    data: data,
+    timestamp: ServerDate().toISOString(),
+  };
+
+  this.connection.send_raw(message);
+}
+
+Client.prototype.send_raw=function(message) {
+  this.connection.send_raw(message);
+}
+
+Client.prototype.on_close=function() {
+  delete(clients[this.secret_id]);
+  console.log((new Date())+" Connection "+this.secret_id+"/"+this.client_id+" closed");
+
+  if(this.event)
+    this.event.remove_client(this);
 }
 
 Client.prototype.close=function() {
@@ -86,43 +94,35 @@ Client.prototype.authenticate=function(message, callback) {
     callback({message: "Invalid authentication message"});
   }
 
-  if(message.data.client_id) {
-    this.client_id=message.data.client_id;
+  if(message.data.secret_id) {
+    this.secret_id=message.data.secret_id;
   }
   else {
-    this.client_id=uniq_id();
+    this.secret_id=uniq_id();
   }
-  console.log("Connect from "+this.client_id);
+  console.log("Connect from "+this.secret_id);
 
-  // TODO: get peer_id of previous connection
-  if(clients[this.client_id]) {
-    this.peer_id=clients[this.client_id].peer_id;
+  if(clients[this.secret_id]) {
+    this.client_id=clients[this.secret_id].client_id;
 
-    if(this!=clients[this.client_id]) {
+    if(this!=clients[this.secret_id]) {
       console.log("Replace connection");
-      clients[this.client_id].close();
+      clients[this.secret_id].close();
     }
   }
   else {
-    if(peers[this.client_id])
-      this.peer_id=peers[this.client_id];
+    if(client_ids[this.secret_id])
+      this.client_id=client_ids[this.secret_id];
     else
-      this.peer_id=uniq_id();
+      this.client_id=uniq_id();
   }
 
-  clients[this.client_id]=this;
-  peers[this.client_id]=this.peer_id;
+  clients[this.secret_id]=this;
+  client_ids[this.secret_id]=this.client_id;
 
-  console.log((new Date())+" Connection "+this.client_id+"/"+this.peer_id+" accepted");
+  console.log((new Date())+" Connection "+this.secret_id+"/"+this.client_id+" accepted");
 
-  this.send({
-	type: 'welcome',
-	timestamp: new Date().toISOString(),
-	peer_id: this.peer_id,
-	data: {
-	  client_id: this.client_id
-	}
-      });
+  this.send({ secret_id: this.secret_id }, 'welcome');
 
   callback();
 }
@@ -138,4 +138,4 @@ Client.prototype.set_event=function(event) {
   this.receive_queue=[];
 }
 
-module.exports.Client=Client;
+module.exports=Client;

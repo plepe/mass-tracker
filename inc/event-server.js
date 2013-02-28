@@ -3,13 +3,15 @@ var hooks=require('../modules/base/modules/hooks/hooks.js');
 var util=require('util');
 var sqlite3=require('sqlite3');
 var fs=require('fs');
+var Messages=require('./messages-server.js');
 var events={};
 var event_db_fields=[ 'name', 'description', 'begin_time', 'end_time', 'timezone', 'begin_longitude', 'begin_latitude', 'begin_zoom' ];
 
 function Event(event_id) {
   this.id=event_id;
   this.ready=false;
-  this.peers={};
+  this.clients={};
+  this.client_id='';
   events[this.id]=this;
 
   fs.stat('db/'+this.id, function(error, stat) {
@@ -71,89 +73,44 @@ Event.prototype.set_ready=function() {
   this.ready=true;
   console.log("Event "+this.id+" ready!");
 
+  this.messages=new Messages(this);
   this.emit('ready', this);
 }
 
-Event.prototype.add_peer=function(client) {
-  this.peers[client.peer_id]=client;
+Event.prototype.add_client=function(client) {
+  this.clients[client.client_id]=client;
   client.set_event(this);
 
-  this.receive_message({
-      type: 'connect',
-      timestamp: new Date().toISOString(),
-      peer_id: client.peer_id
-    }, client);
+  this.send_all({ client_id: client.client_id }, 'connect', client);
 }
 
-Event.prototype.remove_peer=function(client) {
-  delete(this.peers[client.peer_id]);
+Event.prototype.remove_client=function(client) {
+  delete(this.clients[client.client_id]);
 
-  this.receive_message({
-      type: 'disconnect',
-      timestamp: new Date().toISOString(),
-      peer_id: client.peer_id
-    }, client);
+  this.send_all({ client_id: client.client_id }, 'disconnect', client);
 }
 
-Event.prototype.get_received=function() {
-  var current=new Date();
-  var ret=current.toISOString();
+Event.prototype.send_all=function(data, type, client, callback) {
+  if(!client)
+    client=this;
 
-  while(this.last_received>=ret) {
-    current=new Date(current.getTime()+1);
-    ret=current.toISOString();
-  }
+  var message={
+    type: type,
+    data: data,
+    timestamp: ServerDate().toISOString(),
+  };
 
-  this.last_received=ret;
-  return ret;
+  this.receive_message(message, client, callback);
 }
 
 Event.prototype.receive_message=function(message, client, callback) {
   // complete message
-  message.received=this.get_received();
-  message.peer_id=client.peer_id;
+  message.received=get_received_timestamp();
+  message.client_id=client.client_id;
   if(!('data' in message))
     message.data={};
 
-  // check if message has already been received
-  this.db.each("select * from message where timestamp=? and peer_id=?",
-    [ message.timestamp, message.peer_id ],
-
-    // a row found: message already received
-    function(callback, error, row) {
-      console.log("message already received, answer ack");
-      callback(row);
-    }.bind(this, callback),
-
-    // when count=0, message was not received - continue processing
-    function(message, client, callback, error, count) {
-      if(count==0) {
-	console.log("message not received, continue");
-	this.receive_message_continue(message, client, callback);
-      }
-    }.bind(this, message, client, callback));
-}
-
-Event.prototype.receive_message_continue=function(message, client, callback) {
-  // answer request
-  if(message.request) {
-    this.db.each("select * from message",
-	[ ],
-	function(error, row) {
-	  if(error) {
-	    console.log("Error select from database: "+error.message);
-	  }
-	  else {
-	    row.data=JSON.parse(row.data);
-	    client.send(row);
-	  }
-	}.bind(this)
-      );
-
-    return;
-  }
-
-  this.emit("message_received", message);
+  this.emit("message_received", message, client);
 
   // The hooks may modify the message, wait for changes before
   // passing broadcasting and writing to database
@@ -165,20 +122,15 @@ Event.prototype.receive_message_continue=function(message, client, callback) {
     if(callback)
       callback(message);
 
-    // Insert to database
-    this.db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
-	[ client.peer_id, message.timestamp, message.received, message.type, JSON.stringify(message.data) ], function(error) {
-	  if(error) {
-	    console.log("Error inserting into database: "+error.message);
-	  }
-	}.bind(this));
+    // enter message to database
+    this.messages.message_received(message);
   }.bind(this));
 }
 
 Event.prototype.broadcast=function(message, exclude) {
-  for(var i in this.peers) {
-    if(this.peers[i]!=exclude)
-      this.peers[i].send(message);
+  for(var i in this.clients) {
+    if(this.clients[i]!=exclude)
+      this.clients[i].send_raw(message);
   }
 }
 
@@ -212,7 +164,7 @@ Event.prototype.check_message_received=function(message) {
 }
 }
 
-module.exports.Event=Event;
+module.exports=Event;
 module.exports.get_event=function(event_id, callback) {
   if(events[event_id]) {
     if(callback)
