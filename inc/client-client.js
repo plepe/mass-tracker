@@ -70,3 +70,13 @@ Client.prototype.send=function(data, type) {
   message.client_id=this.client_id;
   this.event.receive_message(message);
 }
+
+Client.prototype.request=function(data) {
+  var message={
+    timestamp: ServerDate().toISOString(),
+    type: 'request',
+    data: data
+  };
+
+  this.connection.send_raw(message);
+}

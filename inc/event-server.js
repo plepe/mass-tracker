@@ -110,6 +110,19 @@ Event.prototype.receive_message=function(message, client, callback) {
   if(!('data' in message))
     message.data={};
 
+  switch(message.type) {
+    case "request":
+      this.messages.request(message.data, function(reply) {
+	client.send_raw({
+	  type: 'response',
+	  timestamp: message.timestamp,
+	  data: reply
+	});
+      });
+      break;
+    default:
+  }
+
   this.emit("message_received", message, client);
 
   // The hooks may modify the message, wait for changes before

@@ -8,11 +8,22 @@ function Event(event_id, client) {
 }
 
 Event.prototype.receive_message=function(message, client, callback) {
-  this.messages.message_received(message);
+  if(message.type=='response') {
+    for(var i=0; i<message.data.length; i++) {
+      this.messages.message_received(message.data[i]);
+    }
+  }
+  else {
+    this.messages.message_received(message);
 
-  hooks.call("message_received", message);
+    hooks.call("message_received", message, this);
+  }
+
+  hooks.call("messages_received", this);
 }
 
 Event.prototype.set_ready=function() {
   this.ready=true;
+
+  this.client.request({ request: "all" });
 }
