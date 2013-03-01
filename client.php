@@ -30,24 +30,30 @@ function client_disconnect() {
   client.disconnect();
 }
 
-hooks.register("message_received", function(msg, peer) {
+hooks.register("messages_received", function(msg, peer) {
   var block=document.getElementById("messages");
-  var div=document.createElement("div");
-  div.appendChild(document.createTextNode(JSON.stringify(msg, null, '  ')));
-  div.timestamp=msg.timestamp;
 
   var current=block.firstChild;
   while(current) {
-    if((typeof(current.timestamp)!="undefined")&&
-       (msg.timestamp>current.timestamp)) {
-      block.insertBefore(div, current);
-      return;
-    }
-
-    current=current.nextSibling;
+    var next=current.nextSibling;
+    block.removeChild(current);
+    current=next;
   }
 
-  block.appendChild(div);
+  messages=client.event.messages.request();
+  for(var i=messages.length-1; i>=0; i--) {
+    var div=document.createElement("div");
+    var msg=messages[i];
+
+    var str=
+      "("+msg.type+") "+msg.client_id+": "+
+      JSON.stringify(msg.data, null, ' ');
+
+    div.appendChild(document.createTextNode(str));
+    div.timestamp=msg.timestamp;
+
+    block.appendChild(div);
+  }
 });
 
 </script>
