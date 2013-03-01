@@ -9,7 +9,8 @@ require "conf.php";
 <script type='text/javascript' src='inc/client-client.js'></script>
 <script type='text/javascript' src='inc/connection-client.js'></script>
 <script type='text/javascript' src='inc/event-client.js'></script>
-<script type='text/javascript' src='inc/messages-client.js'></script>
+<script type='text/javascript' src='lib/taffy-min.js'></script>
+<script type='text/javascript' src='inc/messages-taffy.js'></script>
 <script type='text/javascript' src='inc/serverdate.js'></script>
 <script type='text/javascript' src='client.js'></script>
 <script type='text/javascript'>
