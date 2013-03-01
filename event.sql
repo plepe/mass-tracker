@@ -10,7 +10,7 @@ create table event (
 );
 
 create table message (
-  peer_id	varchar(32)	not null,
+  client_id	varchar(32)	not null,
   timestamp	datetime	not null,
   received	datetime	primary key,
   type		text		not null,

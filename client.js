@@ -30,10 +30,8 @@ function init() {
     conf={};
 
   connection_init();
-  var ev=new Event("foobar");
   client=new Client(websocket_url, conf);
-
-  ev.add_client(client);
+  var ev=new Event("foobar", client);
 }
 
 window.onload=init;

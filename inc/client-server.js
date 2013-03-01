@@ -54,7 +54,8 @@ Client.prototype.receive_message=function(message, callback) {
 }
 
 Client.prototype.receive_callback=function(callback, message) {
-  callback(message);
+  if(callback)
+    callback(message);
 }
 
 Client.prototype.send=function(data, type) {

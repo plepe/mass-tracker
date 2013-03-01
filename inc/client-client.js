@@ -7,11 +7,10 @@ function Client(websocket_url, conf) {
   
   this.connection.connect(function() {
     this.conf=get_cookie("mass_tracker");
-    this.conf.event_id='foobar'; // get event_id from parameter or so
 
     var data={
       secret_id: this.conf.secret_id,
-      event_id: this.conf.event_id
+      event_id: this.event.event_id
     };
 
     this.connection.send_raw({ type: 'hello', data: data });
@@ -37,6 +36,8 @@ Client.prototype.receive_message=function(message, callback) {
 
       this.conf.secret_id=this.secret_id;
       set_cookie('mass_tracker', this.conf);
+
+      this.event.set_ready();
 
       this.connection.re_send();
       break;

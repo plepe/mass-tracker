@@ -35,7 +35,7 @@ Messages.prototype.request=function(param, callback) {
 
 Messages.prototype.message_received=function(message) {
   // Insert to database
-  this.db.run("insert into message (peer_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
+  this.db.run("insert into message (client_id, timestamp, received, type, data) values (?, ?, ?, ?, ?)",
       [ message.client_id, message.timestamp, message.received, message.type, JSON.stringify(message.data) ], function(error) {
 	if(error) {
 	  console.log("Error inserting into database: "+error.message+":");
