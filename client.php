@@ -16,6 +16,7 @@ require "conf.php";
 <script type='text/javascript' src='client.js'></script>
 
 <script type='text/javascript' src='inc/frontend.js'></script>
+<script type='text/javascript' src='inc/gps-frontend.js'></script>
 
 <script type='text/javascript'>
 var websocket_url="<?=$websocket_url?>";
