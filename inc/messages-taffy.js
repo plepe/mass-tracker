@@ -11,10 +11,25 @@ Messages.prototype.message_received=function(message) {
 }
 
 Messages.prototype.request=function(param, callback) {
-  var result=this.db().get();
+  if(!param)
+    param={ };
+
+  var result=this.db();
+
+  if(param.type)
+    result=result.filter({ type: param.type });
+  if(param.min_received)
+    result=result.filter({ received: {">": param.min_received}});
+  if(param.max_received)
+    result=result.filter({ received: {"<=": param.max_received}});
+  if(param.min_timestamp)
+    result=result.filter({ timestamp: {">": param.min_timestamp}});
+  if(param.max_timestamp)
+    result=result.filter({ timestamp: {"<=": param.max_timestamp}});
+  result=result.order("timestamp");
 
   if(callback)
-    callback(result);
+    callback(result.get());
 
-  return result;
+  return result.get();
 }
