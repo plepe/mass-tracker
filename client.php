@@ -19,6 +19,7 @@ require "conf.php";
 <script type='text/javascript' src='inc/frontend.js'></script>
 <script type='text/javascript' src='inc/map-frontend.js'></script>
 <script type='text/javascript' src='inc/gps-frontend.js'></script>
+<script type='text/javascript' src='inc/participants-frontend.js'></script>
 
 <script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
 
