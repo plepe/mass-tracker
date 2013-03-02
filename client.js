@@ -34,6 +34,8 @@ function init() {
   var ev=new Event("foobar", client);
 
   gps_init(ev);
+
+  frontend_init(ev);
 }
 
 window.onload=init;
