@@ -28,8 +28,25 @@ Messages.prototype.request=function(param, callback) {
     result=result.filter({ timestamp: {"<=": param.max_timestamp}});
   result=result.order("timestamp");
 
-  if(callback)
-    callback(result.get());
+  var list=result.get();
 
-  return result.get();
+  switch(param.request) {
+    case "newest":
+      var newest={};
+      for(var i=0; i<list.length; i++)
+	newest[list[i].client_id]=list[i];
+
+      list=[];
+      for(var i in newest)
+	list.push(newest[i]);
+
+      break;
+    case "all":
+    default:
+  }
+
+  if(callback)
+    callback(list);
+
+  return list;
 }
