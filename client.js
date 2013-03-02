@@ -32,6 +32,8 @@ function init() {
   connection_init();
   client=new Client(websocket_url, conf);
   var ev=new Event("foobar", client);
+
+  gps_init(ev);
 }
 
 window.onload=init;
