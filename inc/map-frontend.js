@@ -36,7 +36,7 @@ function map_frontend(frontend) {
 
   this.map.setCenter(new OpenLayers.LonLat(16.36, 48.21).transform(fromProjection, toProjection), 16);
 
-
+  setInterval(hooks.call.bind(this, "map_init", this.map), 1);
 }
 
 map_frontend.prototype.update=function() {
