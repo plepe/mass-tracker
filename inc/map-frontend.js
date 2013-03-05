@@ -4,12 +4,7 @@ function map_frontend(frontend) {
   fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
   toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
 
-  this.div_content=document.createElement("div");
-  this.div_content.className="map";
-  this.div_content.id="content_map";
-  this.frontend.div_content.appendChild(this.div_content);
-
-  this.map = new OpenLayers.Map("content_map", {
+  this.map = new OpenLayers.Map("map", {
 	    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
 	    maxResolution: 156543.0399,
 	    numZoomLevels: 19,

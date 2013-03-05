@@ -14,7 +14,6 @@ $include_php=array(
 );
 $include_js=array(
   "inc/functions.js",
-  "inc/gps.js",
   "inc/event_map.js",
   "inc/init.js",
   "inc/event.js",

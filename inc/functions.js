@@ -28,6 +28,9 @@ function now() {
   return new Date(new Date().getTime()-client_time_offset);
 }
 
+if(typeof global=="undefined")
+  global=window;
+
 var last_received_timestamp=0;
 global.get_received_timestamp=function() {
   var current=new Date();

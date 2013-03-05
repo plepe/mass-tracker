@@ -112,7 +112,7 @@ mass_event.prototype.set_date=function(new_date) {
     param.time_shift=this.time_shift;
   param.id=this.id;
 
-  new ajax("get_trackers", param, null, this.update_callback.bind(this, true));
+  // new ajax("get_trackers", param, null, this.update_callback.bind(this, true));
 
   // force update
   this.update(true);

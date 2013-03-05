@@ -59,7 +59,7 @@ function get_event($id) {
   global $db;
   global $events;
 
-  if(!preg_match("/^([a-z0-9A-Z_\.])*$/", $id)) {
+  if(!preg_match("/^([a-z0-9A-Z_\.])+$/", $id)) {
     print "Invalid ID";
     return null;
   }
