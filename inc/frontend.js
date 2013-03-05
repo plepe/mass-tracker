@@ -1,6 +1,8 @@
 function Frontend(event) {
   this.event=event;
 
+  this.show_date_offset=0; // 0..live, <0 playback
+
   this.div_content=document.createElement("div");
   this.div_content.id="content";
   document.body.appendChild(this.div_content);
@@ -18,6 +20,19 @@ function Frontend(event) {
   this.update();
 
   setInterval(this.update.bind(this), 1000);
+}
+
+// Get time - either live or playback
+Frontend.prototype.show_date=function() {
+  return new Date(ServerDate().getTime()+this.show_date_offset);
+}
+
+// Timestamp for requests for messages
+Frontend.prototype.show_date_timestamp=function() {
+  if(this.show_date_offset==0)
+    return null;
+
+  return this.show_date().toISOString();
 }
 
 Frontend.prototype.update=function() {
