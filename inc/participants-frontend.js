@@ -1,9 +1,8 @@
 function participants_frontend(frontend) {
   this.frontend=frontend;
 
-  this.div_content=document.createElement("div");
-  this.div_content.className="participants";
-  this.frontend.div_content.appendChild(this.div_content);
+  this.display=new Display("tracker_list", { title: "TrackerInnen", unit: "", type: "integer", expanded_type: "html" });
+  this.display.show(document.getElementById("displays"));
 }
 
 participants_frontend.prototype.update=function() {
@@ -18,10 +17,7 @@ participants_frontend.prototype.update=function() {
     ul.appendChild(li);
   }
 
-  while(this.div_content.firstChild)
-    this.div_content.removeChild(this.div_content.firstChild);
-
-  this.div_content.appendChild(ul);
+  this.display.set_value(list.length, ul);
 }
 
 hooks.register("frontend_register", function(frontend) {
