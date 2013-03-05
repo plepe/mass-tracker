@@ -25,6 +25,8 @@ set_cookie=function(key, value) {
 }
 
 function init() {
+  resize();
+
   conf=get_cookie("mass_tracker");
   if(!conf)
     conf={};

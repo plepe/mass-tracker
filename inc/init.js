@@ -37,8 +37,6 @@ function init() {
 
     map.events.register("moveend", map, call_hooks.bind(window, "map_moveend"));
 
-    resize();
-
     // Initialize Displays
     var displays=document.getElementById("displays");
 
@@ -86,11 +84,11 @@ function resize() {
     layout_css.href=null;
 
   if(window.innerWidth>window.innerHeight) {
-    if(layout_css.href!="inc/layout_landscape.css")
+    if(!layout_css.href.match(/inc\/layout_landscape\.css$/))
       layout_css.href="inc/layout_landscape.css";
   }
   else {
-    if(layout_css.href!="inc/layout_portrait.css")
+    if(!layout_css.href.match(/inc\/layout_portrait.css$/))
       layout_css.href="inc/layout_portrait.css";
   }
 
