@@ -42,6 +42,7 @@ if(!$event) {
 <script type='text/javascript' src='client.js'></script>
 
 <script type='text/javascript' src='inc/frontend.js'></script>
+<script type='text/javascript' src='inc/event-frontend.js'></script>
 <script type='text/javascript' src='inc/map-frontend.js'></script>
 <script type='text/javascript' src='inc/gps-frontend.js'></script>
 <script type='text/javascript' src='inc/participants-frontend.js'></script>
@@ -108,7 +109,7 @@ hooks.register("messages_received", function(msg, peer) {
 <div id='content_container'>
 
 <div id='content'>
-<div id='title'><?=$event->data['name']?></div>
+<div id='event'><?=$event->data['name']?></div>
 
 <div id='displays' class='displays'></div>
 <div id='status'>
