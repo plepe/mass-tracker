@@ -30,3 +30,13 @@ global.uniq_id=function() {
 
   return ret;
 }
+
+global.log=function(msg, data) {
+  console.log(new Date().toISOString()+": "+msg+(data?":":""));
+
+  var str=JSON.stringify(data);
+  if(str.length>80*3)
+    str=str.substr(0, 80*3-3)+"...";
+
+  console.log(str);
+}
