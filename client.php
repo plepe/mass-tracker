@@ -31,7 +31,6 @@ if(!$event) {
     <?php print_add_html_headers(); ?>
 
 <script type='text/javascript' src='modules/base/modules/hooks/hooks.js'></script>
-<script type='text/javascript' src='lib/jquery.js'></script>
 <script type='text/javascript' src='inc/client-client.js'></script>
 <script type='text/javascript' src='inc/connection-client.js'></script>
 <script type='text/javascript' src='inc/event-client.js'></script>
@@ -45,6 +44,7 @@ if(!$event) {
 <script type='text/javascript' src='inc/event-frontend.js'></script>
 <script type='text/javascript' src='inc/map-frontend.js'></script>
 <script type='text/javascript' src='inc/gps-frontend.js'></script>
+<script type='text/javascript' src='inc/tracker-frontend.js'></script>
 <script type='text/javascript' src='inc/participants-frontend.js'></script>
 
 <script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>

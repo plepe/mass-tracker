@@ -3,8 +3,29 @@ function Event(event_id, client) {
   this.client.set_event(this);
   this.event_id=event_id;
   this.ready=false;
+  this._data={};
 
   this.messages=new Messages();
+}
+
+Event.prototype.data=function(k) {
+  if(!k)
+    return this._data;
+
+  if(typeof this._data[k]=="undefined")
+    return null;
+
+  return this._data[k];
+}
+
+Event.prototype.set_data=function(k, v) {
+  if(v===null) {
+    delete(this._data[k]);
+    return null;
+  }
+
+  this._data[k]=v;
+  return v;
 }
 
 Event.prototype.receive_message=function(message, client, callback) {

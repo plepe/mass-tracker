@@ -38,8 +38,8 @@ var tracker_data_form_default={
   'color2': "#ffff00"
 };
 
-function tracker(id) {
-  this.id=id;
+function tracker_frontend(frontend) {
+  this.frontend=frontend;
   this.data={};
   for(var i in tracker_data_form_default)
     this.data[i]=tracker_data_form_default[i];
@@ -47,12 +47,16 @@ function tracker(id) {
   this.log=[];
   this.participate=false;
 
+  this.create_display();
   this.update_style();
 }
 
-tracker.prototype.cleanup=function() {
+tracker_frontend.prototype.update=function() {
+}
+
+tracker_frontend.prototype.cleanup=function() {
   var newlog=[];
-  var current=current_event.current_time;
+  var current=this.frontend.show_date();
 
   for(var j=0; j<this.log.length; j++) {
     var timestamp=this.log[j].timestamp;
@@ -67,7 +71,7 @@ tracker.prototype.cleanup=function() {
   this.log=newlog;
 }
 
-tracker.prototype.update_style=function() {
+tracker_frontend.prototype.update_style=function() {
   this.age_styles=[];
   for(var i=0; i<age_styles.length; i++) {
     this.age_styles[i]={};
@@ -85,7 +89,7 @@ tracker.prototype.update_style=function() {
   this.pos_style.graphicTitle=this.data.name;
 }
 
-tracker.prototype.format_name=function() {
+tracker_frontend.prototype.format_name=function() {
   var ret="";
 
   ret+="<img src='"+this.icon()+"'> ";
@@ -98,7 +102,7 @@ tracker.prototype.format_name=function() {
   return ret;
 }
 
-tracker.prototype.icon=function(color1, color2) {
+tracker_frontend.prototype.icon=function(color1, color2) {
   var ret='img_cycle.php?color1=%color1%&color2=%color2%';
 
   if(!color1)
@@ -112,7 +116,7 @@ tracker.prototype.icon=function(color1, color2) {
   return ret;
 }
 
-tracker.prototype.set_data=function(data) {
+tracker_frontend.prototype.set_data=function(data) {
   for(var i in data)
     if(data[i])
       this.data[i]=data[i];
@@ -120,7 +124,7 @@ tracker.prototype.set_data=function(data) {
   this.update_style();
 }
 
-tracker.prototype.show_form=function(dom) {
+tracker_frontend.prototype.show_form=function(dom) {
   var data=this.data;
   if(!data) {
     data={};
@@ -133,12 +137,12 @@ tracker.prototype.show_form=function(dom) {
   this.form.set_data(data);
 }
 
-tracker.prototype.show_start_participate=function() {
-  if(current_event.begin_time.getTime()>now().getTime()) {
-    this.display.set_value("ab "+strftime("%H:%M", current_event.begin_time.getTime()/1000), "");
+tracker_frontend.prototype.show_start_participate=function() {
+  if(this.frontend.event.data('begin_time').getTime()>now().getTime()) {
+    this.display.set_value("ab "+strftime("%H:%M", this.frontend.event.data('begin_time').getTime()/1000), "");
     window.setTimeout(this.show_start_participate.bind(this),
-      current_event.begin_time.getTime()-now().getTime());
-    current_event.time_shift=0;
+      this.frontend.event.data('begin_time').getTime()-now().getTime());
+    this.frontend.event.time_shift=0;
 
     return;
   }
@@ -195,29 +199,29 @@ tracker.prototype.show_start_participate=function() {
 
 }
 
-tracker.prototype.submit_participate=function() {
+tracker_frontend.prototype.submit_participate=function() {
   var param={
     'tracker_data': this.form.get_data(),
-    'id': current_event.id
+    'id': this.frontend.event.id
   };
 
   this.participate=true;
-  ajax("tracker_start", param, this.submit_participate_callback.bind(this));
+  // TODO: ajax("tracker_start", param, this.submit_participate_callback.bind(this));
   this.set_data(this.form.get_data());
 }
 
-tracker.prototype.submit_participate_callback=function(data) {
+tracker_frontend.prototype.submit_participate_callback=function(data) {
   if(!this.id) {
     // replace tracker with my id by my object
-    if(current_event.tracker[data.tracker_id]) {
-      this.log=current_event.tracker[data.tracker_id].log;
-      current_event.tracker[data.tracker_id].remove();
-      delete(current_event.tracker[data.tracker_id]);
+    if(this.frontend.event.tracker[data.tracker_id]) {
+      this.log=this.frontend.event.tracker[data.tracker_id].log;
+      this.frontend.event.tracker[data.tracker_id].remove();
+      delete(this.frontend.event.tracker[data.tracker_id]);
     }
 
     // add my tracker to event
     this.id=data.tracker_id;
-    current_event.tracker[this.id]=this;
+    this.frontend.event.tracker[this.id]=this;
   }
 
   this.display.hide_expanded();
@@ -227,7 +231,7 @@ tracker.prototype.submit_participate_callback=function(data) {
   this.refresh();
 }
 
-tracker.prototype.show_edit_participate=function() {
+tracker_frontend.prototype.show_edit_participate=function() {
   var dom=document.createElement("form");
 
   this.show_form(dom);
@@ -247,32 +251,32 @@ tracker.prototype.show_edit_participate=function() {
   this.display.set_value(null, dom);
 }
 
-tracker.prototype.stop_participate=function() {
+tracker_frontend.prototype.stop_participate=function() {
   var param={
-    'id': current_event.id
+    'id': this.frontend.event.id
   };
 
   this.participate=false;
-  ajax("tracker_stop", param, this.stop_participate_callback.bind(this));
+  // TODO: ajax("tracker_stop", param, this.stop_participate_callback.bind(this));
 }
 
-tracker.prototype.stop_participate_callback=function() {
+tracker_frontend.prototype.stop_participate_callback=function() {
   this.display.hide_expanded();
 
   this.show_start_participate();
 }
 
-tracker.prototype.show_end_event=function() {
+tracker_frontend.prototype.show_end_event=function() {
   this.display.set_value("vorbei");
   this.participate=false;
 }
 
-tracker.prototype.create_display=function(displays) {
+tracker_frontend.prototype.create_display=function() {
   this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
-  this.display.show(displays);
+  this.display.show(document.getElementById("displays"));
 
-  if(current_event.end_time.getTime()>now().getTime()) {
-    var x=current_event.end_time.getTime()-now().getTime();
+  if(this.frontend.event.data('end_time').getTime()>now().getTime()) {
+    var x=this.frontend.event.data('end_time').getTime()-now().getTime();
     window.setTimeout(this.show_end_event.bind(this),
       x);
 
@@ -283,17 +287,17 @@ tracker.prototype.create_display=function(displays) {
   }
 }
 
-tracker.prototype.push_point=function(point) {
+tracker_frontend.prototype.push_point=function(point) {
   this.log.push(point);
 }
 
-tracker.prototype.reset=function() {
+tracker_frontend.prototype.reset=function() {
   this.log=[];
 }
 
-tracker.prototype.refresh=function(current) {
+tracker_frontend.prototype.refresh=function(current) {
   if(!current)
-    current=current_event.current_time;
+    current=this.frontend.event.current_time;
 
   if(this.features)
     vector_layer.removeFeatures(this.features);
@@ -367,9 +371,13 @@ tracker.prototype.refresh=function(current) {
     vector_layer.addFeatures([this.pos_feature]);
 }
 
-tracker.prototype.remove=function() {
+tracker_frontend.prototype.remove=function() {
   if(this.features)
     vector_layer.removeFeatures(this.features);
   if(this.pos_feature)
     vector_layer.removeFeatures([this.pos_feature]);
 }
+
+hooks.register("frontend_register", function(frontend) {
+  return new tracker_frontend(frontend);
+});
