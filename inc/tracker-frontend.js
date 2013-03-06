@@ -85,35 +85,16 @@ tracker_frontend.prototype.update_style=function() {
   for(var j in pos_style)
     this.pos_style[j]=pos_style[j];
 
-  this.pos_style.externalGraphic=this.icon();
+  this.pos_style.externalGraphic=format_icon(this.data);
   this.pos_style.graphicTitle=this.data.name;
 }
 
 tracker_frontend.prototype.format_name=function() {
-  var ret="";
-
-  ret+="<img src='"+this.icon()+"'> ";
-
-  if(this.data&&this.data.name)
-    ret+=this.data.name;
-  else
-    ret+="Anonymous";
-
-  return ret;
+  return format_name(this.data);
 }
 
-tracker_frontend.prototype.icon=function(color1, color2) {
-  var ret='img_cycle.php?color1=%color1%&color2=%color2%';
-
-  if(!color1)
-    color1=this.data.color1;
-  if(!color2)
-    color2=this.data.color2;
-
-  ret=ret.replace(/%color1%/, urlencode(color1));
-  ret=ret.replace(/%color2%/, urlencode(color2));
-
-  return ret;
+tracker_frontend.prototype.icon=function() {
+  return format_icon(this.data);
 }
 
 tracker_frontend.prototype.set_data=function(data) {
@@ -184,7 +165,7 @@ tracker_frontend.prototype.show_start_participate=function() {
     move: function(img, c) {
       var data=this.form.get_data();
       img.className="loading";
-      img.src=this.icon(c.toHexString(true), data.color2);
+      img.src=format_icon({ color1: c.toHexString(true), color2: data.color2 });
     }.bind(this, img)
   });
 
@@ -193,40 +174,24 @@ tracker_frontend.prototype.show_start_participate=function() {
     move: function(img, c) {
       var data=this.form.get_data();
       img.className="loading";
-      img.src=this.icon(data.color1, c.toHexString(true));
+      img.src=format_icon({ color1: data.color1, color2: c.toHexString(true) });
     }.bind(this, img)
   });
 
 }
 
 tracker_frontend.prototype.submit_participate=function() {
-  var param={
-    'tracker_data': this.form.get_data(),
-    'id': this.frontend.event.id
-  };
+  var param=this.form.get_data();
 
   this.participate=true;
-  // TODO: ajax("tracker_start", param, this.submit_participate_callback.bind(this));
+  this.frontend.event.send(param, "tracker_start", this.submit_participate_callback.bind(this));
   this.set_data(this.form.get_data());
 }
 
 tracker_frontend.prototype.submit_participate_callback=function(data) {
-  if(!this.id) {
-    // replace tracker with my id by my object
-    if(this.frontend.event.tracker[data.tracker_id]) {
-      this.log=this.frontend.event.tracker[data.tracker_id].log;
-      this.frontend.event.tracker[data.tracker_id].remove();
-      delete(this.frontend.event.tracker[data.tracker_id]);
-    }
-
-    // add my tracker to event
-    this.id=data.tracker_id;
-    this.frontend.event.tracker[this.id]=this;
-  }
-
   this.display.hide_expanded();
-  this.display.set_value(this.format_name());
-  this.show_edit_participate();
+  this.display.set_value(format_name(data));
+  //this.show_edit_participate();
 
   this.refresh();
 }

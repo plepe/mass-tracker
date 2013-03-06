@@ -17,6 +17,7 @@ $include_js=array(
   "inc/event_map.js",
   "inc/init.js",
   "inc/event.js",
+  "inc/format.js",
 
   "lib/jquery.js",
   "lib/jquery-ui.js",
