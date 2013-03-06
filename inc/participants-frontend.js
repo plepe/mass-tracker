@@ -11,8 +11,15 @@ participants_frontend.prototype.update=function() {
   var ul=document.createElement("ul");
 
   for(var i=0; i<list.length; i++) {
+    var participant=this.frontend.event.participants.get(list[i].client_id);
+    var data=null;
+
+    if(participant)
+      data=participant.data();
+
     var li=document.createElement("li");
-    li.appendChild(document.createTextNode(list[i].client_id));
+
+    li.innerHTML=format_name(data);
 
     ul.appendChild(li);
   }
