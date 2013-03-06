@@ -26,3 +26,19 @@ function format_icon(data) {
 
   return ret;
 }
+
+function format_icon_style(data) {
+  var style={
+    graphicWidth: 25,
+    graphicHeight: 25,
+    graphicXOffset: -13,
+    graphicYOffset: -13,
+    graphicZIndex: 10
+  };
+
+  style.externalGraphic=format_icon(data);
+  if(data&&data.name)
+    style.graphicTitle=data.name;
+
+  return style;
+}
