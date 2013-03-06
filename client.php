@@ -38,6 +38,7 @@ if(!$event) {
 <script type='text/javascript' src='inc/messages-taffy.js'></script>
 <script type='text/javascript' src='inc/serverdate.js'></script>
 <script type='text/javascript' src='inc/gps-client.js'></script>
+<script type='text/javascript' src='inc/participants-client.js'></script>
 <script type='text/javascript' src='client.js'></script>
 
 <script type='text/javascript' src='inc/frontend.js'></script>

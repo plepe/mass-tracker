@@ -6,6 +6,7 @@ function Event(event_id, client) {
   this._data={};
 
   this.messages=new Messages();
+  this.participants=new Participants();
 }
 
 Event.prototype.data=function(k) {
