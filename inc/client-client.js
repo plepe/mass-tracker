@@ -58,14 +58,14 @@ Client.prototype.set_event=function(event) {
   this.event=event;
 }
 
-Client.prototype.send=function(data, type) {
+Client.prototype.send=function(data, type, callback) {
   var message={
     timestamp: ServerDate().toISOString(),
     type: type,
     data: data
   };
 
-  this.connection.send_queued(message);
+  this.connection.send_queued(message, callback);
 
   message.client_id=this.client_id;
   this.event.receive_message(message);

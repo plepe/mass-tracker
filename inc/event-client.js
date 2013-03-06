@@ -43,8 +43,8 @@ Event.prototype.receive_message=function(message, client, callback) {
   hooks.call("messages_received", this);
 }
 
-Event.prototype.send=function(data, type) {
-  return this.client.send(data, type);
+Event.prototype.send=function(data, type, callback) {
+  return this.client.send(data, type, callback);
 }
 
 Event.prototype.set_ready=function() {

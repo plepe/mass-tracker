@@ -12,6 +12,7 @@ function connection_init() {
 
 function Connection(url, client) {
   this.to_send=[];
+  this.send_callbacks={};
   this.url=url;
   this.client=client;
 }
@@ -64,7 +65,19 @@ Connection.prototype.connect=function(callback) {
 	    if('data' in message)
 	      this.to_send[i].data=message.data;
 
+	    var orig_message=this.to_send[i];
 	    this.to_send.splice(i, 1);
+
+	    if(this.send_callbacks[message.timestamp]) {
+	      var callback=this.send_callbacks[message.timestamp];
+	      delete(this.send_callbacks[message.timestamp]);
+
+	      callback(
+	        typeof orig_message.data=="undefined"?null:orig_message.data,
+		orig_message
+	      );
+	    }
+
 	    break;
 	  }
 	}
@@ -96,8 +109,12 @@ Connection.prototype.disconnect=function() {
   this.websocket.close();
 }
 
-Connection.prototype.send_queued=function(message) {
+Connection.prototype.send_queued=function(message, callback) {
   this.to_send.push(message);
+
+  if(callback&&message.timestamp) {
+    this.send_callbacks[message.timestamp]=callback;
+  }
 
   this.send_raw(message);
 }
