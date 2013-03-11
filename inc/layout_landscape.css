@@ -1,5 +1,8 @@
 #map {
   position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
   width: 50%;
   height: 100%;
   border-right: 1px solid black;
@@ -8,8 +11,9 @@
 #content_container {
   position: absolute;
   width: 50%;
+  top: 0px;
+  bottom: 0px;
   left: 50%;
-  height: 100%;
   overflow: auto;
 }
 #content {

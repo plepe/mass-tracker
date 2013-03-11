@@ -21,7 +21,7 @@ if(!$event) {
 <html>
 <head>
 <link rel='stylesheet' href='style.css' type='text/css' />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1" />
 <link id='layout_css' rel='stylesheet' href='inc/layout_dummy.css' type='text/css' />
 
 <script type='text/javascript' src='lib/php.default.min.js'></script>
