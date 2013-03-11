@@ -1,35 +1,14 @@
 function map_frontend(frontend) {
   this.frontend=frontend;
 
-  fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
-  toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+  this.map = L.map('map').setView([ 48.21, 16.36 ], 16);
 
-  this.map = new OpenLayers.Map("map", {
-	    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-	    maxResolution: 156543.0399,
-	    numZoomLevels: 19,
-	    projection: new OpenLayers.Projection("EPSG:900913"),
-	    displayProjection: new OpenLayers.Projection("EPSG:900913"),
-	    controls: [ new OpenLayers.Control.Navigation(),
-			new OpenLayers.Control.TouchNavigation() ]
-	  });
-
-  this.map.addControl(new OpenLayers.Control.ScaleLine({ geodesic: true }));
-
-  var basemap=new OpenLayers.Layer.TMS("OpenStreetBrowser",
-    "http://tiles-base.openstreetbrowser.org/tiles/basemap_base/", {
-    type: 'png',
-    getURL: osm_getTileURL,
-    displayOutsideMaxExtent: true,
-    attribution: 'Tiles courtesy <a href="http://www.openstreetbrowser.org/">OpenStreetBrowser</a>, CC-BY-SA <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors</a>'
-  });
-
-  this.map.addLayer(basemap);
-  this.map.setBaseLayer(basemap);
-
-  this.map.addLayer(new OpenLayers.Layer.OSM());
-
-  this.map.setCenter(new OpenLayers.LonLat(16.36, 48.21).transform(fromProjection, toProjection), 16);
+  L.tileLayer(
+    "http://tiles-base.openstreetbrowser.org/tiles/basemap_base/{z}/{x}/{y}.png",
+    {
+      attribution: 'Tiles courtesy <a href="http://www.openstreetbrowser.org/">OpenStreetBrowser</a>, CC-BY-SA <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors</a>'
+    }).addTo(this.map);
+  document.getElementById("map").style.position="absolute";
 
   setTimeout(hooks.call.bind(this, "map_init", this.map), 1);
 }

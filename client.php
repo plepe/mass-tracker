@@ -20,12 +20,13 @@ if(!$event) {
 <!DOCTYPE HTML>
 <html>
 <head>
+<link rel='stylesheet' href='lib/leaflet/leaflet.css' type='text/css' />
+<script type='text/javascript' src='lib/leaflet/leaflet.js'></script>
 <link rel='stylesheet' href='style.css' type='text/css' />
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1" />
-<link id='layout_css' rel='stylesheet' href='inc/layout_dummy.css' type='text/css' />
+<link id='layout_css' rel='stylesheet' href='inc/layout_landscape.css' type='text/css' />
 
 <script type='text/javascript' src='lib/php.default.min.js'></script>
-<script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
     <?php print modulekit_include_js(); /* prints all js-includes */ ?>
     <?php print modulekit_include_css(); /* prints all css-includes */ ?>
     <?php print_add_html_headers(); ?>
@@ -101,12 +102,7 @@ hooks.register("messages_received", function(msg, peer) {
 <input type='button' onclick='client_send({msg: "foobar"})' value='send'>
 <input type='button' onclick='client_connect()' value='connect'>
 <input type='button' onclick='client_disconnect()' value='disconnect'>
-<div id='map'>
-  <div id='nav'>
-    <div id='nav_zoomin' onClick='nav_zoomin()'>+</div>
-    <div id='nav_zoomout' onClick='nav_zoomout()'>-</div>
-  </div>
-</div>
+<div id='map_container'><div id='map'></div></div>
 <div id='content_container'>
 
 <div id='content'>
