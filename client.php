@@ -20,7 +20,7 @@ if(!$event) {
 <!DOCTYPE HTML>
 <html>
 <head>
-<link id='layout_css' rel='stylesheet' href='style.css' type='text/css' />
+<link rel='stylesheet' href='style.css' type='text/css' />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link id='layout_css' rel='stylesheet' href='inc/layout_dummy.css' type='text/css' />
 

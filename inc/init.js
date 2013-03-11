@@ -81,7 +81,7 @@ function resize() {
     layout_css=document.getElementById("layout_css");
 
   if(!layout_css.href)
-    layout_css.href=null;
+    layout_css.href="";
 
   if(window.innerWidth>window.innerHeight) {
     if(!layout_css.href.match(/inc\/layout_landscape\.css$/))
@@ -91,7 +91,6 @@ function resize() {
     if(!layout_css.href.match(/inc\/layout_portrait.css$/))
       layout_css.href="inc/layout_portrait.css";
   }
-
 
   if(map)
     map.setCenter(center);
