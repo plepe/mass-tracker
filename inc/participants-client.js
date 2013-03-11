@@ -29,6 +29,14 @@ function Participant(id, participants_list) {
 }
 
 Participant.prototype.data=function() {
+  if(!this._data) {
+    var newest=this.participants_list.event.messages.request({ request: "newest", type: "tracker_start", client_id: this.id });
+    if(newest.length==0)
+      return {};
+
+    return newest[0].data;
+  }
+
   return this._data;
 }
 
