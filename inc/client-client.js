@@ -39,6 +39,12 @@ Client.prototype.receive_message=function(message, callback) {
 
       this.event.set_ready();
 
+      // fix client_id of messages
+      var list=this.event.messages.request();
+      for(var i=0; i<list.length; i++)
+	if(list[i].client_id===null)
+	  list[i].client_id=this.client_id;
+
       notification("Verbindung zum Server hergestellt", NOTIFICATION_NOTICE);
 
       this.connection.re_send();
