@@ -51,5 +51,10 @@ Event.prototype.send=function(data, type, callback) {
 Event.prototype.set_ready=function() {
   this.ready=true;
 
-  this.client.request({ request: "all" });
+  var param={ request: "all" };
+
+  if(this.client.max_received)
+    param.min_received=this.client.max_received;
+
+  this.client.request(param);
 }
