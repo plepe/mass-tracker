@@ -28,12 +28,35 @@ function shoutbox_frontend(frontend) {
   this.display.show_expanded();
 
   this.display.set_value("", div);
+
+  hooks.register("message_received", this.receive_message.bind(this), this);
+  hooks.register("messages_received", this.reset.bind(this), this);
 }
 
 shoutbox_frontend.prototype.submit=function() {
   var data=this.form.get_data();
 
   this.frontend.event.send(data, "shoutbox");
+}
+
+shoutbox_frontend.prototype.reset=function(message) {
+  this.shout_log.innerHTML="";
+
+  var list=this.frontend.event.messages.request({ type: "shoutbox" });
+
+  for(var i=0; i<list.length; i++) {
+    this.receive_message(list[i]);
+  }
+}
+
+shoutbox_frontend.prototype.receive_message=function(message) {
+  var div=document.createElement("div");
+  div.innerHTML=message.client_id+": "+JSON.stringify(message.data);
+
+  if(this.shout_log.firstChild)
+    this.shout_log.insertBefore(div, this.shout_log.firstChild);
+  else
+    this.shout_log.appendChild(div);
 }
 
 shoutbox_frontend.prototype.update=function() {
