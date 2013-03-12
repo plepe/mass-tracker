@@ -39,8 +39,12 @@ Messages.prototype.request=function(param, callback) {
   else
     where="";
 
+  var order="timestamp asc";
+  if(param.request&&param.client_id&&(param.request=="newest"))
+    order="timestamp desc limit 1";
+
   // answer request
-  this.db.each("select * from message "+where+" order by timestamp asc",
+  this.db.each("select * from message "+where+" order by "+order,
       sql_param,
       
       // for each message
@@ -59,6 +63,16 @@ Messages.prototype.request=function(param, callback) {
       function(error, count) {
 	if(error) {
 	  console.log("Error select from database: "+error.message);
+	}
+
+	if(param.request&&(param.request=="newest")) {
+	  var newest={};
+	  for(var i=0; i<reply.length; i++)
+	    newest[reply[i].client_id]=reply[i];
+
+	  reply=[];
+	  for(var i in newest)
+	    reply.push(newest[i]);
 	}
 
 	callback(reply);
