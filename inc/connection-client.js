@@ -19,10 +19,11 @@ function Connection(url, client) {
 
 Connection.prototype.connect=function(callback) {
   this.keep_closed=false;
+  this.onopen_callback=callback;
   this.websocket=new WebSocket(this.url);
 
   this.websocket.onerror=function(error) {
-    notification("Sorry, but there's some problem with your connection or the server is down.", NOTIFICATION_ERROR);
+    notification("Sorry, but there's a problem with your connection or the server is down.", NOTIFICATION_ERROR);
   }.bind(this);
 
   this.websocket.onclose=function() {
@@ -36,8 +37,8 @@ Connection.prototype.connect=function(callback) {
   }.bind(this);
 
   this.websocket.onopen=function() {
-    callback();
-  };
+    this.onopen_callback();
+  }.bind(this);
 
   this.websocket.onmessage=function(message) {
     try {
