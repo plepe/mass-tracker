@@ -66,11 +66,11 @@ function client_send(data, type) {
 }
 
 function client_connect() {
-  client.connect();
+  client.connection.connect();
 }
 
 function client_disconnect() {
-  client.disconnect();
+  client.connection.disconnect();
 }
 
 hooks.register("messages_received", function(msg, peer) {
