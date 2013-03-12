@@ -1,61 +1,124 @@
 <?php
-include "conf.php";
+require "conf.php";
 include "modulekit/loader.php"; /* loads all php-includes */
 Header("Content-Type: text/html; charset=utf-8");
 session_start();
 call_hooks("init");
 
-?>
-<html>
-  <head>
-    <script type='text/javascript'>
-    // calculate client time offset
-    var client_time_offset=(new Date().getTime())-<?=time()?>*1000;
-    </script>
-    <title><?=$title?></title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link id='layout_css' rel='stylesheet' href='inc/layout_dummy.css' type='text/css' />
-<script type='text/javascript' src='lib/php.default.min.js'></script>
-<script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
-    <?php print modulekit_include_js(); /* prints all js-includes */ ?>
-    <?php print modulekit_include_css(); /* prints all css-includes */ ?>
-    <?php print_add_html_headers(); ?>
-  </head>
-  <body>
+if(!isset($_REQUEST['id'])) {
+  print "No event id supplied!";
+  exit;
+}
 
-<?
 $event=get_event($_REQUEST['id']);
 if(!$event) {
   print "No such event";
   exit;
 }
 
-print "<script type='text/javascript'>\n";
-print "var current_event=new mass_event('{$_REQUEST['id']}', ".json_encode($event->data).");\n";
-print "</script>\n";
-
-if(isset($_REQUEST['participate'])) {
-  $_SESSION['event_id']=$_REQUEST['id'];
-}
-if(isset($_REQUEST['checkout'])) {
-  unset($_SESSION['event_id']);
-}
-
 ?>
-<div id='map'>
-  <div id='nav'>
-    <div id='nav_zoomin' onClick='nav_zoomin()'>+</div>
-    <div id='nav_zoomout' onClick='nav_zoomout()'>-</div>
-  </div>
-</div>
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel='stylesheet' href='lib/leaflet/leaflet.css' type='text/css' />
+<script type='text/javascript' src='lib/leaflet/leaflet.js'></script>
+<link rel='stylesheet' href='style.css' type='text/css' />
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1" />
+<link id='layout_css' rel='stylesheet' href='inc/layout_landscape.css' type='text/css' />
+
+<script type='text/javascript' src='lib/php.default.min.js'></script>
+    <?php print modulekit_include_js(); /* prints all js-includes */ ?>
+    <?php print modulekit_include_css(); /* prints all css-includes */ ?>
+    <?php print_add_html_headers(); ?>
+
+<script type='text/javascript' src='modules/base/modules/hooks/hooks.js'></script>
+<script type='text/javascript' src='inc/client-client.js'></script>
+<script type='text/javascript' src='inc/connection-client.js'></script>
+<script type='text/javascript' src='inc/event-client.js'></script>
+<script type='text/javascript' src='lib/taffy-min.js'></script>
+<script type='text/javascript' src='inc/messages-taffy.js'></script>
+<script type='text/javascript' src='inc/serverdate.js'></script>
+<script type='text/javascript' src='inc/gps-client.js'></script>
+<script type='text/javascript' src='inc/participants-client.js'></script>
+<script type='text/javascript' src='inc/notification-client.js'></script>
+<script type='text/javascript' src='client.js'></script>
+
+<script type='text/javascript' src='inc/frontend.js'></script>
+<script type='text/javascript' src='inc/event-frontend.js'></script>
+<script type='text/javascript' src='inc/map-frontend.js'></script>
+<script type='text/javascript' src='inc/gps-frontend.js'></script>
+<script type='text/javascript' src='inc/tracker-frontend.js'></script>
+<script type='text/javascript' src='inc/participants-frontend.js'></script>
+<script type='text/javascript' src='inc/notification-frontend.js'></script>
+<link rel='stylesheet' href='inc/notification-frontend.css' type='text/css' />
+
+<script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
+
+<script type='text/javascript'>
+var event_id="<?=$event->id?>";
+var websocket_url="<?=$websocket_url?>";
+
+function client_send(data, type) {
+  if(!type)
+    type='chat';
+
+  client.send(data, type);
+}
+
+function client_connect() {
+  client.connection.connect();
+}
+
+function client_disconnect() {
+  client.connection.disconnect();
+}
+
+hooks.register("messages_received", function(msg, peer) {
+  var block=document.getElementById("messages");
+
+  var current=block.firstChild;
+  while(current) {
+    var next=current.nextSibling;
+    block.removeChild(current);
+    current=next;
+  }
+
+  messages=client.event.messages.request();
+  for(var i=messages.length-1; i>=0; i--) {
+    var div=document.createElement("div");
+    var msg=messages[i];
+
+    var str=
+      "("+msg.type+") "+msg.client_id+": "+
+      JSON.stringify(msg.data, null, ' ');
+
+    div.appendChild(document.createTextNode(str));
+    div.timestamp=msg.timestamp;
+
+    block.appendChild(div);
+  }
+});
+
+</script>
+</head>
+<body>
+<input type='button' onclick='client_send({msg: "foobar"})' value='send'>
+<input type='button' onclick='client_connect()' value='connect'>
+<input type='button' onclick='client_disconnect()' value='disconnect'>
+<div id='map_container'><div id='map'></div></div>
 <div id='content_container'>
 
 <div id='content'>
-<div id='title'><?=$event->data['name']?></div>
+<div id='event'><?=$event->data['name']?></div>
 
 <div id='displays' class='displays'></div>
 <div id='status'>
 <?
+$event=get_event($_REQUEST['id']);
+if(!$event) {
+  print "No such event";
+  exit;
+}
 
 $may_edit=false;
 if($event->data['status']=="current") {
@@ -81,5 +144,6 @@ print "</div>\n";
 ?>
 </div>  <!-- #container -->
 </div>  <!-- #content_container -->
-  </body>
+<div id='messages' style='display: none'></div>
+</body>
 </html>
