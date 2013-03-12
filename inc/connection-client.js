@@ -15,11 +15,13 @@ function Connection(url, client) {
   this.send_callbacks={};
   this.url=url;
   this.client=client;
+  this.client.max_received=null;
 }
 
 Connection.prototype.connect=function(callback) {
   this.keep_closed=false;
-  this.onopen_callback=callback;
+  if(callback)
+    this.onopen_callback=callback;
   this.websocket=new WebSocket(this.url);
 
   this.websocket.onerror=function(error) {
@@ -86,11 +88,11 @@ Connection.prototype.connect=function(callback) {
       default:
         this.client.receive_message(message);
 
-	if(message.received>this.max_received) {
-	  this.max_received=message.received;
-	}
-
 	break;
+    }
+
+    if(message.received&&(this.client.max_received===null)||(message.received>this.client.max_received)) {
+      this.client.max_received=message.received;
     }
 
   }.bind(this);
