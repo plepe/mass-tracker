@@ -5,6 +5,7 @@ var sqlite3=require('sqlite3');
 var Functions=require('./functions.js');
 var Event=require('./event-server.js');
 var Client=require('./client-server.js');
+var hooks=require('../modules/base/modules/hooks/hooks.js');
 //var Event=require('./client-server.js');
 
 function Core() {
@@ -31,9 +32,13 @@ Core.prototype.init=function(config) {
 	      console.log("Error initializing database: "+error.message);
 	      process.exit(1);
 	    }
+
+	    hooks.call("db_ready");
 	  });
 	});
       }
+      else
+	hooks.call("db_ready");
     });
   }.bind(this));
 
