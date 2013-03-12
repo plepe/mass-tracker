@@ -22,7 +22,7 @@ Connection.prototype.connect=function(callback) {
   this.websocket=new WebSocket(this.url);
 
   this.websocket.onerror=function(error) {
-    alert("Sorry, but there's some problem with your connection or the server is down.");
+    notification("Sorry, but there's some problem with your connection or the server is down.", NOTIFICATION_ERROR);
   }.bind(this);
 
   this.websocket.onclose=function() {
@@ -30,8 +30,8 @@ Connection.prototype.connect=function(callback) {
       this.disconnect_received=this.max_received;
 
     if(!this.keep_closed) {
-      alert("Connection to server closed. Something wrong? Trying to reconnect.");
-      this.connect();
+      notification("Connection to server closed. Something wrong? Trying to reconnect in 10s.", NOTIFICATION_WARNING);
+      setTimeout(this.connect.bind(this), 10000);
     }
   }.bind(this);
 

@@ -39,6 +39,8 @@ Client.prototype.receive_message=function(message, callback) {
 
       this.event.set_ready();
 
+      notification("Verbindung zum Server hergestellt", NOTIFICATION_NOTICE);
+
       this.connection.re_send();
       break;
     default:
