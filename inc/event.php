@@ -7,7 +7,8 @@ class mass_event {
       global $dir_mode;
       global $file_mode;
 
-      mkdir("db/{$id}", $dir_mode);
+      mkdir("db/{$id}");
+      chmod("db/{$id}", $dir_mode);
       $this->db=new SQLite3("db/{$id}/db.sqlite");
       chmod("db/{$id}/db.sqlite", $file_mode);
       $this->db->query(file_get_contents("event.sql"));
