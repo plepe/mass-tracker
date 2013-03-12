@@ -40,6 +40,7 @@ if(!$event) {
 <script type='text/javascript' src='inc/serverdate.js'></script>
 <script type='text/javascript' src='inc/gps-client.js'></script>
 <script type='text/javascript' src='inc/participants-client.js'></script>
+<script type='text/javascript' src='inc/notification-client.js'></script>
 <script type='text/javascript' src='client.js'></script>
 
 <script type='text/javascript' src='inc/frontend.js'></script>
@@ -48,6 +49,8 @@ if(!$event) {
 <script type='text/javascript' src='inc/gps-frontend.js'></script>
 <script type='text/javascript' src='inc/tracker-frontend.js'></script>
 <script type='text/javascript' src='inc/participants-frontend.js'></script>
+<script type='text/javascript' src='inc/notification-frontend.js'></script>
+<link rel='stylesheet' href='inc/notification-frontend.css' type='text/css' />
 
 <script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
 
