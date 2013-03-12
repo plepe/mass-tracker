@@ -1,5 +1,6 @@
 var Connection=require('./connection-server.js');
 var Event=require('./event-server.js');
+var hooks=require('../modules/base/modules/hooks/hooks.js');
 
 var clients={};
 var client_ids={};
@@ -13,6 +14,19 @@ function Client(request) {
   this.secret_id=null;
   this.client_id=null;
 }
+
+hooks.register("db_ready", function() {
+  db.each("select * from client_ids", [],
+    function(error, row) {
+      client_ids[row.secret_id]=row.client_id;
+    },
+    function(error, count) {
+      if(error) {
+	console.log("Error loading client_ids:");
+	console.log(error);
+      }
+    });
+});
 
 Client.prototype.receive_message=function(message, callback) {
   // TODO: check if message has already been received!
@@ -114,8 +128,11 @@ Client.prototype.authenticate=function(message, callback) {
   else {
     if(client_ids[this.secret_id])
       this.client_id=client_ids[this.secret_id];
-    else
+    else {
       this.client_id=uniq_id();
+
+      db.run("insert into client_ids values (?, ?)", this.secret_id, this.client_id);
+    }
   }
 
   clients[this.secret_id]=this;

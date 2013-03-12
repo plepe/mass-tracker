@@ -10,4 +10,7 @@ create table event (
   begin_zoom	integer		null
 );
 
-
+create table client_ids (
+  secret_id	varchar(32)	primary key,
+  client_id	varchar(32)	not null
+);
