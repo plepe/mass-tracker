@@ -6,9 +6,42 @@ function Messages(event) {
 Messages.prototype.request=function(param, callback) {
   var reply=[];
 
+  var where=[];
+  var sql_param=[];
+
+  if(param.min_received) {
+    where.push("received>?");
+    sql_param.push(param.min_received);
+  }
+  if(param.max_received) {
+    where.push("received<=?");
+    sql_param.push(param.max_received);
+  }
+  if(param.min_timestamp) {
+    where.push("timestamp>?");
+    sql_param.push(param.min_timestamp);
+  }
+  if(param.max_timestamp) {
+    where.push("timestamp<=?");
+    sql_param.push(param.max_timestamp);
+  }
+  if(param.type) {
+    where.push("type=?");
+    sql_param.push(param.type);
+  }
+  if(param.client_id) {
+    where.push("client_id=?");
+    sql_param.push(param.client_id);
+  }
+
+  if(where.length>0)
+    where="where "+where.join(" and ");
+  else
+    where="";
+
   // answer request
-  this.db.each("select * from message",
-      [ ],
+  this.db.each("select * from message "+where+" order by timestamp asc",
+      sql_param,
       
       // for each message
       function(error, row) {
