@@ -21,6 +21,28 @@ participants_frontend.prototype.update=function() {
   for(var i in this.current_participants)
     participants_remove[i]=true;
 
+  // Get map bounds, so we can check visibility. Check visibility of old
+  // positions
+  var visible_participants={};
+  var visible_participants_count=0;
+  var view_moved=[ 0, 0 ];
+  if(this.map) {
+    var view_bounds=this.map.getBounds();
+
+    for(var i in this.current_participants) {
+      var part=this.current_participants[i];
+
+      if(part.marker) {
+	var loc=part.marker.getLatLng();
+
+	if(view_bounds.contains(loc)) {
+	  visible_participants[i]=loc;
+	  visible_participants_count++;
+	}
+      }
+    }
+  }
+
   for(var i=0; i<list.length; i++) {
     if(participants_remove[list[i].client_id])
       delete(participants_remove[list[i].client_id]);
@@ -65,6 +87,11 @@ participants_frontend.prototype.update=function() {
 
 	participant.marker.addTo(this.map);
       }
+
+      if(list[i].client_id in visible_participants) {
+	view_moved[0]=view_moved[0]+(list[i].data.latitude-visible_participants[list[i].client_id].lat);
+	view_moved[1]=view_moved[1]+(list[i].data.longitude-visible_participants[list[i].client_id].lng);
+      }
     }
   }
 
@@ -78,6 +105,22 @@ participants_frontend.prototype.update=function() {
       this.map.removeLayer(participant.marker);
 
     delete(this.current_participants[i]);
+
+    if(i in visible_participants) {
+      delete(visible_participants);
+      visible_participants_count--;
+    }
+  }
+
+  if(visible_participants_count>0) {
+    view_moved[0]=view_moved[0]/visible_participants_count;
+    view_moved[1]=view_moved[1]/visible_participants_count;
+
+    var current_center=this.map.getCenter();
+    this.map.panTo([
+      current_center.lat+view_moved[0],
+      current_center.lng+view_moved[1]
+    ]);
   }
 
   this.display.set_value(list.length, this.ul);
