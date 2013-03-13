@@ -33,6 +33,21 @@ function event_edit_init() {
    map_location.on('drag', event_edit_set_position);
    map_location.on('dragend', event_edit_set_position);
    map.on('zoomend', event_edit_set_position);
+
+   form_data.onchange=event_edit_update_position;
+}
+
+function event_edit_update_position() {
+  var data=form_data.get_data();
+
+  var pos=[
+    data.begin_latitude,
+    data.begin_longitude,
+    data.begin_zoom
+  ];
+
+  map.setView(pos, pos[2]);
+  map_location.setLatLng(pos);
 }
 
 function event_edit_set_position() {
