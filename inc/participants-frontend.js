@@ -43,6 +43,8 @@ participants_frontend.prototype.update=function() {
     }
   }
 
+  var participants_boundary=new L.LatLngBounds([]);
+
   for(var i=0; i<list.length; i++) {
     if(participants_remove[list[i].client_id])
       delete(participants_remove[list[i].client_id]);
@@ -92,6 +94,11 @@ participants_frontend.prototype.update=function() {
 	view_moved[0]=view_moved[0]+(list[i].data.latitude-visible_participants[list[i].client_id].lat);
 	view_moved[1]=view_moved[1]+(list[i].data.longitude-visible_participants[list[i].client_id].lng);
       }
+
+      participants_boundary.extend([
+        list[i].data.latitude,
+	list[i].data.longitude
+      ]);
     }
   }
 
@@ -112,6 +119,7 @@ participants_frontend.prototype.update=function() {
     }
   }
 
+  // if there are visible participants, follow their move
   if(visible_participants_count>0) {
     view_moved[0]=view_moved[0]/visible_participants_count;
     view_moved[1]=view_moved[1]/visible_participants_count;
@@ -121,6 +129,12 @@ participants_frontend.prototype.update=function() {
       current_center.lat+view_moved[0],
       current_center.lng+view_moved[1]
     ]);
+  }
+  // otherwise, if there are only (new?) participants
+  else if(list.length>0) {
+    // if not all current participants fit on the map, fit map accordingly
+    if(!this.map.getBounds().contains(participants_boundary))
+      this.map.fitBounds(participants_boundary);
   }
 
   this.display.set_value(list.length, this.ul);
