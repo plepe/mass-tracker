@@ -20,6 +20,7 @@ function shoutbox_frontend(frontend) {
   form_div.appendChild(submit);
 
   this.shout_log=document.createElement("div");
+  this.shout_log.className="shout_log";
   div.appendChild(this.shout_log);
 
   this.display=new Display("shoutbox", { title: "Shoutbox", unit: "", type: "integer", expanded_type: "html" });
@@ -81,7 +82,14 @@ shoutbox_frontend.prototype.receive_message=function(message) {
 
   var div1=document.createElement("div");
   div1.className="message";
-  div1.appendChild(document.createTextNode(message.data.text));
+  var str=message.data.text;
+  if(typeof str=="string") {
+    str=str.replace(/&/g, "&amp;");
+    str=str.replace(/</g, "&lt;");
+    str=str.replace(/>/g, "&gt;");
+    str=str.replace(/\n/g, "<br>\n");
+  }
+  div1.innerHTML=str;
   div.appendChild(div1);
 
   if(this.shout_log.firstChild)

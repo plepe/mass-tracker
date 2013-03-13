@@ -52,6 +52,7 @@ if(!$event) {
 <script type='text/javascript' src='inc/notification-frontend.js'></script>
 <script type='text/javascript' src='inc/shoutbox-frontend.js'></script>
 <link rel='stylesheet' href='inc/notification-frontend.css' type='text/css' />
+<link rel='stylesheet' href='inc/shoutbox-frontend.css' type='text/css' />
 
 <script type='text/javascript' src='lib/OpenLayers/OpenLayers.js'></script>
 

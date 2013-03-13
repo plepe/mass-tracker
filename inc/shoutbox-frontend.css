@@ -1,0 +1,41 @@
+#shoutbox .shout_log {
+  max-height: 10em;
+  overflow: auto;
+}
+#shoutbox form td.field_desc {
+  display: none;
+}
+#shoutbox form td.field_value {
+  padding: 0;
+}
+#shoutbox form td.field_value textarea {
+  margin: 0px;
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#shoutbox form,
+#shoutbox .shout_log .shout {
+  border: 1px solid #a0a0a0;
+  border-radius: 0.25em;
+  margin-bottom: 0.25em;
+}
+#shoutbox .shout_log .shout .client,
+#shoutbox .shout_log .shout .time {
+  display: inline;
+  font-size: 75%;
+}
+#shoutbox .shout_log .shout .client {
+  padding-left: 0.125em;
+}
+#shoutbox .shout_log .shout .time {
+  padding-right: 0.125em;
+}
+#shoutbox .shout_log .shout .time:before {
+  content: " um ";
+}
+#shoutbox .shout_log .shout .message {
+  padding: 0.125em;
+}
