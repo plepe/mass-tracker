@@ -111,6 +111,8 @@ $body.=$form->show();
 $body.="<input type='submit' value='Ok'>\n";
 $body.="</form>\n";
 
+$body.="<div id='map_container'><div id='map' style='width: 100%; height: 16em;'></div></div>";
+
 $body.="<p><a href='.'>Index</a>\n";
 if(isset($event)) {
   $body.="<a href='event.php?id={$event->id}'>Zurück</a>\n";
@@ -124,6 +126,9 @@ if(isset($event)) {
     <?php print modulekit_include_js(); /* prints all js-includes */ ?>
     <?php print modulekit_include_css(); /* prints all css-includes */ ?>
     <?php print_add_html_headers(); ?>
+<script type='text/javascript' src='event_edit.js'></script>
+<link rel='stylesheet' href='lib/leaflet/leaflet.css' type='text/css' />
+<script type='text/javascript' src='lib/leaflet/leaflet.js'></script>
   </head>
   <body>
 <?
