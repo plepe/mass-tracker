@@ -38,6 +38,8 @@ shoutbox_frontend.prototype.submit=function() {
   var data=this.form.get_data();
 
   this.frontend.event.send(data, "shoutbox");
+
+  this.form.set_data({ 'text': null });
 }
 
 shoutbox_frontend.prototype.reset=function(message) {
