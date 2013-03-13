@@ -72,7 +72,11 @@ shoutbox_frontend.prototype.receive_message=function(message) {
 
   var div1=document.createElement("div");
   div1.className="client";
-  div1.appendChild(document.createTextNode(message.client_id));
+  var user=this.frontend.event.messages.request({ type: "tracker_start", request: "newest", client_id: message.client_id });
+  if(user.length)
+    div1.innerHTML=format_name(user[0].data);
+  else
+    div1.innerHTML="Anonymous";
   div.appendChild(div1);
 
   var div1=document.createElement("div");

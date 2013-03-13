@@ -30,6 +30,9 @@
 #shoutbox .shout_log .shout .client {
   padding-left: 0.125em;
 }
+#shoutbox .shout_log .shout .client img {
+  width: 1em;
+}
 #shoutbox .shout_log .shout .time {
   padding-right: 0.125em;
 }
