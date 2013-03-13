@@ -1,7 +1,12 @@
 function map_frontend(frontend) {
   this.frontend=frontend;
 
-  this.map = L.map('map').setView([ 48.21, 16.36 ], 16);
+  var pos=[
+    event_data.begin_latitude,
+    event_data.begin_longitude,
+    event_data.begin_zoom
+  ];
+  this.map = L.map('map').setView(pos, pos[2]);
 
   L.tileLayer(
     "http://tiles-base.openstreetbrowser.org/tiles/basemap_base/{z}/{x}/{y}.png",

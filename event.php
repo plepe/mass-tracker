@@ -58,6 +58,7 @@ if(!$event) {
 
 <script type='text/javascript'>
 var event_id="<?=$event->id?>";
+var event_data=<?=json_encode($event->data)?>;
 var websocket_url="<?=$websocket_url?>";
 
 function client_send(data, type) {
