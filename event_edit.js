@@ -2,7 +2,23 @@ var map;
 var map_location;
 
 function event_edit_init() {
-  map = L.map('map').setView([ 48.21, 16.36 ], 16);
+  var data=form_data.get_data();
+
+  if((!data.begin_longitude)||(!data.begin_latitude)) {
+    pos=[ 0, 0, 1 ];
+  }
+  else {
+    pos=[
+      data.begin_latitude,
+      data.begin_longitude,
+      16
+    ];
+  }
+
+  if(data.begin_zoom)
+    pos[2]=data.begin_zoom;
+
+  map = L.map('map').setView(pos, pos[2]);
 
   L.tileLayer(
     "http://tiles-base.openstreetbrowser.org/tiles/basemap_base/{z}/{x}/{y}.png",
@@ -11,7 +27,7 @@ function event_edit_init() {
     }).addTo(this.map);
   document.getElementById("map").style.position="absolute";
 
-   map_location=L.marker([ 48.21, 16.36 ], {
+   map_location=L.marker(pos, {
      draggable: true
    }).addTo(map);
    map_location.on('drag', event_edit_set_position);

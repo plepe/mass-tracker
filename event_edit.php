@@ -39,7 +39,7 @@ $form_def=array(
   'begin_zoom'	=>array(
     'type'	=>"integer",
     'name'	=>"Default Zoom",
-    'default'	=>16,
+    'default'	=>1,
   ),
 );
 
