@@ -49,9 +49,40 @@ shoutbox_frontend.prototype.reset=function(message) {
   }
 }
 
+shoutbox_frontend.prototype.format_date=function(message) {
+  var d=new Date(message.timestamp).getTime()/1000;
+  var now=new Date().getTime()/1000;
+  var days=now-d;
+
+  if(now-d>2*86400)
+    str=strftime("%d %b, %H:%M", d);
+  if(now-d>1*86400)
+    str=strftime("gestern, %H:%M", d);
+  else
+    str=strftime("%H:%M", d);
+
+  return document.createTextNode(str);
+}
+
 shoutbox_frontend.prototype.receive_message=function(message) {
   var div=document.createElement("div");
-  div.innerHTML=message.client_id+": "+JSON.stringify(message.data);
+  div.className="shout";
+  div.message=message;
+
+  var div1=document.createElement("div");
+  div1.className="client";
+  div1.appendChild(document.createTextNode(message.client_id));
+  div.appendChild(div1);
+
+  var div1=document.createElement("div");
+  div1.className="time";
+  div1.appendChild(this.format_date(message));
+  div.appendChild(div1);
+
+  var div1=document.createElement("div");
+  div1.className="message";
+  div1.appendChild(document.createTextNode(message.data.text));
+  div.appendChild(div1);
 
   if(this.shout_log.firstChild)
     this.shout_log.insertBefore(div, this.shout_log.firstChild);
