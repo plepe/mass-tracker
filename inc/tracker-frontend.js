@@ -119,10 +119,11 @@ tracker_frontend.prototype.show_form=function(dom) {
 }
 
 tracker_frontend.prototype.show_start_participate=function() {
-  if(this.frontend.event.data('begin_time').getTime()>now().getTime()) {
-    this.display.set_value("ab "+strftime("%H:%M", this.frontend.event.data('begin_time').getTime()/1000), "");
+  var begin_time=this.frontend.event.get_date('begin_time');
+  if(begin_time.getTime()>now().getTime()) {
+    this.display.set_value("ab "+strftime("%H:%M", begin_time/1000), "");
     window.setTimeout(this.show_start_participate.bind(this),
-      this.frontend.event.data('begin_time').getTime()-now().getTime());
+      begin_time.getTime()-now().getTime());
     this.frontend.event.time_shift=0;
 
     return;
@@ -240,8 +241,9 @@ tracker_frontend.prototype.create_display=function() {
   this.display=new Display("this_tracker", { title: "Teilnahme", unit: "", type: "large" });
   this.display.show(document.getElementById("displays"));
 
-  if(this.frontend.event.data('end_time').getTime()>now().getTime()) {
-    var x=this.frontend.event.data('end_time').getTime()-now().getTime();
+  var end_time=this.frontend.event.get_date('end_time');
+  if(end_time.getTime()>now().getTime()) {
+    var x=end_time.getTime()-now().getTime();
     window.setTimeout(this.show_end_event.bind(this),
       x);
 
