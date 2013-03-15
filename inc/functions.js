@@ -44,3 +44,11 @@ global.get_received_timestamp=function() {
   last_received_timestamp=ret;
   return ret;
 }
+
+// from: http://stackoverflow.com/a/10073801
+function zeroPad(n,length){
+  var s=n+"",needed=length-s.length;
+  if (needed>0)
+    s=(Math.pow(10,needed)+"").slice(1)+s;
+  return s;
+}

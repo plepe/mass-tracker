@@ -32,6 +32,19 @@ Event.prototype.set_data=function(k, v) {
   return v;
 }
 
+Event.prototype.get_date=function(k) {
+  var value=this.data(k);
+
+  var datetime=value.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2})/);
+//  var timezone=this.data("timezone")/60.0;
+//  timezone=(timezone<0?"-":"+")+zeroPad(Math.floor(Math.abs(timezone)), 2)+":"+zeroPad((timezone-Math.floor(timezone))*60, 2);
+  var timezone="Z";
+  var datetime=datetime[1]+"T"+datetime[2]+timezone;
+
+  var x=new Date(datetime);
+  return x;
+}
+
 Event.prototype.receive_message=function(message, client, callback) {
   if(message.type=='response') {
     for(var i=0; i<message.data.length; i++) {
