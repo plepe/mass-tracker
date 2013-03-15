@@ -29,7 +29,7 @@ gps.prototype.update=function(lonlat) {
   var current=ServerDate();
   var sent=false;
 
-  if(//this_tracker.participate&&       // participating?
+  if(this.event.client.participate&&  // participating?
      (this.coords.accuracy<50)&&      // accuracy good enough
      ((this.last_submit===null)||     // never submitted?
       (current.getTime()>=this.last_submit.getTime()+gps_interval*1000))) { // not too often?

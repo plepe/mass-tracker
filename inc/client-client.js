@@ -2,6 +2,7 @@ function Client(websocket_url, conf) {
   this.secret_id=null;
   this.client_id=null;
   this.conf=conf;
+  this.participate=false;
 
   this.connection=new Connection(websocket_url, this);
   

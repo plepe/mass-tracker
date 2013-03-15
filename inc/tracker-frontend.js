@@ -45,7 +45,6 @@ function tracker_frontend(frontend) {
     this.data[i]=tracker_data_form_default[i];
 
   this.log=[];
-  this.participate=false;
 
   this.create_display();
   this.update_style();
@@ -184,7 +183,7 @@ tracker_frontend.prototype.show_start_participate=function() {
 tracker_frontend.prototype.submit_participate=function() {
   var param=this.form.get_data();
 
-  this.participate=true;
+  this.frontend.event.client.participate=true;
   this.frontend.event.send(param, "tracker_start", this.submit_participate_callback.bind(this));
   this.set_data(this.form.get_data());
 }
@@ -192,7 +191,7 @@ tracker_frontend.prototype.submit_participate=function() {
 tracker_frontend.prototype.submit_participate_callback=function(data) {
   this.display.hide_expanded();
   this.display.set_value(format_name(data));
-  //this.show_edit_participate();
+  this.show_edit_participate();
 
   this.refresh();
 }
@@ -222,8 +221,10 @@ tracker_frontend.prototype.stop_participate=function() {
     'id': this.frontend.event.id
   };
 
-  this.participate=false;
+  this.frontend.event.client.participate=false;
   // TODO: ajax("tracker_stop", param, this.stop_participate_callback.bind(this));
+  // TODO:
+  this.stop_participate_callback();
 }
 
 tracker_frontend.prototype.stop_participate_callback=function() {
