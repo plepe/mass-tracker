@@ -4,6 +4,9 @@ function Event(event_id, client) {
   this.event_id=event_id;
   this.ready=false;
   this._data={};
+  // TODO: receive data from server? e.g. from messsages
+  if(event_data)
+    this._data=event_data;
 
   this.messages=new Messages();
   this.participants=new Participants(this);
