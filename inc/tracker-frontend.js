@@ -263,6 +263,7 @@ tracker_frontend.prototype.reset=function() {
 }
 
 tracker_frontend.prototype.refresh=function(current) {
+  return;
   if(!current)
     current=this.frontend.event.current_time;
 
